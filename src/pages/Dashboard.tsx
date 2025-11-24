@@ -4,10 +4,12 @@ import nocLogo from "@/assets/noc-logo.png";
 
 const Dashboard = () => {
   const authData = authStorage.getAuthData();
+  const employeeData = authStorage.getEmployeeData();
   
   const user = {
-    name: "Osama Ali Omran Duhaim",
-    email: "oidhaym@noc.ly",
+    name: employeeData?.name || "User",
+    email: employeeData?.email || "",
+    image: employeeData?.image,
     employeeId: authData?.employee_id,
     userId: authData?.user_id,
     isManager: authData?.is_manager,
@@ -69,9 +71,17 @@ const Dashboard = () => {
           {/* User Info Card */}
           <Card className="p-6 w-80">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-2xl">
-                👤
-              </div>
+              {user.image ? (
+                <img 
+                  src={user.image} 
+                  alt={user.name}
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-2xl">
+                  👤
+                </div>
+              )}
               <div>
                 <h2 className="font-semibold text-lg text-foreground">{user.name}</h2>
               </div>
