@@ -2,16 +2,59 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import nocLogo from "@/assets/noc-logo.png";
 
 const Login = () => {
   const [email, setEmail] = useState("oidhaym@noc.ly");
   const [password, setPassword] = useState("123");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempt with:", email);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("https://bsnswheel.org/api/v1/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          login: email,
+          password: password,
+          player_id: "f0d27a08-34c3-4611-9e49-250c691ca53f",
+          device_type: 1, // Android device
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Login successful!",
+        });
+        // Store auth data and redirect here
+        console.log("Login response:", data);
+      } else {
+        toast({
+          title: "Error",
+          description: data.message || "Login failed. Please check your credentials.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Network error. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -68,8 +111,9 @@ const Login = () => {
             <Button 
               type="submit" 
               className="w-full h-14 text-base font-medium"
+              disabled={isLoading}
             >
-              Log in
+              {isLoading ? "Logging in..." : "Log in"}
             </Button>
 
             <div className="flex items-center justify-between text-base">
