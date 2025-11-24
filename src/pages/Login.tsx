@@ -38,6 +38,25 @@ const Login = () => {
         // Store complete auth data for future API calls
         authStorage.setAuthData(data);
         
+        // Fetch employee data
+        try {
+          const employeeResponse = await fetch(
+            `http://bsnswheel.org/api/v1/employees/${data.employee_id}?context={"lang": "ar_001"}`,
+            {
+              headers: {
+                "x-api-key": data["x-api-key"],
+              },
+            }
+          );
+          
+          if (employeeResponse.ok) {
+            const employeeData = await employeeResponse.json();
+            authStorage.setEmployeeData(employeeData);
+          }
+        } catch (error) {
+          console.error("Failed to fetch employee data:", error);
+        }
+        
         toast({
           title: "Success",
           description: "Login successful!",
