@@ -41,7 +41,12 @@ const Login = () => {
         // Fetch employee data
         try {
           const employeeResponse = await fetch(
-            `https://bsnswheel.org/api/v1/employees/${data.employee_id}?context={"lang": "ar_001"}`
+            `https://bsnswheel.org/api/v1/employees/${data.employee_id}?context={"lang": "ar_001"}`,
+            {
+              headers: {
+                "x-api-key": data["x-api-key"],
+              },
+            }
           );
           
           if (employeeResponse.ok) {
