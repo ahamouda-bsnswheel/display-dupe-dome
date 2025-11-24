@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("123");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,12 +34,16 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
+        // Store auth token
+        localStorage.setItem("authToken", data.token || JSON.stringify(data));
+        
         toast({
           title: "Success",
           description: "Login successful!",
         });
-        // Store auth data and redirect here
-        console.log("Login response:", data);
+        
+        // Redirect to dashboard
+        navigate("/dashboard");
       } else {
         toast({
           title: "Error",
