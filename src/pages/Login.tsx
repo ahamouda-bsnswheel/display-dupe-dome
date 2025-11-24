@@ -5,8 +5,8 @@ import { Label } from "@/components/ui/label";
 import nocLogo from "@/assets/noc-logo.png";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("oidhaym@noc.ly");
+  const [password, setPassword] = useState("123");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
