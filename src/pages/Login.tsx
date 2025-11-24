@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { authStorage } from "@/lib/auth";
 import nocLogo from "@/assets/noc-logo.png";
 
 const Login = () => {
@@ -34,8 +35,8 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Store auth token
-        localStorage.setItem("authToken", data.token || JSON.stringify(data));
+        // Store complete auth data for future API calls
+        authStorage.setAuthData(data);
         
         toast({
           title: "Success",

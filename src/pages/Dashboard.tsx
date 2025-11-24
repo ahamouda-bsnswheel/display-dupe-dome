@@ -1,10 +1,16 @@
 import { Card } from "@/components/ui/card";
+import { authStorage } from "@/lib/auth";
 import nocLogo from "@/assets/noc-logo.png";
 
 const Dashboard = () => {
+  const authData = authStorage.getAuthData();
+  
   const user = {
     name: "Osama Ali Omran Duhaim",
     email: "oidhaym@noc.ly",
+    employeeId: authData?.employee_id,
+    userId: authData?.user_id,
+    isManager: authData?.is_manager,
   };
 
   const myListItems = [
