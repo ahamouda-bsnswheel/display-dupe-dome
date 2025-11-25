@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ChevronLeft, Power, Plus, Edit, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,6 +19,8 @@ interface WorkExperience {
 
 const Profile = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get("tab") || "resume";
   const [isAddWorkExpOpen, setIsAddWorkExpOpen] = useState(false);
   const [isEditWorkExpOpen, setIsEditWorkExpOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -157,7 +159,11 @@ const Profile = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="resume" className="w-full">
+        <Tabs 
+          value={activeTab} 
+          onValueChange={(value) => setSearchParams({ tab: value })}
+          className="w-full"
+        >
           <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0 h-auto">
             <TabsTrigger 
               value="resume" 
