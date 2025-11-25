@@ -25,9 +25,17 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
+interface WorkExperience {
+  dates: string;
+  title: string;
+  companyName?: string;
+}
+
 interface AddWorkExperienceModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  editData?: WorkExperience;
+  isEditMode?: boolean;
 }
 
 const resumeTypes = [
@@ -43,12 +51,33 @@ const resumeTypes = [
 export const AddWorkExperienceModal = ({
   open,
   onOpenChange,
+  editData,
+  isEditMode = false,
 }: AddWorkExperienceModalProps) => {
   const [resumeType, setResumeType] = useState<string>("");
   const [companyName, setCompanyName] = useState("");
   const [titleOfEmployee, setTitleOfEmployee] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+
+  // Pre-fill data when in edit mode
+  useState(() => {
+    if (isEditMode && editData) {
+      setCompanyName(editData.companyName || "");
+      setTitleOfEmployee(editData.title || "");
+      
+      // Parse dates from "DD/MM/YYYY - DD/MM/YYYY" format
+      const dates = editData.dates.split(" - ");
+      if (dates.length === 2) {
+        const [startStr, endStr] = dates;
+        const [startDay, startMonth, startYear] = startStr.split("/");
+        const [endDay, endMonth, endYear] = endStr.split("/");
+        
+        setStartDate(new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay)));
+        setEndDate(new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay)));
+      }
+    }
+  });
 
   const handleSave = () => {
     // TODO: Implement save logic
@@ -80,24 +109,26 @@ export const AddWorkExperienceModal = ({
 
         {/* Form Content */}
         <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-6">
-          {/* Resume Type */}
-          <div className="space-y-2">
-            <Label className="text-base font-normal text-foreground">
-              Resume Type
-            </Label>
-            <Select value={resumeType} onValueChange={setResumeType}>
-              <SelectTrigger className="h-14 rounded-xl border-border bg-background text-base">
-                <SelectValue placeholder="Enter Resume Type" />
-              </SelectTrigger>
-              <SelectContent>
-                {resumeTypes.map((type) => (
-                  <SelectItem key={type} value={type} className="text-base">
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Resume Type - Only show in add mode */}
+          {!isEditMode && (
+            <div className="space-y-2">
+              <Label className="text-base font-normal text-foreground">
+                Resume Type
+              </Label>
+              <Select value={resumeType} onValueChange={setResumeType}>
+                <SelectTrigger className="h-14 rounded-xl border-border bg-background text-base">
+                  <SelectValue placeholder="Enter Resume Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {resumeTypes.map((type) => (
+                    <SelectItem key={type} value={type} className="text-base">
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* Company Name */}
           <div className="space-y-2">
