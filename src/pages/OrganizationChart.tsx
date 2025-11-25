@@ -130,7 +130,7 @@ const OrganizationChart = () => {
             <div className="bg-card rounded-2xl border-2 border-border p-4 w-full max-w-[280px]">
               <div className="flex flex-col items-center">
                 <Avatar className="h-16 w-16 mb-3">
-                  <AvatarImage src={ceo.image} alt={ceo.name} />
+                  <AvatarImage src={ceo.image} alt={ceo.name} crossOrigin="anonymous" />
                   <AvatarFallback className="bg-muted">
                     {ceo.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -158,7 +158,7 @@ const OrganizationChart = () => {
                       </div>
                     ) : (
                       <Avatar className="h-16 w-16 mb-3">
-                        <AvatarImage src={employee.image} alt={employee.name} />
+                        <AvatarImage src={employee.image} alt={employee.name} crossOrigin="anonymous" />
                         <AvatarFallback className="bg-muted">
                           {employee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                         </AvatarFallback>
