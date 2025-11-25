@@ -250,25 +250,25 @@ const Profile = () => {
           <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0 h-auto overflow-x-auto flex-nowrap">
             <TabsTrigger 
               value="resume" 
-              className="flex-shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-gradient-to-t data-[state=active]:from-primary/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm transition-all"
+              className="flex-shrink-0 rounded-none border-b-2 border-transparent text-muted-foreground data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:bg-gradient-to-t data-[state=active]:from-primary/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-all"
             >
               Resume
             </TabsTrigger>
             <TabsTrigger 
               value="work-info"
-              className="flex-shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-secondary data-[state=active]:bg-gradient-to-t data-[state=active]:from-secondary/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm transition-all"
+              className="flex-shrink-0 rounded-none border-b-2 border-transparent text-muted-foreground data-[state=active]:text-secondary data-[state=active]:border-secondary data-[state=active]:bg-gradient-to-t data-[state=active]:from-secondary/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-all"
             >
               Work Info
             </TabsTrigger>
             <TabsTrigger 
               value="private-info"
-              className="flex-shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-gradient-to-t data-[state=active]:from-accent/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm transition-all"
+              className="flex-shrink-0 rounded-none border-b-2 border-transparent text-muted-foreground data-[state=active]:text-accent data-[state=active]:border-accent data-[state=active]:bg-gradient-to-t data-[state=active]:from-accent/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-all"
             >
               Private Info
             </TabsTrigger>
             <TabsTrigger 
               value="achievements"
-              className="flex-shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-coral data-[state=active]:bg-gradient-to-t data-[state=active]:from-coral/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm transition-all"
+              className="flex-shrink-0 rounded-none border-b-2 border-transparent text-muted-foreground data-[state=active]:text-coral data-[state=active]:border-coral data-[state=active]:bg-gradient-to-t data-[state=active]:from-coral/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-all"
             >
               My Achievement
             </TabsTrigger>
