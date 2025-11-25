@@ -420,8 +420,116 @@ const Profile = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="private-info" className="p-4">
-            <p className="text-muted-foreground">Private Info content coming soon...</p>
+          <TabsContent value="private-info" className="p-4 space-y-6 mt-0">
+            {/* Basic Info */}
+            <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Language</p>
+                  <p className="text-sm text-muted-foreground">english</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Home Work Distance</p>
+                  <p className="text-sm text-muted-foreground">---</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Private Car Plate</p>
+                  <p className="text-sm text-muted-foreground">---</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Family Status */}
+            <div>
+              <h3 className="text-base font-semibold text-foreground mb-3">Family Status</h3>
+              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3 flex-1">
+                    <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">Marital Status</p>
+                      <p className="text-sm text-muted-foreground">---</p>
+                    </div>
+                  </div>
+                  <button className="text-muted-foreground hover:text-foreground ml-2">
+                    <Edit className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Number of Children</p>
+                    <p className="text-sm text-muted-foreground">0</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Emergency */}
+            <div>
+              <h3 className="text-base font-semibold text-foreground mb-3">Emergency</h3>
+              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3 flex-1">
+                    <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">Contact Name</p>
+                      <p className="text-sm text-muted-foreground">---</p>
+                    </div>
+                  </div>
+                  <button className="text-muted-foreground hover:text-foreground ml-2">
+                    <Edit className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Contact Phone</p>
+                    <p className="text-sm text-muted-foreground">---</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Education */}
+            <div>
+              <h3 className="text-base font-semibold text-foreground mb-3">Education</h3>
+              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3 flex-1">
+                    <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">Certificate Level</p>
+                      <p className="text-sm text-muted-foreground">Bachelor</p>
+                    </div>
+                  </div>
+                  <button className="text-muted-foreground hover:text-foreground ml-2">
+                    <Edit className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Field of Study</p>
+                    <p className="text-sm text-muted-foreground">محاسبة</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">School</p>
+                    <p className="text-sm text-muted-foreground">---</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="achievements" className="p-4">
