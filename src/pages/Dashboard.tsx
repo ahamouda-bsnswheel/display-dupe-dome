@@ -132,28 +132,29 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          {/* Today Attendance */}
-          
-          <Card className="p-4">
-            <div className="flex justify-center items-center gap-2 mb-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold bg-blue-50 rounded-lg px-4 py-2">00</div>
-              </div>
-              <div className="text-2xl font-bold">:</div>
-              <div className="text-center">
-                <div className="text-2xl font-bold bg-blue-50 rounded-lg px-4 py-2">00</div>
-              </div>
-              <div className="text-2xl font-bold">:</div>
-              <div className="text-center">
-                <div className="text-2xl font-bold bg-blue-50 rounded-lg px-4 py-2">00</div>
-              </div>
+          {/* Today's Hours */}
+          <Card className="p-4 sm:p-6">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="text-sm text-muted-foreground">Today's Hours</h3>
+              <Badge variant="secondary" className="bg-muted text-foreground">
+                Not Started
+              </Badge>
             </div>
-            <p className="text-xs text-muted-foreground text-center mb-4">
-              GENERAL 09:00 AM TO 06:00 PM
-            </p>
-            <Button className="w-full bg-primary hover:bg-primary/90">
+            
+            <div className="text-5xl sm:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+              00:00:00
+            </div>
+            
+            <div className="h-2 bg-muted rounded-full mb-6" />
+            
+            <Button className="w-full bg-primary hover:bg-primary/90 text-lg py-6 rounded-2xl">
+              <Clock className="h-5 w-5 mr-2" />
               Check In
             </Button>
+            
+            <p className="text-sm text-muted-foreground text-center mt-4">
+              Shift: 09:00 AM - 06:00 PM
+            </p>
           </Card>
         </section>
 
