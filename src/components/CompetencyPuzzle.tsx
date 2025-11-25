@@ -18,7 +18,7 @@ const competencies: Competency[] = [
     name: "Psychological Resilience",
     jobLevel: "Competent",
     progress: 0,
-    position: { top: "25%", right: "0", width: "25%", height: "25%" },
+    position: { top: "0", right: "25%", width: "25%", height: "25%" },
   },
   {
     id: "critical-thinking",
