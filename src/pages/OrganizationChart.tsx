@@ -7,11 +7,12 @@ import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useAuthImage } from "@/hooks/use-auth-image";
 
 interface OrgChartEmployee {
-  id: number;
+  id: string;
   name: string;
-  job_title: string;
+  job: string;
+  type: string;
+  level: number;
   image_url: string;
-  parent_id: number | null;
 }
 
 interface Employee {
@@ -48,7 +49,7 @@ const OrganizationChart = () => {
         const response = await fetch(
           `https://bsnswheel.org/api/v1/org_chart/custom/${employeeData.id}`,
           {
-            method: "GET",
+            method: "PUT",
             headers: {
               Authorization: apiKey,
               "Content-Type": "application/json",
@@ -62,7 +63,7 @@ const OrganizationChart = () => {
 
         const data = await response.json();
         console.log("Organization chart data:", data);
-        setOrgChartData(data || []);
+        setOrgChartData(data.result || []);
       } catch (error) {
         console.error("Error fetching organization chart:", error);
       } finally {
@@ -74,14 +75,22 @@ const OrganizationChart = () => {
   }, [employeeData?.id]);
 
   // Build organizational hierarchy from org chart data
-  const topLevel = orgChartData.find(emp => emp.parent_id === null);
-  const subordinates = orgChartData.filter(emp => emp.parent_id !== null);
+  const manager = orgChartData.find(emp => emp.type === "manager");
+  const currentUser = orgChartData.find(emp => emp.type === "self");
+  const teamMembers = orgChartData.filter(emp => emp.type === "sama");
 
-  const employees: Employee[] = subordinates.map(emp => ({
-    name: emp.name,
-    position: emp.job_title,
-    image: getSecureImageUrl(emp.image_url),
-  }));
+  const employees: Employee[] = [
+    ...(currentUser ? [{
+      name: currentUser.name,
+      position: currentUser.job.trim(),
+      image: getSecureImageUrl(currentUser.image_url),
+    }] : []),
+    ...teamMembers.map(emp => ({
+      name: emp.name,
+      position: emp.job.trim(),
+      image: getSecureImageUrl(emp.image_url),
+    }))
+  ];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -105,21 +114,21 @@ const OrganizationChart = () => {
           ) : (
             <>
               {/* Top Level / Manager */}
-              {topLevel && (
+              {manager && (
                 <>
                   <div className="flex flex-col items-center mb-6">
                     <div className="bg-card rounded-2xl border-2 border-border p-4 w-full max-w-[280px]">
                       <div className="flex flex-col items-center">
                         <Avatar className="h-16 w-16 mb-3">
-                          <AvatarImage src={getSecureImageUrl(topLevel.image_url)} alt={topLevel.name} />
+                          <AvatarImage src={getSecureImageUrl(manager.image_url)} alt={manager.name} />
                           <AvatarFallback className="bg-muted">
-                            {topLevel.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                            {manager.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <p className="text-sm font-semibold text-primary text-center mb-1">
-                          {topLevel.name}
+                          {manager.name}
                         </p>
-                        <p className="text-xs text-muted-foreground text-center">{topLevel.job_title}</p>
+                        <p className="text-xs text-muted-foreground text-center">{manager.job.trim()}</p>
                       </div>
                     </div>
                     
