@@ -86,11 +86,15 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-hero flex items-center justify-center px-6 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.1),transparent_50%)]"></div>
+      
+      <div className="w-full max-w-md relative z-10">
         {/* Language Selector */}
         <div className="flex justify-end mb-12">
-          <button className="flex items-center gap-2 text-primary text-sm font-medium">
+          <button className="flex items-center gap-2 text-white text-sm font-medium hover:text-white/80 transition-colors">
             English
             <Globe className="w-4 h-4" />
           </button>
@@ -98,14 +102,14 @@ const Login = () => {
 
         {/* Welcome Section */}
         <div className="mb-10">
-          <h1 className="text-3xl font-semibold text-foreground mb-2">Welcome to NOC</h1>
-          <p className="text-muted-foreground text-sm">Empowering Efficiency, Ensuring Reliability</p>
+          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">Welcome to NOC</h1>
+          <p className="text-white/90 text-sm drop-shadow">Empowering Efficiency, Ensuring Reliability</p>
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-normal text-foreground">
+            <Label htmlFor="email" className="text-sm font-normal text-white/90">
               Email
             </Label>
             <Input
@@ -114,13 +118,13 @@ const Login = () => {
               placeholder="Mfadel@Noc.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-14 text-base bg-white"
+              className="h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 shadow-lg"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-sm font-normal text-foreground">
+            <Label htmlFor="password" className="text-sm font-normal text-white/90">
               Password
             </Label>
             <div className="relative">
@@ -130,7 +134,7 @@ const Login = () => {
                 placeholder="•••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-14 text-base bg-white pr-12"
+                className="h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 pr-12 shadow-lg"
                 required
               />
               <button
@@ -144,12 +148,16 @@ const Login = () => {
           </div>
 
           <div className="flex justify-start">
-            <a href="#" className="text-primary text-sm hover:underline font-medium">
+            <a href="#" className="text-white text-sm hover:underline font-medium">
               Forget Password?
             </a>
           </div>
 
-          <Button type="submit" className="w-full h-14 text-base font-semibold rounded-xl" disabled={isLoading}>
+          <Button 
+            type="submit" 
+            className="w-full h-14 text-base font-semibold rounded-xl bg-white text-primary hover:bg-white/90 shadow-xl hover-lift" 
+            disabled={isLoading}
+          >
             {isLoading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
