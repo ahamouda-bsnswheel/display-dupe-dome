@@ -297,134 +297,71 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="work-info" className="p-4 space-y-6 mt-0">
-            {/* Time Off, Time Sheet, Attendance */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Time Off</p>
-                  <p className="text-sm text-muted-foreground">---</p>
+            {/* Private Contact */}
+            <div>
+              <h3 className="text-base font-semibold text-foreground mb-3">Private Contact</h3>
+              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Work Address</p>
+                    <p className="text-sm text-muted-foreground">Jannah Al-Areef</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Time Sheet</p>
-                  <p className="text-sm text-muted-foreground">Mitchell Admin</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Attendance</p>
-                  <p className="text-sm text-muted-foreground">Mohamed Mostafa Fadl</p>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Work Location</p>
+                    <p className="text-sm text-muted-foreground">Tripoli</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Schedule Section */}
+            {/* Approvers */}
+            <div>
+              <h3 className="text-base font-semibold text-foreground mb-3">Approvers</h3>
+              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Expenses</p>
+                    <p className="text-sm text-muted-foreground">Mitchell Admin</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Time Off</p>
+                    <p className="text-sm text-muted-foreground">---</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Time Sheet</p>
+                    <p className="text-sm text-muted-foreground">Mitchell Admin</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Attendance</p>
+                    <p className="text-sm text-muted-foreground">Mohamed Mostafa Fadl</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Schedule */}
             <div>
               <h3 className="text-base font-semibold text-foreground mb-3">Schedule</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Working Hours</p>
                     <p className="text-sm text-muted-foreground">Standard 40 hours/week</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Work Location Plan</p>
-                    <p className="text-sm text-muted-foreground">Work Location Plan - Portal User 01</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Time Zone</p>
-                    <p className="text-sm text-muted-foreground">Libya</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Planning Section */}
-            <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Planning</h3>
-              <div className="bg-card p-4 rounded-lg border border-border">
-                <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Roles</p>
-                    <p className="text-sm text-muted-foreground">No Roles</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Organization Chart Section */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-foreground">Organization Chart</h3>
-                <Button 
-                  variant="link" 
-                  className="h-auto p-0 text-primary"
-                  onClick={() => navigate("/organization-chart")}
-                >
-                  See All
-                </Button>
-              </div>
-              <div className="bg-card p-4 rounded-lg border border-border">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
-                  <p className="text-sm font-semibold text-foreground">Roles</p>
-                </div>
-                <div className="space-y-3 ml-5">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src="" alt="Abdulkareem Essaied Shuia" />
-                      <AvatarFallback className="bg-muted text-sm">AE</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Abdulkareem Essaied Shuia</p>
-                      <p className="text-sm text-muted-foreground">CHRO</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src={user.image} alt={user.name} />
-                      <AvatarFallback className="bg-muted text-sm">
-                        {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{user.name}</p>
-                      <p className="text-sm text-muted-foreground">{user.position}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Job Description Section */}
-            <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Job Description</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
-                <div>
-                  <h4 className="text-sm font-bold text-foreground mb-2">Job Summary:</h4>
-                  <p className="text-sm text-foreground leading-relaxed">
-                    The Administrative Office Specialist is responsible for providing high-level administrative, clerical, and operational support to the office or department, ensuring efficient day-to-day operations. This role serves as a central point of contact, manages vital information flow, and performs specialized administrative duties that require a high degree of confidentiality, organization, and problem-solving skills.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-foreground mb-2">Key Responsibilities:</h4>
-                  <div className="space-y-2">
-                    <p className="text-sm font-semibold text-foreground">1. Administrative and Clerical Support:</p>
-                    <p className="text-sm text-foreground ml-4">
-                      • <span className="font-medium">Correspondence Management:</span> Manage incoming and outgoing communications, including answering and directing phone calls.
-                    </p>
                   </div>
                 </div>
               </div>
