@@ -9,9 +9,12 @@ import { Search, Clock, Calendar, BookOpen, Home, Grid3x3, Bell, MoreHorizontal,
 import { QRScannerModal } from "@/components/QRScannerModal";
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const authData = authStorage.getAuthData();
   const employeeData = authStorage.getEmployeeData();
   
@@ -55,10 +58,10 @@ const Dashboard = () => {
     setElapsedTime(0);
     localStorage.setItem("checkInTime", now.toString());
     toast({
-      title: "Checked In",
-      description: "Your attendance has been recorded.",
+      title: t('dashboard.checkedInToast'),
+      description: t('dashboard.checkedInDesc'),
     });
-  }, [toast]);
+  }, [toast, t]);
 
   const handleCheckOut = useCallback(() => {
     setIsCheckedIn(false);
@@ -66,10 +69,10 @@ const Dashboard = () => {
     setElapsedTime(0);
     localStorage.removeItem("checkInTime");
     toast({
-      title: "Checked Out",
-      description: "Have a great day!",
+      title: t('dashboard.checkedOutToast'),
+      description: t('dashboard.checkedOutDesc'),
     });
-  }, [toast]);
+  }, [toast, t]);
 
   const handleQRScan = useCallback((qrCode: string) => {
     console.log("QR Code scanned:", qrCode);
@@ -94,15 +97,15 @@ const Dashboard = () => {
   } = useAuthImage(user.image);
   const modules = [{
     icon: Clock,
-    title: "Time Tracker",
+    title: t('dashboard.timeTracker'),
     color: "bg-blue-50"
   }, {
     icon: Calendar,
-    title: "Time Off",
+    title: t('dashboard.timeOff'),
     color: "bg-yellow-50"
   }, {
     icon: BookOpen,
-    title: "Courses",
+    title: t('dashboard.courses'),
     color: "bg-green-50"
   }];
   const recentProjects = [{
@@ -124,16 +127,16 @@ const Dashboard = () => {
     assignee: "👤"
   }];
   const managerStats = [{
-    label: "4 Time Off",
+    label: t('dashboard.timeOffCount'),
     color: "bg-yellow-100 text-yellow-800"
   }, {
-    label: "0 Requests",
+    label: t('dashboard.requestsCount'),
     color: "bg-purple-100 text-purple-800"
   }, {
-    label: "16 Expenses",
+    label: t('dashboard.expensesCount'),
     color: "bg-green-100 text-green-800"
   }, {
-    label: "18 Tasks",
+    label: t('dashboard.tasksCount'),
     color: "bg-blue-100 text-blue-800"
   }];
   return <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto">
@@ -154,7 +157,7 @@ const Dashboard = () => {
               </Avatar>
             </div>
             <div>
-              <p className="text-xs sm:text-sm text-white/80">Hello,</p>
+              <p className="text-xs sm:text-sm text-white/80">{t('dashboard.hello')}</p>
               <p className="font-bold text-white drop-shadow-md text-sm sm:text-base truncate max-w-[150px] sm:max-w-none">{user.name}!</p>
             </div>
           </div>
@@ -168,7 +171,7 @@ const Dashboard = () => {
       <main className="px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         {/* Manager Stats */}
         {user.isManager && <>
-            <h2 className="text-lg font-semibold">Dashboard</h2>
+            <h2 className="text-lg font-semibold">{t('dashboard.dashboard')}</h2>
             <div className="flex gap-2 overflow-x-auto pb-2">
               {managerStats.map((stat, index) => <Badge key={index} className={`${stat.color} whitespace-nowrap text-xs px-3 py-1`}>
                   {stat.label}
@@ -180,7 +183,7 @@ const Dashboard = () => {
         <section>
           <div className="flex items-center gap-2 mb-3">
             <Clock className="h-5 w-5 text-primary" />
-            <h2 className="text-base font-semibold">Attendance</h2>
+            <h2 className="text-base font-semibold">{t('dashboard.attendance')}</h2>
           </div>
           
           {/* Quick Check-In */}
@@ -191,8 +194,8 @@ const Dashboard = () => {
                   <Camera className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-base">Quick Check-In</p>
-                  <p className="text-sm text-muted-foreground">Scan QR to clock in/out</p>
+                  <p className="font-semibold text-base">{t('dashboard.quickCheckIn')}</p>
+                  <p className="text-sm text-muted-foreground">{t('dashboard.scanQR')}</p>
                 </div>
               </div>
               <Button 
@@ -208,12 +211,12 @@ const Dashboard = () => {
           {/* Today's Hours */}
           <Card className="p-4 sm:p-6">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm text-muted-foreground">Today's Hours</h3>
+              <h3 className="text-sm text-muted-foreground">{t('dashboard.todaysHours')}</h3>
               <Badge 
                 variant="secondary" 
                 className={isCheckedIn ? "bg-success/20 text-success" : "bg-muted text-foreground"}
               >
-                {isCheckedIn ? "Checked In" : "Not Started"}
+                {isCheckedIn ? t('dashboard.checkedIn') : t('dashboard.notStarted')}
               </Badge>
             </div>
             
@@ -235,11 +238,11 @@ const Dashboard = () => {
               onClick={isCheckedIn ? handleCheckOut : handleCheckIn}
             >
               <Clock className="h-5 w-5 mr-2" />
-              {isCheckedIn ? "Check Out" : "Check In"}
+              {isCheckedIn ? t('dashboard.checkOut') : t('dashboard.checkIn')}
             </Button>
             
             <p className="text-sm text-muted-foreground text-center mt-4">
-              Shift: 09:00 AM - 06:00 PM
+              {t('dashboard.shift')}
             </p>
           </Card>
         </section>
@@ -247,9 +250,9 @@ const Dashboard = () => {
         {/* Modules (Employee) or Ongoing Tasks (Manager) */}
         {!user.isManager ? <section>
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-semibold">Modules</h2>
+              <h2 className="text-base font-semibold">{t('dashboard.modules')}</h2>
               <Button variant="link" className="text-primary text-sm p-0">
-                See All
+                {t('dashboard.seeAll')}
               </Button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -262,9 +265,9 @@ const Dashboard = () => {
             </div>
           </section> : <section>
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-semibold">Ongoing Tasks</h2>
+              <h2 className="text-base font-semibold">{t('dashboard.ongoingTasks')}</h2>
               <Button variant="link" className="text-primary text-sm p-0">
-                See All
+                {t('dashboard.seeAll')}
               </Button>
             </div>
             <div className="space-y-3">
@@ -283,9 +286,9 @@ const Dashboard = () => {
         {/* Recent Projects (Employee only) */}
         {!user.isManager && <section>
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-semibold">Recent Projects</h2>
+              <h2 className="text-base font-semibold">{t('dashboard.recentProjects')}</h2>
               <Button variant="link" className="text-primary text-sm p-0">
-                See All
+                {t('dashboard.seeAll')}
               </Button>
             </div>
             <div className="space-y-3">
@@ -308,7 +311,7 @@ const Dashboard = () => {
 
         {/* Welcome Message (Manager only) */}
         {user.isManager && <div className="text-center py-8">
-            <p className="text-lg font-semibold">Welcome {user.name}!</p>
+            <p className="text-lg font-semibold">{t('dashboard.welcome')} {user.name}!</p>
           </div>}
       </main>
 
