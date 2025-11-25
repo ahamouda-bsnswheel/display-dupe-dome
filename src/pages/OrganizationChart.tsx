@@ -138,14 +138,18 @@ const OrganizationChart = () => {
               {/* Team Members Grid */}
               {employees.length > 0 ? (
                 <div className="grid grid-cols-2 gap-4">
-                  {employees.map((employee, index) => (
-                    <OrgChartEmployeeCard
-                      key={index}
-                      name={employee.name}
-                      position={employee.position}
-                      imageUrl={employee.image}
-                    />
-                  ))}
+                  {employees.map((employee) => {
+                    const empData = orgChartData.find(e => e.name === employee.name);
+                    return (
+                      <OrgChartEmployeeCard
+                        key={empData?.id || employee.name}
+                        employeeId={empData?.id || ''}
+                        name={employee.name}
+                        position={employee.position}
+                        imageUrl={employee.image}
+                      />
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="flex items-center justify-center py-8">
