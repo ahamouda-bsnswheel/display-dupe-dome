@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ChevronLeft, Power, Plus, Edit, Trash2, Phone, Mail, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, Power, Plus, Edit, Trash2, Phone, Mail, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,8 +28,9 @@ interface WorkExperience {
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
+  const isRTL = language === 'ar';
   const activeTab = searchParams.get("tab") || "resume";
   const [isAddWorkExpOpen, setIsAddWorkExpOpen] = useState(false);
   const [isEditWorkExpOpen, setIsEditWorkExpOpen] = useState(false);
@@ -189,14 +190,14 @@ const Profile = () => {
   const [karmaValue, setKarmaValue] = useState(0);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-screen-xl mx-auto">
+    <div className="min-h-screen bg-background flex flex-col max-w-screen-xl mx-auto" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="bg-card border-b border-border px-4 sm:px-6 py-3 flex items-center justify-between">
         <button
           onClick={() => navigate("/more")}
           className="flex items-center gap-2 text-foreground"
         >
-          <ChevronLeft className="h-6 w-6" />
+          {isRTL ? <ChevronRight className="h-6 w-6" /> : <ChevronLeft className="h-6 w-6" />}
           <span className="text-lg font-medium">{t('profile.title')}</span>
         </button>
         <button onClick={handleLogout}>
@@ -210,7 +211,7 @@ const Profile = () => {
           {/* Decorative background elements */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
           
-          <div className="relative flex flex-col items-center mb-4">
+            <div className="relative flex flex-col items-center mb-4">
             <div className="relative mb-3">
               <div className="absolute inset-0 bg-gradient-hero rounded-full blur-xl opacity-60 animate-pulse"></div>
               <Avatar className="relative h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 border-4 border-white/30 shadow-2xl">
@@ -221,22 +222,22 @@ const Profile = () => {
               </Avatar>
             </div>
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 drop-shadow-lg text-center px-4">{user.name}</h2>
-            <p className="text-xs sm:text-sm text-white/90 mb-1 flex items-center gap-1.5 drop-shadow">
+            <p className={`text-xs sm:text-sm text-white/90 mb-1 flex items-center gap-1.5 drop-shadow ${isRTL ? 'flex-row-reverse' : ''}`}>
               <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="truncate max-w-[200px] sm:max-w-none">{user.employeeId}</span>
             </p>
-            <p className="text-xs sm:text-sm text-white/90 flex items-center gap-1.5 drop-shadow">
+            <p className={`text-xs sm:text-sm text-white/90 flex items-center gap-1.5 drop-shadow ${isRTL ? 'flex-row-reverse' : ''}`}>
               <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="truncate max-w-[200px] sm:max-w-none">{user.email}</span>
             </p>
           </div>
           
           <div className="relative text-xs sm:text-sm space-y-1 bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20 max-w-md mx-auto">
-            <p className="flex items-center gap-2 text-white">
+            <p className={`flex items-center gap-2 text-white ${isRTL ? 'flex-row-reverse text-right' : ''}`}>
               <span>•</span>
               <span className="truncate">{user.position}</span>
             </p>
-            <p className="flex items-center gap-2 text-white">
+            <p className={`flex items-center gap-2 text-white ${isRTL ? 'flex-row-reverse text-right' : ''}`}>
               <span>•</span>
               <span className="truncate">{user.department}</span>
             </p>
@@ -300,14 +301,14 @@ const Profile = () => {
                 {workExperience.map((exp, index) => (
                   <div key={index} className="bg-card p-4 rounded-lg border border-primary/20">
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                      <div className={`flex-1 ${isRTL ? 'text-right' : ''}`}>
                         <p className="text-sm text-secondary mb-1">{exp.dates}</p>
                         <p className="text-sm font-medium text-primary">{exp.title}</p>
                         {exp.companyName && (
                           <p className="text-sm text-muted-foreground">{exp.companyName}</p>
                         )}
                       </div>
-                      <div className="flex gap-2 ml-2">
+                      <div className={`flex gap-2 ${isRTL ? 'mr-2' : 'ml-2'}`}>
                         <button 
                           onClick={() => handleEditWorkExp(exp, index)}
                           className="text-primary hover:text-primary/80"
@@ -344,12 +345,12 @@ const Profile = () => {
                 {skills.map((skill, index) => (
                   <div key={index} className="bg-card p-4 rounded-lg border border-secondary/20">
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                      <div className={`flex-1 ${isRTL ? 'text-right' : ''}`}>
                         <p className="text-sm font-medium text-secondary mb-1">{skill.name}</p>
                         <p className="text-sm text-primary">{skill.level}</p>
                         <p className="text-sm text-muted-foreground">{skill.category}</p>
                       </div>
-                      <div className="flex gap-2 ml-2">
+                      <div className={`flex gap-2 ${isRTL ? 'mr-2' : 'ml-2'}`}>
                         <button 
                           onClick={() => handleEditSkill(skill)}
                           className="text-secondary hover:text-secondary/80"
@@ -373,11 +374,11 @@ const Profile = () => {
           <TabsContent value="work-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Private Contact */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.privateContact')}</h3>
+              <h3 className={`text-base font-semibold text-primary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.privateContact')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.workAddress')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.address_id && Array.isArray(employeeData.address_id)
@@ -386,9 +387,9 @@ const Profile = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.workLocation')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.work_location_id && Array.isArray(employeeData.work_location_id)
@@ -402,11 +403,11 @@ const Profile = () => {
 
             {/* Approvers */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.approvers')}</h3>
+              <h3 className={`text-base font-semibold text-secondary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.approvers')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.expenses')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.expense_manager_id && Array.isArray(employeeData.expense_manager_id)
@@ -415,16 +416,16 @@ const Profile = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.timeOff')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.timeSheet')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.timesheet_manager_id && Array.isArray(employeeData.timesheet_manager_id)
@@ -433,9 +434,9 @@ const Profile = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.attendance')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.attendance_manager_id && Array.isArray(employeeData.attendance_manager_id)
@@ -449,11 +450,11 @@ const Profile = () => {
 
             {/* Schedule Section */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.schedule')}</h3>
+              <h3 className={`text-base font-semibold text-primary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.schedule')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.workingHours')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.resource_calendar_id && Array.isArray(employeeData.resource_calendar_id)
@@ -462,9 +463,9 @@ const Profile = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.workLocationPlan')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.work_location_plan_id && Array.isArray(employeeData.work_location_plan_id)
@@ -473,9 +474,9 @@ const Profile = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.timeZone')}</p>
                     <p className="text-sm text-muted-foreground">{employeeData?.tz || "---"}</p>
                   </div>
@@ -485,11 +486,11 @@ const Profile = () => {
 
             {/* Planning Section */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.planning')}</h3>
+              <h3 className={`text-base font-semibold text-secondary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.planning')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20">
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.roles')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.planning_role_ids && employeeData.planning_role_ids.length > 0
@@ -504,7 +505,7 @@ const Profile = () => {
             {/* Organization Chart Section */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-primary">{t('profile.organizationChart')}</h3>
+                <h3 className={`text-base font-semibold text-primary ${isRTL ? 'text-right' : ''}`}>{t('profile.organizationChart')}</h3>
                 <Button 
                   variant="link" 
                   className="h-auto p-0 text-secondary hover:text-secondary/80"
@@ -514,34 +515,34 @@ const Profile = () => {
                 </Button>
               </div>
               <div className="bg-card p-4 rounded-lg border border-primary/20">
-                <div className="flex items-center gap-3 mb-3">
+                <div className={`flex items-center gap-3 mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
-                  <p className="text-sm font-semibold text-primary">{t('profile.reportingStructure')}</p>
+                  <p className={`text-sm font-semibold text-primary ${isRTL ? 'text-right' : ''}`}>{t('profile.reportingStructure')}</p>
                 </div>
-                <div className="space-y-3 ml-5">
+                <div className={`space-y-3 ${isRTL ? 'mr-5' : 'ml-5'}`}>
                   {/* Show managers if available */}
                   {employeeData?.attendance_manager_id && Array.isArray(employeeData.attendance_manager_id) && (
-                    <div className="flex items-center gap-3">
+                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <Avatar className="h-10 w-10">
                         <AvatarImage src="" alt={employeeData.attendance_manager_id[1]} />
                         <AvatarFallback className="bg-muted text-sm">
                           {employeeData.attendance_manager_id[1].split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
+                      <div className={isRTL ? 'text-right' : ''}>
                         <p className="text-sm font-medium text-foreground">{employeeData.attendance_manager_id[1]}</p>
                         <p className="text-sm text-muted-foreground">{t('profile.manager')}</p>
                       </div>
                     </div>
                   )}
-                  <div className="flex items-center gap-3">
+                  <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={userImageUrl} alt={user.name} />
                       <AvatarFallback className="bg-muted text-sm">
                         {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
+                    <div className={isRTL ? 'text-right' : ''}>
                       <p className="text-sm font-medium text-foreground">{user.name}</p>
                       <p className="text-sm text-muted-foreground">{user.position}</p>
                     </div>
@@ -552,11 +553,11 @@ const Profile = () => {
 
             {/* Job Description Section */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.jobDescription')}</h3>
+              <h3 className={`text-base font-semibold text-secondary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.jobDescription')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20">
                 {employeeData?.job_description ? (
                   <div 
-                    className="text-sm text-foreground leading-relaxed prose prose-sm max-w-none"
+                    className={`text-sm text-foreground leading-relaxed prose prose-sm max-w-none ${isRTL ? 'text-right' : ''}`}
                     dangerouslySetInnerHTML={{ 
                       __html: DOMPurify.sanitize(employeeData.job_description, {
                         ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'span', 'div'],
@@ -565,7 +566,7 @@ const Profile = () => {
                     }}
                   />
                 ) : (
-                  <p className="text-sm text-muted-foreground">{t('profile.noJobDescription')}</p>
+                  <p className={`text-sm text-muted-foreground ${isRTL ? 'text-right' : ''}`}>{t('profile.noJobDescription')}</p>
                 )}
               </div>
             </div>
@@ -574,12 +575,12 @@ const Profile = () => {
           <TabsContent value="private-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Private Contact */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.privateContact')}</h3>
+              <h3 className={`text-base font-semibold text-primary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.privateContact')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3 flex-1">
+                  <div className={`flex items-center gap-3 flex-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
-                    <div>
+                    <div className={isRTL ? 'text-right' : ''}>
                       <p className="text-sm font-semibold text-primary">{t('profile.privateAddress')}</p>
                       <p className="text-sm text-muted-foreground">
                         {employeeData?.private_street || "---"}
@@ -588,32 +589,32 @@ const Profile = () => {
                   </div>
                   <button 
                     onClick={() => setIsEditPrivateContactOpen(true)}
-                    className="text-primary hover:text-primary/80 ml-2"
+                    className={`text-primary hover:text-primary/80 ${isRTL ? 'mr-2' : 'ml-2'}`}
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.email')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.private_email || "---"}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.phone')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.private_phone || "---"}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.bankAccountNumber')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.bank_account_id && Array.isArray(employeeData.bank_account_id)
@@ -622,25 +623,25 @@ const Profile = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.language')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.lang || "---"}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.homeWorkDistance')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.privateCarPlate')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
@@ -650,12 +651,12 @@ const Profile = () => {
 
             {/* Family Status */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.familyStatus')}</h3>
+              <h3 className={`text-base font-semibold text-secondary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.familyStatus')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3 flex-1">
+                  <div className={`flex items-center gap-3 flex-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
-                    <div>
+                    <div className={isRTL ? 'text-right' : ''}>
                       <p className="text-sm font-semibold text-primary">{t('profile.maritalStatus')}</p>
                       <p className="text-sm text-muted-foreground">
                         {employeeData?.marital 
@@ -666,14 +667,14 @@ const Profile = () => {
                   </div>
                   <button 
                     onClick={() => setIsEditFamilyStatusOpen(true)}
-                    className="text-secondary hover:text-secondary/80 ml-2"
+                    className={`text-secondary hover:text-secondary/80 ${isRTL ? 'mr-2' : 'ml-2'}`}
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.numberOfChildren')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.children ?? "---"}
@@ -685,26 +686,26 @@ const Profile = () => {
 
             {/* Emergency */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.emergency')}</h3>
+              <h3 className={`text-base font-semibold text-primary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.emergency')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3 flex-1">
+                  <div className={`flex items-center gap-3 flex-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
-                    <div>
+                    <div className={isRTL ? 'text-right' : ''}>
                       <p className="text-sm font-semibold text-primary">{t('profile.contactName')}</p>
                       <p className="text-sm text-muted-foreground">---</p>
                     </div>
                   </div>
                   <button 
                     onClick={() => setIsEditEmergencyOpen(true)}
-                    className="text-primary hover:text-primary/80 ml-2"
+                    className={`text-primary hover:text-primary/80 ${isRTL ? 'mr-2' : 'ml-2'}`}
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.contactPhone')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
@@ -714,33 +715,33 @@ const Profile = () => {
 
             {/* Education */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.education')}</h3>
+              <h3 className={`text-base font-semibold text-secondary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.education')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3 flex-1">
+                  <div className={`flex items-center gap-3 flex-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
-                    <div>
+                    <div className={isRTL ? 'text-right' : ''}>
                       <p className="text-sm font-semibold text-primary">{t('profile.certificateLevel')}</p>
                       <p className="text-sm text-muted-foreground">Bachelor</p>
                     </div>
                   </div>
                   <button 
                     onClick={() => setIsEditEducationOpen(true)}
-                    className="text-secondary hover:text-secondary/80 ml-2"
+                    className={`text-secondary hover:text-secondary/80 ${isRTL ? 'mr-2' : 'ml-2'}`}
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.fieldOfStudy')}</p>
                     <p className="text-sm text-muted-foreground">محاسبة</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div>
+                  <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.school')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
@@ -763,30 +764,30 @@ const Profile = () => {
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <p className="text-base font-semibold text-foreground">
+              <p className={`text-base font-semibold text-foreground ${isRTL ? 'text-right' : ''}`}>
                 {t('profile.getLevelUp')} <span className="text-primary">{karmaValue}</span> {t('profile.xpToLevelUp')}
               </p>
             </div>
 
             {/* Badges Section */}
             <div>
-              <h3 className="text-lg font-semibold text-foreground mb-4">{t('profile.badges')}</h3>
+              <h3 className={`text-lg font-semibold text-foreground mb-4 ${isRTL ? 'text-right' : ''}`}>{t('profile.badges')}</h3>
               <div className="space-y-3">
                 {badges.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">{t('profile.noBadges')}</p>
+                  <p className={`text-center text-muted-foreground py-8 ${isRTL ? 'text-right' : ''}`}>{t('profile.noBadges')}</p>
                 ) : (
                   badges.map((badge) => (
                     <div 
                       key={badge.id}
                       className="bg-card p-4 rounded-lg border border-border flex items-center justify-between"
                     >
-                      <div className="flex items-center gap-4">
+                      <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                         <BadgeImage
                           imageUrl={getSecureImageUrl(badge.image_url) || ""}
                           alt={badge.name}
                           className="w-12 h-12"
                         />
-                        <div>
+                        <div className={isRTL ? 'text-right' : ''}>
                           <p className="text-base font-semibold text-foreground">{badge.name}</p>
                           {badge.description && (
                             <p className="text-sm text-muted-foreground">{badge.description}</p>
