@@ -18,28 +18,28 @@ const competencies: Competency[] = [
     name: "Psychological Resilience",
     jobLevel: "Competent",
     progress: 0,
-    position: { top: "4%", left: "36%", width: "28%", height: "20%" },
+    position: { top: "25%", right: "0", width: "25%", height: "25%" },
   },
   {
     id: "critical-thinking",
     name: "Critical Thinking",
     jobLevel: "Developing",
     progress: 35,
-    position: { top: "4%", left: "67%", width: "29%", height: "20%" },
+    position: { top: "0", right: "0", width: "25%", height: "25%" },
   },
   {
     id: "communication",
     name: "Communication",
     jobLevel: "Advanced",
     progress: 60,
-    position: { top: "27%", left: "36%", width: "28%", height: "20%" },
+    position: { top: "25%", right: "25%", width: "25%", height: "25%" },
   },
   {
     id: "accountability",
     name: "Accountability",
     jobLevel: "Competent",
     progress: 45,
-    position: { top: "27%", left: "67%", width: "29%", height: "20%" },
+    position: { top: "25%", right: "0", width: "25%", height: "25%" },
   },
 ];
 
@@ -58,11 +58,7 @@ export const CompetencyPuzzle = () => {
   return (
     <>
       <div className="relative w-full max-w-sm mx-auto rounded-lg overflow-hidden">
-        <img 
-          src={puzzleImage} 
-          alt="Competency Puzzle" 
-          className="w-full h-auto block"
-        />
+        <img src={puzzleImage} alt="Competency Puzzle" className="w-full h-auto block" />
         {competencies.map((comp) => (
           <button
             key={comp.id}
@@ -82,9 +78,7 @@ export const CompetencyPuzzle = () => {
       <Dialog open={!!selectedCompetency} onOpenChange={() => setSelectedCompetency(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-base">
-              Competency - {selectedCompetency?.name}
-            </DialogTitle>
+            <DialogTitle className="text-base">Competency - {selectedCompetency?.name}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
@@ -96,10 +90,7 @@ export const CompetencyPuzzle = () => {
                 <p className="text-sm font-semibold text-foreground">{selectedCompetency?.progress}%</p>
               </div>
             </div>
-            <Button 
-              onClick={handleUpscalingRoute}
-              className="w-full bg-primary hover:bg-primary/90"
-            >
+            <Button onClick={handleUpscalingRoute} className="w-full bg-primary hover:bg-primary/90">
               Upscaling Route
             </Button>
           </div>
