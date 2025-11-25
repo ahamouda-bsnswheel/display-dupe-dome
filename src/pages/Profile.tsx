@@ -47,7 +47,7 @@ const Profile = () => {
   
   const user = {
     name: employeeData?.name || "User",
-    employeeId: "G-62519723",
+    employeeId: employeeData?.work_phone || "N/A",
     email: employeeData?.work_email || "user@example.com",
     position: employeeData?.job_title || "Employee",
     department: employeeData?.department_id ? employeeData.department_id[1] : "Human Resource",
