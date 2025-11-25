@@ -277,18 +277,24 @@ const Profile = () => {
           <TabsContent value="resume" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Competencies */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Competencies</h3>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-1 rounded-full bg-primary animate-pulse"></div>
+                <h3 className="text-base font-bold bg-gradient-primary bg-clip-text text-transparent">Competencies</h3>
+              </div>
               <CompetencyPuzzle competencies={competencies} />
             </div>
 
             {/* Work Experience */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-foreground">Work Experience</h3>
+                <div className="flex items-center gap-2">
+                  <div className="h-1 w-1 rounded-full bg-secondary animate-pulse"></div>
+                  <h3 className="text-base font-bold bg-gradient-secondary bg-clip-text text-transparent">Work Experience</h3>
+                </div>
                 <Button 
                   size="icon" 
                   variant="ghost" 
-                  className="h-6 w-6"
+                  className="h-8 w-8 hover:bg-secondary/10 hover:text-secondary transition-colors"
                   onClick={() => setIsAddWorkExpOpen(true)}
                 >
                   <Plus className="h-4 w-4" />
@@ -296,11 +302,11 @@ const Profile = () => {
               </div>
               <div className="space-y-3">
                 {workExperience.map((exp, index) => (
-                  <div key={index} className="bg-card p-4 rounded-lg border border-border">
+                  <div key={index} className="glass hover-lift bg-card/50 backdrop-blur p-4 rounded-xl border border-secondary/20 shadow-lg shadow-secondary/5 transition-all">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <p className="text-sm text-muted-foreground mb-1">{exp.dates}</p>
-                        <p className="text-sm font-medium text-foreground">{exp.title}</p>
+                        <p className="text-xs font-medium text-secondary mb-1.5">{exp.dates}</p>
+                        <p className="text-sm font-semibold text-foreground mb-1">{exp.title}</p>
                         {exp.companyName && (
                           <p className="text-sm text-muted-foreground">{exp.companyName}</p>
                         )}
@@ -308,13 +314,13 @@ const Profile = () => {
                       <div className="flex gap-2 ml-2">
                         <button 
                           onClick={() => handleEditWorkExp(exp, index)}
-                          className="text-muted-foreground hover:text-foreground"
+                          className="text-muted-foreground hover:text-secondary transition-colors"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button 
                           onClick={() => handleDeleteWorkExp(index)}
-                          className="text-muted-foreground hover:text-destructive"
+                          className="text-muted-foreground hover:text-destructive transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -328,11 +334,14 @@ const Profile = () => {
             {/* Skills */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-foreground">Skills</h3>
+                <div className="flex items-center gap-2">
+                  <div className="h-1 w-1 rounded-full bg-accent animate-pulse"></div>
+                  <h3 className="text-base font-bold bg-gradient-accent bg-clip-text text-transparent">Skills</h3>
+                </div>
                 <Button 
                   size="icon" 
                   variant="ghost" 
-                  className="h-6 w-6"
+                  className="h-8 w-8 hover:bg-accent/10 hover:text-accent transition-colors"
                   onClick={() => setIsAddSkillOpen(true)}
                 >
                   <Plus className="h-4 w-4" />
@@ -340,23 +349,23 @@ const Profile = () => {
               </div>
               <div className="space-y-3">
                 {skills.map((skill, index) => (
-                  <div key={index} className="bg-card p-4 rounded-lg border border-border">
+                  <div key={index} className="glass hover-lift bg-card/50 backdrop-blur p-4 rounded-xl border border-accent/20 shadow-lg shadow-accent/5 transition-all">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-foreground mb-1">{skill.name}</p>
-                        <p className="text-sm text-muted-foreground">{skill.level}</p>
-                        <p className="text-sm text-muted-foreground">{skill.category}</p>
+                        <p className="text-sm font-semibold text-foreground mb-1">{skill.name}</p>
+                        <p className="text-xs font-medium text-accent">{skill.level}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{skill.category}</p>
                       </div>
                       <div className="flex gap-2 ml-2">
                         <button 
                           onClick={() => handleEditSkill(skill)}
-                          className="text-muted-foreground hover:text-foreground"
+                          className="text-muted-foreground hover:text-accent transition-colors"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button 
                           onClick={() => handleDeleteSkill(index)}
-                          className="text-muted-foreground hover:text-destructive"
+                          className="text-muted-foreground hover:text-destructive transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
