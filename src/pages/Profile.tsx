@@ -8,10 +8,21 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { authStorage } from "@/lib/auth";
 import { CompetencyPuzzle } from "@/components/CompetencyPuzzle";
 import { AddWorkExperienceModal } from "@/components/AddWorkExperienceModal";
+import { DeleteWorkExperienceDialog } from "@/components/DeleteWorkExperienceDialog";
+
+interface WorkExperience {
+  dates: string;
+  title: string;
+  companyName?: string;
+}
 
 const Profile = () => {
   const navigate = useNavigate();
   const [isAddWorkExpOpen, setIsAddWorkExpOpen] = useState(false);
+  const [isEditWorkExpOpen, setIsEditWorkExpOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedWorkExp, setSelectedWorkExp] = useState<WorkExperience | null>(null);
+  const [selectedWorkExpIndex, setSelectedWorkExpIndex] = useState<number | null>(null);
   const employeeData = authStorage.getEmployeeData();
   
   const user = {
@@ -28,16 +39,36 @@ const Profile = () => {
     navigate("/");
   };
 
-  const workExperience = [
+  const [workExperience, setWorkExperience] = useState<WorkExperience[]>([
     {
       dates: "01/06/2023 - 01/03/2025",
       title: "Quality control Coordinator",
+      companyName: "Quality control Coordinator",
     },
     {
       dates: "01/01/2023 - 01/06/2023",
       title: "Manager Assistant",
+      companyName: "---",
     },
-  ];
+  ]);
+
+  const handleEditWorkExp = (exp: WorkExperience, index: number) => {
+    setSelectedWorkExp(exp);
+    setSelectedWorkExpIndex(index);
+    setIsEditWorkExpOpen(true);
+  };
+
+  const handleDeleteWorkExp = (index: number) => {
+    setSelectedWorkExpIndex(index);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteWorkExp = () => {
+    if (selectedWorkExpIndex !== null) {
+      setWorkExperience(workExperience.filter((_, i) => i !== selectedWorkExpIndex));
+      setSelectedWorkExpIndex(null);
+    }
+  };
 
   const skills = [
     {
@@ -158,12 +189,21 @@ const Profile = () => {
                       <div className="flex-1">
                         <p className="text-sm text-muted-foreground mb-1">{exp.dates}</p>
                         <p className="text-sm font-medium text-foreground">{exp.title}</p>
+                        {exp.companyName && (
+                          <p className="text-sm text-muted-foreground">{exp.companyName}</p>
+                        )}
                       </div>
                       <div className="flex gap-2 ml-2">
-                        <button className="text-muted-foreground hover:text-foreground">
+                        <button 
+                          onClick={() => handleEditWorkExp(exp, index)}
+                          className="text-muted-foreground hover:text-foreground"
+                        >
                           <Edit className="h-4 w-4" />
                         </button>
-                        <button className="text-muted-foreground hover:text-destructive">
+                        <button 
+                          onClick={() => handleDeleteWorkExp(index)}
+                          className="text-muted-foreground hover:text-destructive"
+                        >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
@@ -223,6 +263,21 @@ const Profile = () => {
       <AddWorkExperienceModal 
         open={isAddWorkExpOpen}
         onOpenChange={setIsAddWorkExpOpen}
+      />
+
+      {/* Edit Work Experience Modal */}
+      <AddWorkExperienceModal 
+        open={isEditWorkExpOpen}
+        onOpenChange={setIsEditWorkExpOpen}
+        editData={selectedWorkExp || undefined}
+        isEditMode={true}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteWorkExperienceDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={confirmDeleteWorkExp}
       />
     </div>
   );
