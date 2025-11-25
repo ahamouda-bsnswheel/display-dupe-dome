@@ -458,30 +458,26 @@ const Profile = () => {
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Basic Info */}
-            <div className="bg-card p-4 rounded-lg border border-border space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Language</p>
-                  <p className="text-sm text-muted-foreground">english</p>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Language</p>
+                    <p className="text-sm text-muted-foreground">english</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Home Work Distance</p>
-                  <p className="text-sm text-muted-foreground">---</p>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Home Work Distance</p>
+                    <p className="text-sm text-muted-foreground">---</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Private Car Plate</p>
-                  <p className="text-sm text-muted-foreground">---</p>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Private Car Plate</p>
+                    <p className="text-sm text-muted-foreground">---</p>
+                  </div>
                 </div>
               </div>
             </div>
