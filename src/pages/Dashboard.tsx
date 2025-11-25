@@ -8,13 +8,11 @@ import {
   Clock, 
   Calendar, 
   BookOpen, 
-  User, 
   Home, 
   Grid3x3, 
   Bell, 
-  Smile,
-  ChevronRight,
-  Briefcase
+  MoreHorizontal,
+  ChevronRight
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -34,7 +32,6 @@ const Dashboard = () => {
     { icon: Clock, title: "Time Tracker", color: "bg-blue-50" },
     { icon: Calendar, title: "Time Off", color: "bg-yellow-50" },
     { icon: BookOpen, title: "Courses", color: "bg-green-50" },
-    { icon: User, title: "Profile", color: "bg-purple-50" },
   ];
 
   const recentProjects = [
@@ -138,7 +135,7 @@ const Dashboard = () => {
                 See All
               </Button>
             </div>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               {modules.map((module, index) => (
                 <button
                   key={index}
@@ -227,7 +224,7 @@ const Dashboard = () => {
             <Bell className="h-6 w-6" />
           </Button>
           <Button variant="ghost" size="icon">
-            <Smile className="h-6 w-6" />
+            <MoreHorizontal className="h-6 w-6" />
           </Button>
         </div>
       </nav>
