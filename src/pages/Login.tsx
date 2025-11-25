@@ -95,7 +95,7 @@ const Login = () => {
         {/* Language Selector */}
         <div className="flex justify-end mb-12">
           <button className="flex items-center gap-2 text-white text-sm font-medium hover:text-white/80 transition-colors">
-            English
+            عربي
             <Globe className="w-4 h-4" />
           </button>
         </div>
