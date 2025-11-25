@@ -9,6 +9,7 @@ import { authStorage } from "@/lib/auth";
 import { CompetencyPuzzle } from "@/components/CompetencyPuzzle";
 import { AddWorkExperienceModal } from "@/components/AddWorkExperienceModal";
 import { DeleteWorkExperienceDialog } from "@/components/DeleteWorkExperienceDialog";
+import { AddSkillModal } from "@/components/AddSkillModal";
 
 interface WorkExperience {
   dates: string;
@@ -23,6 +24,7 @@ const Profile = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedWorkExp, setSelectedWorkExp] = useState<WorkExperience | null>(null);
   const [selectedWorkExpIndex, setSelectedWorkExpIndex] = useState<number | null>(null);
+  const [isAddSkillOpen, setIsAddSkillOpen] = useState(false);
   const employeeData = authStorage.getEmployeeData();
   
   const user = {
@@ -217,7 +219,12 @@ const Profile = () => {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-base font-semibold text-foreground">Skills</h3>
-                <Button size="icon" variant="ghost" className="h-6 w-6">
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className="h-6 w-6"
+                  onClick={() => setIsAddSkillOpen(true)}
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -278,6 +285,12 @@ const Profile = () => {
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         onConfirm={confirmDeleteWorkExp}
+      />
+
+      {/* Add Skill Modal */}
+      <AddSkillModal 
+        open={isAddSkillOpen}
+        onOpenChange={setIsAddSkillOpen}
       />
     </div>
   );
