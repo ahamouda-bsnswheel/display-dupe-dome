@@ -145,7 +145,7 @@ const Profile = () => {
         <div className="bg-card px-6 py-6">
           <div className="flex flex-col items-center mb-4">
             <Avatar className="h-24 w-24 mb-3">
-              <AvatarImage src={user.image} alt={user.name} />
+              <AvatarImage src={user.image} alt={user.name} crossOrigin="anonymous" />
               <AvatarFallback className="bg-muted text-xl">
                 {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
               </AvatarFallback>
@@ -447,7 +447,7 @@ const Profile = () => {
                 <div className="space-y-3 ml-5">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src="" alt="Abdulkareem Essaied Shuia" />
+                      <AvatarImage src="" alt="Abdulkareem Essaied Shuia" crossOrigin="anonymous" />
                       <AvatarFallback className="bg-muted text-sm">AE</AvatarFallback>
                     </Avatar>
                     <div>
@@ -457,7 +457,7 @@ const Profile = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={user.image} alt={user.name} />
+                      <AvatarImage src={user.image} alt={user.name} crossOrigin="anonymous" />
                       <AvatarFallback className="bg-muted text-sm">
                         {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                       </AvatarFallback>

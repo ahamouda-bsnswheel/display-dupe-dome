@@ -72,7 +72,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={user.image} alt={user.name} />
+              <AvatarImage src={user.image} alt={user.name} crossOrigin="anonymous" />
               <AvatarFallback className="bg-muted">
                 {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
               </AvatarFallback>

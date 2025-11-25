@@ -46,7 +46,7 @@ const More = () => {
       {/* Profile Section */}
       <div className="bg-card px-6 py-8 flex flex-col items-center">
         <Avatar className="h-32 w-32 mb-4">
-          <AvatarImage src={user.image} alt={user.name} />
+          <AvatarImage src={user.image} alt={user.name} crossOrigin="anonymous" />
           <AvatarFallback className="bg-muted text-2xl">
             {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
           </AvatarFallback>
