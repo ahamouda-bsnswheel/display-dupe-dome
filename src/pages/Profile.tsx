@@ -15,6 +15,7 @@ import { EditPrivateContactModal } from "@/components/EditPrivateContactModal";
 import { EditFamilyStatusModal } from "@/components/EditFamilyStatusModal";
 import { EditEmergencyModal } from "@/components/EditEmergencyModal";
 import { EditEducationModal } from "@/components/EditEducationModal";
+import DOMPurify from "dompurify";
 
 interface WorkExperience {
   id?: number;
@@ -533,9 +534,15 @@ const Profile = () => {
               <h3 className="text-base font-semibold text-foreground mb-3">Job Description</h3>
               <div className="bg-card p-4 rounded-lg border border-border">
                 {employeeData?.job_description ? (
-                  <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-                    {employeeData.job_description}
-                  </p>
+                  <div 
+                    className="text-sm text-foreground leading-relaxed prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ 
+                      __html: DOMPurify.sanitize(employeeData.job_description, {
+                        ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'span', 'div'],
+                        ALLOWED_ATTR: ['class']
+                      })
+                    }}
+                  />
                 ) : (
                   <p className="text-sm text-muted-foreground">No job description available</p>
                 )}
