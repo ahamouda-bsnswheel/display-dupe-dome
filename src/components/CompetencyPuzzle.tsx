@@ -18,28 +18,28 @@ const competencies: Competency[] = [
     name: "Psychological Resilience",
     jobLevel: "Competent",
     progress: 0,
-    position: { top: "5%", left: "28%", width: "22%", height: "42%" },
+    position: { top: "2%", left: "34%", width: "30%", height: "23%" },
   },
   {
     id: "critical-thinking",
     name: "Critical Thinking",
     jobLevel: "Developing",
     progress: 35,
-    position: { top: "5%", left: "52%", width: "23%", height: "42%" },
+    position: { top: "2%", left: "66%", width: "33%", height: "23%" },
   },
   {
     id: "communication",
     name: "Communication",
     jobLevel: "Advanced",
     progress: 60,
-    position: { top: "28%", left: "28%", width: "47%", height: "22%" },
+    position: { top: "26%", left: "34%", width: "32%", height: "22%" },
   },
   {
     id: "accountability",
     name: "Accountability",
     jobLevel: "Competent",
     progress: 45,
-    position: { top: "5%", left: "77%", width: "20%", height: "42%" },
+    position: { top: "26%", left: "67%", width: "32%", height: "22%" },
   },
 ];
 
@@ -57,7 +57,7 @@ export const CompetencyPuzzle = () => {
 
   return (
     <>
-      <div className="relative w-full rounded-lg overflow-hidden">
+      <div className="relative w-full max-w-sm mx-auto rounded-lg overflow-hidden">
         <img 
           src={puzzleImage} 
           alt="Competency Puzzle" 
