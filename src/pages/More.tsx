@@ -33,7 +33,7 @@ const More = () => {
   };
 
   const menuItems = [
-    { icon: User, label: "My Profile", onClick: () => {} },
+    { icon: User, label: "My Profile", onClick: () => navigate("/profile") },
     { icon: LayoutGrid, label: "My Dashboard", onClick: () => navigate("/dashboard") },
     { icon: Globe, label: "Language", onClick: () => {} },
     { icon: BookOpen, label: "My Courses", onClick: () => {} },
