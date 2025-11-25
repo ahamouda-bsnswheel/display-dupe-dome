@@ -66,7 +66,7 @@ export const CompetencyPuzzle = () => {
             className="absolute cursor-pointer hover:bg-white/10 transition-colors"
             style={{
               top: comp.position.top,
-              left: comp.position.left,
+              right: comp.position.right,
               width: comp.position.width,
               height: comp.position.height,
             }}
