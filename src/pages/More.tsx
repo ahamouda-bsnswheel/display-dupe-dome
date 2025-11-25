@@ -23,8 +23,8 @@ const More = () => {
   
   const user = {
     name: employeeData?.name || "User",
-    role: (employeeData as any)?.position || "Employee",
-    image: employeeData?.image,
+    role: employeeData?.job_title || "Employee",
+    image: employeeData?.image_url,
   };
 
   const handleLogout = () => {

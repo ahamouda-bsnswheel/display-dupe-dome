@@ -1,16 +1,11 @@
+import { EmployeeData } from "@/types/employee";
+
 interface AuthData {
   "x-api-key": string;
   employee_id: number;
   user_id: number;
   is_internal: boolean;
   is_manager: boolean;
-}
-
-interface EmployeeData {
-  name: string;
-  email: string;
-  image?: string;
-  [key: string]: any; // For other fields from API
 }
 
 const AUTH_STORAGE_KEY = "noc_auth_data";

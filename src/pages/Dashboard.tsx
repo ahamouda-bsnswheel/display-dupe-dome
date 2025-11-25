@@ -23,11 +23,13 @@ const Dashboard = () => {
   
   const user = {
     name: employeeData?.name || "User",
-    email: employeeData?.email || "",
-    image: employeeData?.image,
+    email: employeeData?.work_email || "",
+    image: employeeData?.image_url,
+    jobTitle: employeeData?.job_title || "",
+    department: employeeData?.department_id ? employeeData.department_id[1] : "",
     employeeId: authData?.employee_id,
     userId: authData?.user_id,
-    isManager: authData?.is_manager || false, // Default to employee view
+    isManager: authData?.is_manager || false,
   };
 
   const modules = [
