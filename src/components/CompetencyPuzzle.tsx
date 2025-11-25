@@ -13,60 +13,32 @@ interface Competency {
 
 const competencies: Competency[] = [
   {
-    id: "leading",
-    name: "Leading in a changing world",
-    color: "bg-[#6B9F4A]",
-    jobLevel: "Developing",
-    progress: 30,
-  },
-  {
-    id: "customer",
-    name: "Customer Centric",
-    color: "bg-[#D4A929]",
-    jobLevel: "Competent",
-    progress: 45,
-  },
-  {
-    id: "belonging",
-    name: "Belonging to a value oriented culture",
-    color: "bg-[#B8932E]",
-    jobLevel: "Beginner",
-    progress: 15,
-  },
-  {
     id: "resilience",
-    name: "Resilience",
-    color: "bg-[#1565A6]",
+    name: "Psychological Resilience",
+    color: "bg-[#6B9F4A]",
     jobLevel: "Competent",
     progress: 0,
   },
   {
-    id: "business",
-    name: "Working with a business mindset",
-    color: "bg-[#1565A6]",
+    id: "critical-thinking",
+    name: "Critical Thinking",
+    color: "bg-[#D4A929]",
     jobLevel: "Developing",
-    progress: 25,
+    progress: 35,
   },
   {
-    id: "innovate",
-    name: "Innovate and pioneer",
-    color: "bg-[#3BA19A]",
-    jobLevel: "Beginner",
-    progress: 10,
-  },
-  {
-    id: "empowering",
-    name: "Empowering a better performance",
-    color: "bg-[#4BA8A3]",
-    jobLevel: "Competent",
-    progress: 55,
+    id: "communication",
+    name: "Communication",
+    color: "bg-[#1565A6]",
+    jobLevel: "Advanced",
+    progress: 60,
   },
   {
     id: "accountability",
     name: "Accountability",
     color: "bg-[#3BA19A]",
-    jobLevel: "Advanced",
-    progress: 70,
+    jobLevel: "Competent",
+    progress: 45,
   },
 ];
 
@@ -136,10 +108,6 @@ function getPuzzleClipPath(index: number): string {
     "polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 15%)",
     "polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%)",
     "polygon(0 0, 100% 0, 100% 100%, 15% 100%, 0 85%)",
-    "polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%)",
-    "polygon(0 0, 100% 0, 100% 100%, 15% 100%, 0 85%)",
-    "polygon(0 0, 85% 0, 100% 15%, 100% 100%, 0 100%)",
-    "polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 15%)",
   ];
   return puzzleShapes[index] || "none";
 }
