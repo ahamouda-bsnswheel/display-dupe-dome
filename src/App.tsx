@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import More from "./pages/More";
 import Profile from "./pages/Profile";
+import UpscalingRoute from "./pages/UpscalingRoute";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/more" element={<More />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/upscaling-route/:competencyId" element={<UpscalingRoute />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
