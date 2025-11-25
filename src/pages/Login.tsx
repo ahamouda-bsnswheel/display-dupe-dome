@@ -37,17 +37,14 @@ const Login = () => {
 
       if (response.ok) {
         authStorage.setAuthData(data);
-        
+
         try {
-          const employeeResponse = await fetch(
-            `https://bsnswheel.org/api/v1/employees/${data.employee_id}?context={"lang": "ar_001"}`,
-            {
-              headers: {
-                "Authorization": data["x-api-key"],
-              },
-            }
-          );
-          
+          const employeeResponse = await fetch(`https://bsnswheel.org/api/v1/employees/${data.employee_id}`, {
+            headers: {
+              Authorization: data["x-api-key"],
+            },
+          });
+
           if (employeeResponse.ok) {
             const employeeData = await employeeResponse.json();
             authStorage.setEmployeeData(employeeData);
@@ -55,12 +52,12 @@ const Login = () => {
         } catch (error) {
           console.error("Failed to fetch employee data:", error);
         }
-        
+
         toast({
           title: "Success",
           description: "Login successful!",
         });
-        
+
         navigate("/dashboard");
       } else {
         toast({
@@ -94,12 +91,8 @@ const Login = () => {
 
         {/* Welcome Section */}
         <div className="mb-10">
-          <h1 className="text-3xl font-semibold text-foreground mb-2">
-            Welcome to NOC
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            Empowering Efficiency, Ensuring Reliability
-          </p>
+          <h1 className="text-3xl font-semibold text-foreground mb-2">Welcome to NOC</h1>
+          <p className="text-muted-foreground text-sm">Empowering Efficiency, Ensuring Reliability</p>
         </div>
 
         {/* Login Form */}
@@ -138,11 +131,7 @@ const Login = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
-                )}
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
           </div>
@@ -153,11 +142,7 @@ const Login = () => {
             </a>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full h-14 text-base font-semibold rounded-xl"
-            disabled={isLoading}
-          >
+          <Button type="submit" className="w-full h-14 text-base font-semibold rounded-xl" disabled={isLoading}>
             {isLoading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
