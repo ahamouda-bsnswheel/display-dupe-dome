@@ -2,43 +2,44 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import puzzleImage from "@/assets/competency-puzzle.png";
 
 interface Competency {
   id: string;
   name: string;
-  color: string;
   jobLevel: string;
   progress: number;
+  position: { top: string; left: string; width: string; height: string };
 }
 
 const competencies: Competency[] = [
   {
     id: "resilience",
     name: "Psychological Resilience",
-    color: "bg-[#6B9F4A]",
     jobLevel: "Competent",
     progress: 0,
+    position: { top: "5%", left: "28%", width: "22%", height: "42%" },
   },
   {
     id: "critical-thinking",
     name: "Critical Thinking",
-    color: "bg-[#D4A929]",
     jobLevel: "Developing",
     progress: 35,
+    position: { top: "5%", left: "52%", width: "23%", height: "42%" },
   },
   {
     id: "communication",
     name: "Communication",
-    color: "bg-[#1565A6]",
     jobLevel: "Advanced",
     progress: 60,
+    position: { top: "28%", left: "28%", width: "47%", height: "22%" },
   },
   {
     id: "accountability",
     name: "Accountability",
-    color: "bg-[#3BA19A]",
     jobLevel: "Competent",
     progress: 45,
+    position: { top: "5%", left: "77%", width: "20%", height: "42%" },
   },
 ];
 
@@ -56,18 +57,25 @@ export const CompetencyPuzzle = () => {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-1 rounded-lg overflow-hidden">
-        {competencies.map((comp, index) => (
+      <div className="relative w-full rounded-lg overflow-hidden">
+        <img 
+          src={puzzleImage} 
+          alt="Competency Puzzle" 
+          className="w-full h-auto block"
+        />
+        {competencies.map((comp) => (
           <button
             key={comp.id}
             onClick={() => setSelectedCompetency(comp)}
-            className={`${comp.color} p-4 min-h-[100px] flex items-center justify-center text-white text-sm font-medium text-center relative transition-opacity hover:opacity-90`}
+            className="absolute cursor-pointer hover:bg-white/10 transition-colors"
             style={{
-              clipPath: getPuzzleClipPath(index),
+              top: comp.position.top,
+              left: comp.position.left,
+              width: comp.position.width,
+              height: comp.position.height,
             }}
-          >
-            <span className="relative z-10">{comp.name}</span>
-          </button>
+            aria-label={comp.name}
+          />
         ))}
       </div>
 
@@ -100,14 +108,3 @@ export const CompetencyPuzzle = () => {
     </>
   );
 };
-
-// Helper function to create puzzle piece shapes
-function getPuzzleClipPath(index: number): string {
-  const puzzleShapes = [
-    "polygon(0 0, 85% 0, 100% 15%, 100% 100%, 0 100%)",
-    "polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 15%)",
-    "polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%)",
-    "polygon(0 0, 100% 0, 100% 100%, 15% 100%, 0 85%)",
-  ];
-  return puzzleShapes[index] || "none";
-}
