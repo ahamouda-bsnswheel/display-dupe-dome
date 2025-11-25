@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { authStorage } from "@/lib/auth";
+import { useNavigate } from "react-router-dom";
 import { 
   Search, 
   Clock, 
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const authData = authStorage.getAuthData();
   const employeeData = authStorage.getEmployeeData();
   
@@ -223,7 +225,11 @@ const Dashboard = () => {
           <Button variant="ghost" size="icon">
             <Bell className="h-6 w-6" />
           </Button>
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => navigate("/more")}
+          >
             <MoreHorizontal className="h-6 w-6" />
           </Button>
         </div>
