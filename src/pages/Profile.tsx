@@ -187,9 +187,9 @@ const Profile = () => {
   const [karmaValue, setKarmaValue] = useState(0);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col max-w-screen-xl mx-auto">
       {/* Header */}
-      <div className="bg-card border-b border-border px-4 py-3 flex items-center justify-between">
+      <div className="bg-card border-b border-border px-4 sm:px-6 py-3 flex items-center justify-between">
         <button
           onClick={() => navigate("/more")}
           className="flex items-center gap-2 text-foreground"
@@ -204,39 +204,39 @@ const Profile = () => {
 
       <ScrollArea className="flex-1">
         {/* User Info Section */}
-        <div className="relative bg-gradient-hero px-6 py-8 overflow-hidden">
+        <div className="relative bg-gradient-hero px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10 overflow-hidden">
           {/* Decorative background elements */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
           
           <div className="relative flex flex-col items-center mb-4">
             <div className="relative mb-3">
               <div className="absolute inset-0 bg-gradient-hero rounded-full blur-xl opacity-60 animate-pulse"></div>
-              <Avatar className="relative h-24 w-24 border-4 border-white/30 shadow-2xl">
+              <Avatar className="relative h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 border-4 border-white/30 shadow-2xl">
                 <AvatarImage src={userImageUrl} alt={user.name} />
-                <AvatarFallback className="bg-white/90 text-primary text-xl font-bold">
+                <AvatarFallback className="bg-white/90 text-primary text-lg sm:text-xl md:text-2xl font-bold">
                   {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </div>
-            <h2 className="text-xl font-bold text-white mb-1 drop-shadow-lg">{user.name}</h2>
-            <p className="text-sm text-white/90 mb-1 flex items-center gap-1.5 drop-shadow">
-              <Phone className="h-4 w-4" />
-              {user.employeeId}
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 drop-shadow-lg text-center px-4">{user.name}</h2>
+            <p className="text-xs sm:text-sm text-white/90 mb-1 flex items-center gap-1.5 drop-shadow">
+              <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="truncate max-w-[200px] sm:max-w-none">{user.employeeId}</span>
             </p>
-            <p className="text-sm text-white/90 flex items-center gap-1.5 drop-shadow">
-              <Mail className="h-4 w-4" />
-              {user.email}
+            <p className="text-xs sm:text-sm text-white/90 flex items-center gap-1.5 drop-shadow">
+              <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="truncate max-w-[200px] sm:max-w-none">{user.email}</span>
             </p>
           </div>
           
-          <div className="relative text-sm space-y-1 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+          <div className="relative text-xs sm:text-sm space-y-1 bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20 max-w-md mx-auto">
             <p className="flex items-center gap-2 text-white">
               <span>•</span>
-              <span>{user.position}</span>
+              <span className="truncate">{user.position}</span>
             </p>
             <p className="flex items-center gap-2 text-white">
               <span>•</span>
-              <span>{user.department}</span>
+              <span className="truncate">{user.department}</span>
             </p>
           </div>
         </div>
@@ -247,34 +247,34 @@ const Profile = () => {
           onValueChange={(value) => setSearchParams({ tab: value })}
           className="w-full"
         >
-          <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0 h-auto">
+          <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0 h-auto overflow-x-auto flex-nowrap">
             <TabsTrigger 
               value="resume" 
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-gradient-to-t data-[state=active]:from-primary/5 data-[state=active]:to-transparent px-4 py-3 transition-all"
+              className="flex-shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-gradient-to-t data-[state=active]:from-primary/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm transition-all"
             >
               Resume
             </TabsTrigger>
             <TabsTrigger 
               value="work-info"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-secondary data-[state=active]:bg-gradient-to-t data-[state=active]:from-secondary/5 data-[state=active]:to-transparent px-4 py-3 transition-all"
+              className="flex-shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-secondary data-[state=active]:bg-gradient-to-t data-[state=active]:from-secondary/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm transition-all"
             >
               Work Info
             </TabsTrigger>
             <TabsTrigger 
               value="private-info"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-gradient-to-t data-[state=active]:from-accent/5 data-[state=active]:to-transparent px-4 py-3 transition-all"
+              className="flex-shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-gradient-to-t data-[state=active]:from-accent/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm transition-all"
             >
               Private Info
             </TabsTrigger>
             <TabsTrigger 
               value="achievements"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-coral data-[state=active]:bg-gradient-to-t data-[state=active]:from-coral/5 data-[state=active]:to-transparent px-4 py-3 transition-all"
+              className="flex-shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-coral data-[state=active]:bg-gradient-to-t data-[state=active]:from-coral/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm transition-all"
             >
               My Achievement
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="resume" className="p-4 space-y-6 mt-0">
+          <TabsContent value="resume" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Competencies */}
             <div>
               <h3 className="text-base font-semibold text-foreground mb-3">Competencies</h3>
@@ -368,7 +368,7 @@ const Profile = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="work-info" className="p-4 space-y-6 mt-0">
+          <TabsContent value="work-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Private Contact */}
             <div>
               <h3 className="text-base font-semibold text-foreground mb-3">Private Contact</h3>
@@ -569,7 +569,7 @@ const Profile = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="private-info" className="p-4 space-y-6 mt-0">
+          <TabsContent value="private-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Private Contact */}
             <div>
               <h3 className="text-base font-semibold text-foreground mb-3">Private Contact</h3>
@@ -747,8 +747,7 @@ const Profile = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="achievements" className="p-4 space-y-6">
-            {/* User Level Section */}
+          <TabsContent value="achievements" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">{/* User Level Section */}
             <div className="flex flex-col items-center justify-center py-6">
               <div className="relative w-48 h-48 mb-4">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 blur-xl" />
