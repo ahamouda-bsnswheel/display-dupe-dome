@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ChevronLeft, Power, Plus, Edit, Trash2 } from "lucide-react";
+import { ChevronLeft, Power, Plus, Edit, Trash2, Phone, Mail } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -154,9 +154,13 @@ const Profile = () => {
               </AvatarFallback>
             </Avatar>
             <h2 className="text-xl font-semibold text-primary mb-1">{user.name}</h2>
-            <p className="text-sm text-muted-foreground mb-1">{user.employeeId}</p>
-            <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <span>📧</span> {user.email}
+            <p className="text-sm text-muted-foreground mb-1 flex items-center gap-1.5">
+              <Phone className="h-4 w-4" />
+              {user.employeeId}
+            </p>
+            <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+              <Mail className="h-4 w-4" />
+              {user.email}
             </p>
           </div>
           
