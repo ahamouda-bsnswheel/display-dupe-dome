@@ -371,12 +371,12 @@ const Profile = () => {
           <TabsContent value="work-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Private Contact */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Private Contact</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <h3 className="text-base font-semibold text-primary mb-3">Private Contact</h3>
+              <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Work Address</p>
+                    <p className="text-sm font-semibold text-primary">Work Address</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.address_id && Array.isArray(employeeData.address_id)
                         ? employeeData.address_id[1] 
@@ -385,9 +385,9 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Work Location</p>
+                    <p className="text-sm font-semibold text-primary">Work Location</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.work_location_id && Array.isArray(employeeData.work_location_id)
                         ? employeeData.work_location_id[1]
@@ -400,12 +400,12 @@ const Profile = () => {
 
             {/* Approvers */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Approvers</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <h3 className="text-base font-semibold text-secondary mb-3">Approvers</h3>
+              <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Expenses</p>
+                    <p className="text-sm font-semibold text-primary">Expenses</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.expense_manager_id && Array.isArray(employeeData.expense_manager_id)
                         ? employeeData.expense_manager_id[1]
@@ -414,16 +414,16 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Time Off</p>
+                    <p className="text-sm font-semibold text-primary">Time Off</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Time Sheet</p>
+                    <p className="text-sm font-semibold text-primary">Time Sheet</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.timesheet_manager_id && Array.isArray(employeeData.timesheet_manager_id)
                         ? employeeData.timesheet_manager_id[1]
@@ -432,9 +432,9 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Attendance</p>
+                    <p className="text-sm font-semibold text-primary">Attendance</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.attendance_manager_id && Array.isArray(employeeData.attendance_manager_id)
                         ? employeeData.attendance_manager_id[1]
@@ -447,12 +447,12 @@ const Profile = () => {
 
             {/* Schedule Section */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Schedule</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <h3 className="text-base font-semibold text-primary mb-3">Schedule</h3>
+              <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Working Hours</p>
+                    <p className="text-sm font-semibold text-primary">Working Hours</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.resource_calendar_id && Array.isArray(employeeData.resource_calendar_id)
                         ? employeeData.resource_calendar_id[1]
@@ -461,9 +461,9 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Work Location Plan</p>
+                    <p className="text-sm font-semibold text-primary">Work Location Plan</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.work_location_plan_id && Array.isArray(employeeData.work_location_plan_id)
                         ? employeeData.work_location_plan_id[1]
@@ -472,9 +472,9 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Time Zone</p>
+                    <p className="text-sm font-semibold text-primary">Time Zone</p>
                     <p className="text-sm text-muted-foreground">{employeeData?.tz || "---"}</p>
                   </div>
                 </div>
@@ -483,12 +483,12 @@ const Profile = () => {
 
             {/* Planning Section */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Planning</h3>
-              <div className="bg-card p-4 rounded-lg border border-border">
+              <h3 className="text-base font-semibold text-secondary mb-3">Planning</h3>
+              <div className="bg-card p-4 rounded-lg border border-secondary/20">
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Roles</p>
+                    <p className="text-sm font-semibold text-primary">Roles</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.planning_role_ids && employeeData.planning_role_ids.length > 0
                         ? employeeData.planning_role_ids.join(", ")
@@ -502,19 +502,19 @@ const Profile = () => {
             {/* Organization Chart Section */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-foreground">Organization Chart</h3>
+                <h3 className="text-base font-semibold text-primary">Organization Chart</h3>
                 <Button 
                   variant="link" 
-                  className="h-auto p-0 text-primary"
+                  className="h-auto p-0 text-secondary hover:text-secondary/80"
                   onClick={() => navigate("/organization-chart")}
                 >
                   See All
                 </Button>
               </div>
-              <div className="bg-card p-4 rounded-lg border border-border">
+              <div className="bg-card p-4 rounded-lg border border-primary/20">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
-                  <p className="text-sm font-semibold text-foreground">Reporting Structure</p>
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
+                  <p className="text-sm font-semibold text-primary">Reporting Structure</p>
                 </div>
                 <div className="space-y-3 ml-5">
                   {/* Show managers if available */}
@@ -550,8 +550,8 @@ const Profile = () => {
 
             {/* Job Description Section */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Job Description</h3>
-              <div className="bg-card p-4 rounded-lg border border-border">
+              <h3 className="text-base font-semibold text-secondary mb-3">Job Description</h3>
+              <div className="bg-card p-4 rounded-lg border border-secondary/20">
                 {employeeData?.job_description ? (
                   <div 
                     className="text-sm text-foreground leading-relaxed prose prose-sm max-w-none"
@@ -572,13 +572,13 @@ const Profile = () => {
           <TabsContent value="private-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Private Contact */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Private Contact</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <h3 className="text-base font-semibold text-primary mb-3">Private Contact</h3>
+              <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
+                    <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-sm font-semibold text-foreground">Private Address</p>
+                      <p className="text-sm font-semibold text-primary">Private Address</p>
                       <p className="text-sm text-muted-foreground">
                         {employeeData?.private_street || "---"}
                       </p>
@@ -586,33 +586,33 @@ const Profile = () => {
                   </div>
                   <button 
                     onClick={() => setIsEditPrivateContactOpen(true)}
-                    className="text-muted-foreground hover:text-foreground ml-2"
+                    className="text-primary hover:text-primary/80 ml-2"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Email</p>
+                    <p className="text-sm font-semibold text-primary">Email</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.private_email || "---"}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Phone</p>
+                    <p className="text-sm font-semibold text-primary">Phone</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.private_phone || "---"}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Bank Account Number</p>
+                    <p className="text-sm font-semibold text-primary">Bank Account Number</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.bank_account_id && Array.isArray(employeeData.bank_account_id)
                         ? employeeData.bank_account_id[1]
@@ -621,25 +621,25 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Language</p>
+                    <p className="text-sm font-semibold text-primary">Language</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.lang || "---"}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Home Work Distance</p>
+                    <p className="text-sm font-semibold text-primary">Home Work Distance</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Private Car Plate</p>
+                    <p className="text-sm font-semibold text-primary">Private Car Plate</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
@@ -648,13 +648,13 @@ const Profile = () => {
 
             {/* Family Status */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Family Status</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <h3 className="text-base font-semibold text-secondary mb-3">Family Status</h3>
+              <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
+                    <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-sm font-semibold text-foreground">Marital Status</p>
+                      <p className="text-sm font-semibold text-primary">Marital Status</p>
                       <p className="text-sm text-muted-foreground">
                         {employeeData?.marital 
                           ? employeeData.marital.charAt(0).toUpperCase() + employeeData.marital.slice(1)
@@ -664,15 +664,15 @@ const Profile = () => {
                   </div>
                   <button 
                     onClick={() => setIsEditFamilyStatusOpen(true)}
-                    className="text-muted-foreground hover:text-foreground ml-2"
+                    className="text-secondary hover:text-secondary/80 ml-2"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Number of Children</p>
+                    <p className="text-sm font-semibold text-primary">Number of Children</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.children ?? "---"}
                     </p>
@@ -683,27 +683,27 @@ const Profile = () => {
 
             {/* Emergency */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Emergency</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <h3 className="text-base font-semibold text-primary mb-3">Emergency</h3>
+              <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
+                    <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-sm font-semibold text-foreground">Contact Name</p>
+                      <p className="text-sm font-semibold text-primary">Contact Name</p>
                       <p className="text-sm text-muted-foreground">---</p>
                     </div>
                   </div>
                   <button 
                     onClick={() => setIsEditEmergencyOpen(true)}
-                    className="text-muted-foreground hover:text-foreground ml-2"
+                    className="text-primary hover:text-primary/80 ml-2"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Contact Phone</p>
+                    <p className="text-sm font-semibold text-primary">Contact Phone</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
@@ -712,34 +712,34 @@ const Profile = () => {
 
             {/* Education */}
             <div>
-              <h3 className="text-base font-semibold text-foreground mb-3">Education</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+              <h3 className="text-base font-semibold text-secondary mb-3">Education</h3>
+              <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
+                    <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-sm font-semibold text-foreground">Certificate Level</p>
+                      <p className="text-sm font-semibold text-primary">Certificate Level</p>
                       <p className="text-sm text-muted-foreground">Bachelor</p>
                     </div>
                   </div>
                   <button 
                     onClick={() => setIsEditEducationOpen(true)}
-                    className="text-muted-foreground hover:text-foreground ml-2"
+                    className="text-secondary hover:text-secondary/80 ml-2"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Field of Study</p>
+                    <p className="text-sm font-semibold text-primary">Field of Study</p>
                     <p className="text-sm text-muted-foreground">محاسبة</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">School</p>
+                    <p className="text-sm font-semibold text-primary">School</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
