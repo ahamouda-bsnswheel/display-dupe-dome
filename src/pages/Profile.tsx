@@ -10,6 +10,10 @@ import { CompetencyPuzzle } from "@/components/CompetencyPuzzle";
 import { AddWorkExperienceModal } from "@/components/AddWorkExperienceModal";
 import { DeleteWorkExperienceDialog } from "@/components/DeleteWorkExperienceDialog";
 import { AddSkillModal } from "@/components/AddSkillModal";
+import { EditPrivateContactModal } from "@/components/EditPrivateContactModal";
+import { EditFamilyStatusModal } from "@/components/EditFamilyStatusModal";
+import { EditEmergencyModal } from "@/components/EditEmergencyModal";
+import { EditEducationModal } from "@/components/EditEducationModal";
 
 interface WorkExperience {
   dates: string;
@@ -31,6 +35,13 @@ const Profile = () => {
   const [isDeleteSkillDialogOpen, setIsDeleteSkillDialogOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<any>(null);
   const [selectedSkillIndex, setSelectedSkillIndex] = useState<number | null>(null);
+  
+  // Private Info modals
+  const [isEditPrivateContactOpen, setIsEditPrivateContactOpen] = useState(false);
+  const [isEditFamilyStatusOpen, setIsEditFamilyStatusOpen] = useState(false);
+  const [isEditEmergencyOpen, setIsEditEmergencyOpen] = useState(false);
+  const [isEditEducationOpen, setIsEditEducationOpen] = useState(false);
+  
   const employeeData = authStorage.getEmployeeData();
   
   const user = {
@@ -433,7 +444,10 @@ const Profile = () => {
                       <p className="text-sm text-muted-foreground">---</p>
                     </div>
                   </div>
-                  <button className="text-muted-foreground hover:text-foreground ml-2">
+                  <button 
+                    onClick={() => setIsEditPrivateContactOpen(true)}
+                    className="text-muted-foreground hover:text-foreground ml-2"
+                  >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
@@ -494,7 +508,10 @@ const Profile = () => {
                       <p className="text-sm text-muted-foreground">---</p>
                     </div>
                   </div>
-                  <button className="text-muted-foreground hover:text-foreground ml-2">
+                  <button 
+                    onClick={() => setIsEditFamilyStatusOpen(true)}
+                    className="text-muted-foreground hover:text-foreground ml-2"
+                  >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
@@ -520,7 +537,10 @@ const Profile = () => {
                       <p className="text-sm text-muted-foreground">---</p>
                     </div>
                   </div>
-                  <button className="text-muted-foreground hover:text-foreground ml-2">
+                  <button 
+                    onClick={() => setIsEditEmergencyOpen(true)}
+                    className="text-muted-foreground hover:text-foreground ml-2"
+                  >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
@@ -546,7 +566,10 @@ const Profile = () => {
                       <p className="text-sm text-muted-foreground">Bachelor</p>
                     </div>
                   </div>
-                  <button className="text-muted-foreground hover:text-foreground ml-2">
+                  <button 
+                    onClick={() => setIsEditEducationOpen(true)}
+                    className="text-muted-foreground hover:text-foreground ml-2"
+                  >
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
@@ -614,6 +637,47 @@ const Profile = () => {
         open={isDeleteSkillDialogOpen}
         onOpenChange={setIsDeleteSkillDialogOpen}
         onConfirm={confirmDeleteSkill}
+      />
+
+      {/* Edit Private Contact Modal */}
+      <EditPrivateContactModal
+        open={isEditPrivateContactOpen}
+        onOpenChange={setIsEditPrivateContactOpen}
+        defaultValues={{
+          email: user.email,
+          phone: "926319723",
+        }}
+      />
+
+      {/* Edit Family Status Modal */}
+      <EditFamilyStatusModal
+        open={isEditFamilyStatusOpen}
+        onOpenChange={setIsEditFamilyStatusOpen}
+        defaultValues={{
+          maritalStatus: "Single",
+          numberOfChildren: "0",
+        }}
+      />
+
+      {/* Edit Emergency Modal */}
+      <EditEmergencyModal
+        open={isEditEmergencyOpen}
+        onOpenChange={setIsEditEmergencyOpen}
+        defaultValues={{
+          contactName: "",
+          contactPhone: "",
+        }}
+      />
+
+      {/* Edit Education Modal */}
+      <EditEducationModal
+        open={isEditEducationOpen}
+        onOpenChange={setIsEditEducationOpen}
+        defaultValues={{
+          certificateLevel: "Bachelor",
+          fieldOfStudy: "محاسبة",
+          school: "",
+        }}
       />
     </div>
   );
