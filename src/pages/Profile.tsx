@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ChevronLeft, Power, Plus, Edit, Trash2 } from "lucide-react";
-import { z } from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,10 @@ import { CompetencyPuzzle } from "@/components/CompetencyPuzzle";
 import { AddWorkExperienceModal } from "@/components/AddWorkExperienceModal";
 import { DeleteWorkExperienceDialog } from "@/components/DeleteWorkExperienceDialog";
 import { AddSkillModal } from "@/components/AddSkillModal";
-import { EditFieldModal } from "@/components/EditFieldModal";
+import { EditPrivateContactModal } from "@/components/EditPrivateContactModal";
+import { EditFamilyStatusModal } from "@/components/EditFamilyStatusModal";
+import { EditEmergencyModal } from "@/components/EditEmergencyModal";
+import { EditEducationModal } from "@/components/EditEducationModal";
 
 interface WorkExperience {
   dates: string;
@@ -34,23 +36,11 @@ const Profile = () => {
   const [selectedSkill, setSelectedSkill] = useState<any>(null);
   const [selectedSkillIndex, setSelectedSkillIndex] = useState<number | null>(null);
   
-  // Private Info modal
-  const [editModalConfig, setEditModalConfig] = useState<{
-    open: boolean;
-    title: string;
-    fields: Array<{
-      name: string;
-      label: string;
-      type?: string;
-      placeholder?: string;
-      defaultValue?: string;
-      validation?: z.ZodTypeAny;
-    }>;
-  }>({
-    open: false,
-    title: "",
-    fields: [],
-  });
+  // Private Info modals
+  const [isEditPrivateContactOpen, setIsEditPrivateContactOpen] = useState(false);
+  const [isEditFamilyStatusOpen, setIsEditFamilyStatusOpen] = useState(false);
+  const [isEditEmergencyOpen, setIsEditEmergencyOpen] = useState(false);
+  const [isEditEducationOpen, setIsEditEducationOpen] = useState(false);
   
   const employeeData = authStorage.getEmployeeData();
   
@@ -455,26 +445,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <button 
-                    onClick={() => setEditModalConfig({
-                      open: true,
-                      title: "Private Contact",
-                      fields: [
-                        {
-                          name: "email",
-                          label: "Private Email",
-                          type: "email",
-                          defaultValue: user.email,
-                          validation: z.string().trim().email({ message: "Invalid email address" }).max(255),
-                        },
-                        {
-                          name: "phone",
-                          label: "Private Phone",
-                          type: "tel",
-                          defaultValue: "926319723",
-                          validation: z.string().trim().min(1, { message: "Phone is required" }).max(20),
-                        },
-                      ],
-                    })}
+                    onClick={() => setIsEditPrivateContactOpen(true)}
                     className="text-muted-foreground hover:text-foreground ml-2"
                   >
                     <Edit className="h-4 w-4" />
@@ -538,26 +509,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <button 
-                    onClick={() => setEditModalConfig({
-                      open: true,
-                      title: "Family Status",
-                      fields: [
-                        {
-                          name: "maritalStatus",
-                          label: "Marital Status",
-                          placeholder: "Enter marital status",
-                          defaultValue: "Single",
-                          validation: z.string().trim().min(1, { message: "Marital status is required" }).max(50),
-                        },
-                        {
-                          name: "numberOfChildren",
-                          label: "Number of Children",
-                          type: "number",
-                          defaultValue: "0",
-                          validation: z.string().trim().regex(/^\d+$/, { message: "Must be a number" }),
-                        },
-                      ],
-                    })}
+                    onClick={() => setIsEditFamilyStatusOpen(true)}
                     className="text-muted-foreground hover:text-foreground ml-2"
                   >
                     <Edit className="h-4 w-4" />
@@ -586,27 +538,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <button 
-                    onClick={() => setEditModalConfig({
-                      open: true,
-                      title: "Emergency",
-                      fields: [
-                        {
-                          name: "contactName",
-                          label: "Emergency Contact",
-                          placeholder: "Enter Emergency Contact",
-                          defaultValue: "",
-                          validation: z.string().trim().min(1, { message: "Contact name is required" }).max(100),
-                        },
-                        {
-                          name: "contactPhone",
-                          label: "Emergency Phone",
-                          type: "tel",
-                          placeholder: "Enter Emergency Phone",
-                          defaultValue: "",
-                          validation: z.string().trim().min(1, { message: "Contact phone is required" }).max(20),
-                        },
-                      ],
-                    })}
+                    onClick={() => setIsEditEmergencyOpen(true)}
                     className="text-muted-foreground hover:text-foreground ml-2"
                   >
                     <Edit className="h-4 w-4" />
@@ -635,33 +567,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <button 
-                    onClick={() => setEditModalConfig({
-                      open: true,
-                      title: "Education",
-                      fields: [
-                        {
-                          name: "certificateLevel",
-                          label: "Certificate Level",
-                          placeholder: "Enter certificate level",
-                          defaultValue: "Bachelor",
-                          validation: z.string().trim().min(1, { message: "Certificate level is required" }).max(100),
-                        },
-                        {
-                          name: "fieldOfStudy",
-                          label: "Field of Study",
-                          placeholder: "Enter field of study",
-                          defaultValue: "محاسبة",
-                          validation: z.string().trim().min(1, { message: "Field of study is required" }).max(100),
-                        },
-                        {
-                          name: "school",
-                          label: "School",
-                          placeholder: "Enter School",
-                          defaultValue: "",
-                          validation: z.string().trim().max(200),
-                        },
-                      ],
-                    })}
+                    onClick={() => setIsEditEducationOpen(true)}
                     className="text-muted-foreground hover:text-foreground ml-2"
                   >
                     <Edit className="h-4 w-4" />
@@ -733,12 +639,45 @@ const Profile = () => {
         onConfirm={confirmDeleteSkill}
       />
 
-      {/* Edit Field Modal - Reusable for all Private Info edits */}
-      <EditFieldModal
-        open={editModalConfig.open}
-        onOpenChange={(open) => setEditModalConfig({ ...editModalConfig, open })}
-        title={editModalConfig.title}
-        fields={editModalConfig.fields}
+      {/* Edit Private Contact Modal */}
+      <EditPrivateContactModal
+        open={isEditPrivateContactOpen}
+        onOpenChange={setIsEditPrivateContactOpen}
+        defaultValues={{
+          email: user.email,
+          phone: "926319723",
+        }}
+      />
+
+      {/* Edit Family Status Modal */}
+      <EditFamilyStatusModal
+        open={isEditFamilyStatusOpen}
+        onOpenChange={setIsEditFamilyStatusOpen}
+        defaultValues={{
+          maritalStatus: "Single",
+          numberOfChildren: "0",
+        }}
+      />
+
+      {/* Edit Emergency Modal */}
+      <EditEmergencyModal
+        open={isEditEmergencyOpen}
+        onOpenChange={setIsEditEmergencyOpen}
+        defaultValues={{
+          contactName: "",
+          contactPhone: "",
+        }}
+      />
+
+      {/* Edit Education Modal */}
+      <EditEducationModal
+        open={isEditEducationOpen}
+        onOpenChange={setIsEditEducationOpen}
+        defaultValues={{
+          certificateLevel: "Bachelor",
+          fieldOfStudy: "محاسبة",
+          school: "",
+        }}
       />
     </div>
   );
