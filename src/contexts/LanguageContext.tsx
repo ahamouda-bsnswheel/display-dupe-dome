@@ -56,6 +56,14 @@ const translations = {
     'dashboard.requestsCount': '0 Requests',
     'dashboard.expensesCount': '16 Expenses',
     'dashboard.tasksCount': '18 Tasks',
+    // More Page
+    'more.myProfile': 'My Profile',
+    'more.myDashboard': 'My Dashboard',
+    'more.language': 'Language',
+    'more.myCourses': 'My Courses',
+    'more.privacyPolicy': 'Privacy Policy',
+    'more.termsAndConditions': 'Terms And Conditions',
+    'more.logOut': 'Log Out',
   },
   ar: {
     // Login Page
@@ -102,6 +110,14 @@ const translations = {
     'dashboard.requestsCount': '0 طلب',
     'dashboard.expensesCount': '16 مصروف',
     'dashboard.tasksCount': '18 مهمة',
+    // More Page
+    'more.myProfile': 'ملفي الشخصي',
+    'more.myDashboard': 'لوحة التحكم',
+    'more.language': 'اللغة',
+    'more.myCourses': 'دوراتي',
+    'more.privacyPolicy': 'سياسة الخصوصية',
+    'more.termsAndConditions': 'الشروط والأحكام',
+    'more.logOut': 'تسجيل الخروج',
   },
 };
 

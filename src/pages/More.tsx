@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useAuthImage } from "@/hooks/use-auth-image";
 import { useNavigate } from "react-router-dom";
-import { 
+import { useLanguage } from "@/contexts/LanguageContext";
+import {
   User, 
   LayoutGrid, 
   Globe, 
@@ -19,6 +20,7 @@ import {
 
 const More = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const authData = authStorage.getAuthData();
   const employeeData = authStorage.getEmployeeData();
   
@@ -36,12 +38,12 @@ const More = () => {
   };
 
   const menuItems = [
-    { icon: User, label: "My Profile", onClick: () => navigate("/profile") },
-    { icon: LayoutGrid, label: "My Dashboard", onClick: () => navigate("/dashboard") },
-    { icon: Globe, label: "Language", onClick: () => {} },
-    { icon: BookOpen, label: "My Courses", onClick: () => {} },
-    { icon: FileText, label: "Privacy Policy", onClick: () => {} },
-    { icon: FileText, label: "Terms And Conditions", onClick: () => {} },
+    { icon: User, label: t('more.myProfile'), onClick: () => navigate("/profile") },
+    { icon: LayoutGrid, label: t('more.myDashboard'), onClick: () => navigate("/dashboard") },
+    { icon: Globe, label: t('more.language'), onClick: () => {} },
+    { icon: BookOpen, label: t('more.myCourses'), onClick: () => {} },
+    { icon: FileText, label: t('more.privacyPolicy'), onClick: () => {} },
+    { icon: FileText, label: t('more.termsAndConditions'), onClick: () => {} },
   ];
 
   return (
@@ -80,7 +82,7 @@ const More = () => {
           className="w-full flex items-center gap-4 py-4 px-4 bg-card hover:bg-muted/50 transition-colors mt-4"
         >
           <LogOut className="h-6 w-6 text-destructive" />
-          <span className="text-base font-medium text-destructive">Log Out</span>
+          <span className="text-base font-medium text-destructive">{t('more.logOut')}</span>
         </button>
       </div>
 
