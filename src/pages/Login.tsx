@@ -5,11 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { authStorage } from "@/lib/auth";
-import nocLogo from "@/assets/noc-logo.png";
+import { Eye, EyeOff, Globe } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("oidhaym@noc.ly");
   const [password, setPassword] = useState("123");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -28,17 +29,15 @@ const Login = () => {
           login: email,
           password: password,
           player_id: "f0d27a08-34c3-4611-9e49-250c691ca53f",
-          device_type: 1, // Android device
+          device_type: 1,
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Store complete auth data for future API calls
         authStorage.setAuthData(data);
         
-        // Fetch employee data
         try {
           const employeeResponse = await fetch(
             `https://bsnswheel.org/api/v1/employees/${data.employee_id}?context={"lang": "ar_001"}`,
@@ -62,7 +61,6 @@ const Login = () => {
           description: "Login successful!",
         });
         
-        // Redirect to dashboard
         navigate("/dashboard");
       } else {
         toast({
@@ -84,74 +82,85 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border px-6 py-4">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
-            <img src={nocLogo} alt="National Oil Corporation" className="h-16 w-auto" />
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-foreground">English (US)</span>
-            <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
+    <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <div className="w-full max-w-md">
+        {/* Language Selector */}
+        <div className="flex justify-end mb-12">
+          <button className="flex items-center gap-2 text-primary text-sm font-medium">
+            English
+            <Globe className="w-4 h-4" />
+          </button>
         </div>
-      </header>
 
-      {/* Login Form */}
-      <div className="flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md space-y-6">
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-base font-normal text-foreground">
-                Email
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12 text-base"
-                required
-              />
-            </div>
+        {/* Welcome Section */}
+        <div className="mb-10">
+          <h1 className="text-3xl font-semibold text-foreground mb-2">
+            Welcome to NOC
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Empowering Efficiency, Ensuring Reliability
+          </p>
+        </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-base font-normal text-foreground">
-                Password
-              </Label>
+        {/* Login Form */}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-normal text-foreground">
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="Mfadel@Noc.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-14 text-base bg-white"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-sm font-normal text-foreground">
+              Password
+            </Label>
+            <div className="relative">
               <Input
                 id="password"
-                type="password"
-                placeholder="Password"
+                type={showPassword ? "text" : "password"}
+                placeholder="•••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-12 text-base"
+                className="h-14 text-base bg-white pr-12"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
             </div>
+          </div>
 
-            <Button 
-              type="submit" 
-              className="w-full h-14 text-base font-medium"
-              disabled={isLoading}
-            >
-              {isLoading ? "Logging in..." : "Log in"}
-            </Button>
+          <div className="flex justify-start">
+            <a href="#" className="text-primary text-sm hover:underline font-medium">
+              Forget Password?
+            </a>
+          </div>
 
-            <div className="flex items-center justify-between text-base">
-              <a href="#" className="text-primary hover:underline">
-                Don't have an account?
-              </a>
-              <a href="#" className="text-primary hover:underline">
-                Reset Password
-              </a>
-            </div>
-          </form>
-        </div>
+          <Button 
+            type="submit" 
+            className="w-full h-14 text-base font-semibold rounded-xl"
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing in..." : "Sign In"}
+          </Button>
+        </form>
       </div>
     </div>
   );
