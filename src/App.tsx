@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import More from "./pages/More";
 import Profile from "./pages/Profile";
 import OrganizationChart from "./pages/OrganizationChart";
+import EmployeeDetail from "./pages/EmployeeDetail";
 import UpscalingRoute from "./pages/UpscalingRoute";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/more" element={<More />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/organization-chart" element={<OrganizationChart />} />
+          <Route path="/employee/:employeeId" element={<EmployeeDetail />} />
           <Route path="/upscaling-route/:competencyId" element={<UpscalingRoute />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -1,7 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthImage } from "@/hooks/use-auth-image";
+import { useNavigate } from "react-router-dom";
 
 interface OrgChartEmployeeCardProps {
+  employeeId: string;
   name: string;
   position: string;
   imageUrl?: string;
@@ -9,16 +11,21 @@ interface OrgChartEmployeeCardProps {
 }
 
 export const OrgChartEmployeeCard = ({ 
+  employeeId,
   name, 
   position, 
   imageUrl,
   isCurrentUser = false 
 }: OrgChartEmployeeCardProps) => {
   const { blobUrl } = useAuthImage(imageUrl);
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col items-center">
-      <div className="bg-card rounded-2xl border-2 border-border p-4 w-full">
+      <button
+        onClick={() => navigate(`/employee/${employeeId}`)}
+        className="bg-card rounded-2xl border-2 border-border p-4 w-full hover:border-primary/50 transition-colors"
+      >
         <div className="flex flex-col items-center">
           <Avatar className="h-16 w-16 mb-3">
             <AvatarImage src={blobUrl} alt={name} />
@@ -33,7 +40,7 @@ export const OrgChartEmployeeCard = ({
             {position}
           </p>
         </div>
-      </div>
+      </button>
     </div>
   );
 };
