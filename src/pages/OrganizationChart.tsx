@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ChevronLeft, User } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useAuthImage } from "@/hooks/use-auth-image";
+import { OrgChartEmployeeCard } from "@/components/OrgChartEmployeeCard";
 
 interface OrgChartEmployee {
   id: string;
@@ -27,13 +28,9 @@ const OrganizationChart = () => {
   const [orgChartData, setOrgChartData] = useState<OrgChartEmployee[]>([]);
   const [loading, setLoading] = useState(true);
   
-  const user = {
-    name: employeeData?.name || "User",
-    position: employeeData?.job_title || "Employee",
-    image: getSecureImageUrl(employeeData?.image_url),
-  };
-
-  const { blobUrl: userImageUrl } = useAuthImage(user.image);
+  // Hook for manager image
+  const managerImageUrl = orgChartData.find(emp => emp.type === "manager")?.image_url;
+  const { blobUrl: managerBlobUrl } = useAuthImage(getSecureImageUrl(managerImageUrl));
 
   useEffect(() => {
     const fetchOrgChart = async () => {
@@ -120,7 +117,7 @@ const OrganizationChart = () => {
                     <div className="bg-card rounded-2xl border-2 border-border p-4 w-full max-w-[280px]">
                       <div className="flex flex-col items-center">
                         <Avatar className="h-16 w-16 mb-3">
-                          <AvatarImage src={getSecureImageUrl(manager.image_url)} alt={manager.name} />
+                          <AvatarImage src={managerBlobUrl} alt={manager.name} />
                           <AvatarFallback className="bg-muted">
                             {manager.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                           </AvatarFallback>
@@ -142,27 +139,12 @@ const OrganizationChart = () => {
               {employees.length > 0 ? (
                 <div className="grid grid-cols-2 gap-4">
                   {employees.map((employee, index) => (
-                    <div key={index} className="flex flex-col items-center">
-                      <div className="bg-card rounded-2xl border-2 border-border p-4 w-full">
-                        <div className="flex flex-col items-center">
-                          <Avatar className="h-16 w-16 mb-3">
-                            <AvatarImage 
-                              src={employee.name === user.name ? userImageUrl : employee.image} 
-                              alt={employee.name} 
-                            />
-                            <AvatarFallback className="bg-muted">
-                              {employee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <p className="text-sm font-semibold text-primary text-center mb-1 leading-tight">
-                            {employee.name}
-                          </p>
-                          <p className="text-xs text-muted-foreground text-center leading-tight">
-                            {employee.position}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                    <OrgChartEmployeeCard
+                      key={index}
+                      name={employee.name}
+                      position={employee.position}
+                      imageUrl={employee.image}
+                    />
                   ))}
                 </div>
               ) : (
