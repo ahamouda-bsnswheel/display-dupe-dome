@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ChevronLeft, Power, Plus, Edit, Trash2, Phone, Mail } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,6 +17,7 @@ import { EditEmergencyModal } from "@/components/EditEmergencyModal";
 import { EditEducationModal } from "@/components/EditEducationModal";
 
 interface WorkExperience {
+  id?: number;
   dates: string;
   title: string;
   companyName?: string;
@@ -44,6 +45,7 @@ const Profile = () => {
   const [isEditEducationOpen, setIsEditEducationOpen] = useState(false);
   
   const employeeData = authStorage.getEmployeeData();
+  const employeeId = employeeData?.id;
   
   const user = {
     name: employeeData?.name || "User",
@@ -56,23 +58,76 @@ const Profile = () => {
 
   const { blobUrl: userImageUrl } = useAuthImage(user.image);
 
+  // Fetch employee details for Resume tab
+  useEffect(() => {
+    const fetchEmployeeDetails = async () => {
+      if (!employeeId) return;
+
+      try {
+        const headers = authStorage.getAuthHeaders();
+        const response = await fetch(
+          `https://bsnswheel.org/api/v1/employee_details/custom/${employeeId}`,
+          {
+            method: "PUT",
+            headers,
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Populate work experience from resumes
+          if (data.resumes && data.resumes.length > 0) {
+            const workExpResume = data.resumes.find((r: any) => r.type === "Work Experience");
+            if (workExpResume && workExpResume.lines) {
+              const formattedWorkExp = workExpResume.lines.map((line: any) => ({
+                id: line.id,
+                dates: formatDateRange(line.date_start, line.date_end),
+                title: line.name,
+                companyName: line.description || "---",
+              }));
+              setWorkExperience(formattedWorkExp);
+            }
+          }
+
+          // Populate skills
+          if (data.skills && data.skills.length > 0) {
+            const formattedSkills = data.skills.map((skill: any) => ({
+              id: skill.id,
+              name: skill.skill_id[1],
+              level: `${skill.skill_level_id[1]} (${skill.level_progress}%)`,
+              category: skill.skill_type_id[1],
+            }));
+            setSkills(formattedSkills);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching employee details:", error);
+      }
+    };
+
+    fetchEmployeeDetails();
+  }, [employeeId]);
+
+  // Helper function to format date ranges
+  const formatDateRange = (startDate: string, endDate: string) => {
+    const formatDate = (dateStr: string) => {
+      const date = new Date(dateStr);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+
+    return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+  };
+
   const handleLogout = () => {
     authStorage.clearAuthData();
     navigate("/");
   };
 
-  const [workExperience, setWorkExperience] = useState<WorkExperience[]>([
-    {
-      dates: "01/06/2023 - 01/03/2025",
-      title: "Quality control Coordinator",
-      companyName: "Quality control Coordinator",
-    },
-    {
-      dates: "01/01/2023 - 01/06/2023",
-      title: "Manager Assistant",
-      companyName: "---",
-    },
-  ]);
+  const [workExperience, setWorkExperience] = useState<WorkExperience[]>([]);
 
   const handleEditWorkExp = (exp: WorkExperience, index: number) => {
     setSelectedWorkExp(exp);
@@ -109,23 +164,7 @@ const Profile = () => {
     }
   };
 
-  const [skills, setSkills] = useState([
-    {
-      name: "Arabic",
-      level: "Expert (100%)",
-      category: "Languages",
-    },
-    {
-      name: "Communication",
-      level: "L1 (26%)",
-      category: "Marketing",
-    },
-    {
-      name: "Digital advertising",
-      level: "L1 (25%)",
-      category: "Marketing",
-    },
-  ]);
+  const [skills, setSkills] = useState([]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
