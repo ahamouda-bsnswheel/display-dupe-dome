@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { authStorage } from "@/lib/auth";
 import { Eye, EyeOff, Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Login = () => {
   const [email, setEmail] = useState("oidhaym@noc.ly");
@@ -14,6 +15,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { language, toggleLanguage, t } = useLanguage();
 
   // Redirect to dashboard if already logged in
   useEffect(() => {
@@ -61,22 +63,22 @@ const Login = () => {
         }
 
         toast({
-          title: "Success",
-          description: "Login successful!",
+          title: t('login.success'),
+          description: t('login.loginSuccessful'),
         });
 
         navigate("/dashboard");
       } else {
         toast({
-          title: "Error",
-          description: data.message || "Login failed. Please check your credentials.",
+          title: t('login.error'),
+          description: data.message || t('login.loginFailed'),
           variant: "destructive",
         });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Network error. Please try again.",
+        title: t('login.error'),
+        description: t('login.networkError'),
         variant: "destructive",
       });
       console.error("Login error:", error);
@@ -93,29 +95,32 @@ const Login = () => {
       
       <div className="w-full max-w-md relative z-10">
         {/* Language Selector */}
-        <div className="flex justify-end mb-12">
-          <button className="flex items-center gap-2 text-white text-sm font-medium hover:text-white/80 transition-colors">
-            عربي
+        <div className={`flex ${language === 'ar' ? 'justify-start' : 'justify-end'} mb-12`}>
+          <button 
+            onClick={toggleLanguage}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-medium hover:bg-secondary/90 transition-colors"
+          >
             <Globe className="w-4 h-4" />
+            {t('language')}
           </button>
         </div>
 
         {/* Welcome Section */}
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">Welcome to NOC</h1>
-          <p className="text-white/90 text-sm drop-shadow">Empowering Efficiency, Ensuring Reliability</p>
+          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">{t('login.welcome')}</h1>
+          <p className="text-white/90 text-sm drop-shadow">{t('login.subtitle')}</p>
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm font-normal text-white/90">
-              Email
+              {t('login.email')}
             </Label>
             <Input
               id="email"
               type="email"
-              placeholder="Mfadel@Noc.com"
+              placeholder={t('login.emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 shadow-lg"
@@ -125,31 +130,31 @@ const Login = () => {
 
           <div className="space-y-2">
             <Label htmlFor="password" className="text-sm font-normal text-white/90">
-              Password
+              {t('login.password')}
             </Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="•••"
+                placeholder={t('login.passwordPlaceholder')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 pr-12 shadow-lg"
+                className={`h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 shadow-lg ${language === 'ar' ? 'pl-12' : 'pr-12'}`}
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className={`absolute ${language === 'ar' ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors`}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
           </div>
 
-          <div className="flex justify-start">
+          <div className={`flex ${language === 'ar' ? 'justify-end' : 'justify-start'}`}>
             <a href="#" className="text-white text-sm hover:underline font-medium">
-              Forget Password?
+              {t('login.forgotPassword')}
             </a>
           </div>
 
@@ -158,7 +163,7 @@ const Login = () => {
             className="w-full h-14 text-base font-semibold rounded-xl bg-white text-primary hover:bg-white/90 shadow-xl hover-lift" 
             disabled={isLoading}
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isLoading ? t('login.signingIn') : t('login.signIn')}
           </Button>
         </form>
       </div>
