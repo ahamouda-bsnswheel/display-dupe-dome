@@ -15,6 +15,7 @@ import { EditPrivateContactModal } from "@/components/EditPrivateContactModal";
 import { EditFamilyStatusModal } from "@/components/EditFamilyStatusModal";
 import { EditEmergencyModal } from "@/components/EditEmergencyModal";
 import { EditEducationModal } from "@/components/EditEducationModal";
+import { BadgeImage } from "@/components/BadgeImage";
 import DOMPurify from "dompurify";
 
 interface WorkExperience {
@@ -106,6 +107,16 @@ const Profile = () => {
           if (data.competencies && data.competencies.length > 0) {
             setCompetencies(data.competencies);
           }
+
+          // Populate badges
+          if (data.badges && data.badges.length > 0) {
+            setBadges(data.badges);
+          }
+
+          // Populate karma value
+          if (data.ranks && data.ranks.karma_value !== undefined) {
+            setKarmaValue(data.ranks.karma_value);
+          }
         }
       } catch (error) {
         console.error("Error fetching employee details:", error);
@@ -172,6 +183,8 @@ const Profile = () => {
 
   const [skills, setSkills] = useState([]);
   const [competencies, setCompetencies] = useState<any[]>([]);
+  const [badges, setBadges] = useState<any[]>([]);
+  const [karmaValue, setKarmaValue] = useState(0);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -744,7 +757,7 @@ const Profile = () => {
                 </Avatar>
               </div>
               <p className="text-base font-semibold text-foreground">
-                Get <span className="text-primary">0</span> xp to level up!
+                Get <span className="text-primary">{karmaValue}</span> xp to level up!
               </p>
             </div>
 
@@ -752,67 +765,33 @@ const Profile = () => {
             <div>
               <h3 className="text-lg font-semibold text-foreground mb-4">Badges</h3>
               <div className="space-y-3">
-                {/* Badge Item 1 */}
-                <div className="bg-card p-4 rounded-lg border border-border flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-full bg-primary/80" />
+                {badges.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">No badges earned yet</p>
+                ) : (
+                  badges.map((badge) => (
+                    <div 
+                      key={badge.id}
+                      className="bg-card p-4 rounded-lg border border-border flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-4">
+                        <BadgeImage
+                          imageUrl={getSecureImageUrl(badge.image_url) || ""}
+                          alt={badge.name}
+                          className="w-12 h-12"
+                        />
+                        <div>
+                          <p className="text-base font-semibold text-foreground">{badge.name}</p>
+                          {badge.description && (
+                            <p className="text-sm text-muted-foreground">{badge.description}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                        <Check className="h-5 w-5 text-white" />
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-base font-semibold text-foreground">Power User</p>
-                    </div>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
-                    <Check className="h-5 w-5 text-white" />
-                  </div>
-                </div>
-
-                {/* Badge Item 2 */}
-                <div className="bg-card p-4 rounded-lg border border-border flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-full bg-primary/80" />
-                    </div>
-                    <div>
-                      <p className="text-base font-semibold text-foreground">Problem Solver</p>
-                    </div>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
-                    <Check className="h-5 w-5 text-white" />
-                  </div>
-                </div>
-
-                {/* Badge Item 3 */}
-                <div className="bg-card p-4 rounded-lg border border-border flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
-                      <div className="text-2xl">🏆</div>
-                    </div>
-                    <div>
-                      <p className="text-base font-semibold text-foreground">Safety Champion</p>
-                      <p className="text-sm text-muted-foreground">You did great at your job.</p>
-                    </div>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
-                    <Check className="h-5 w-5 text-white" />
-                  </div>
-                </div>
-
-                {/* Badge Item 4 */}
-                <div className="bg-card p-4 rounded-lg border border-border flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
-                      <div className="text-2xl">💡</div>
-                    </div>
-                    <div>
-                      <p className="text-base font-semibold text-foreground">Brilliant</p>
-                      <p className="text-sm text-muted-foreground">With your brilliant ideas, you are an inspiration to others.</p>
-                    </div>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
-                    <Check className="h-5 w-5 text-white" />
-                  </div>
-                </div>
+                  ))
+                )}
               </div>
             </div>
           </TabsContent>
