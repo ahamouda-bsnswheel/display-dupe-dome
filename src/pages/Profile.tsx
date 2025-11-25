@@ -297,27 +297,58 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="work-info" className="p-4 space-y-6 mt-0">
-            {/* Time Off, Time Sheet, Attendance */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Time Off</p>
-                  <p className="text-sm text-muted-foreground">---</p>
+            {/* Private Contact */}
+            <div>
+              <h3 className="text-base font-semibold text-foreground mb-3">Private Contact</h3>
+              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Work Address</p>
+                    <p className="text-sm text-muted-foreground">Jannah Al-Areef</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Work Location</p>
+                    <p className="text-sm text-muted-foreground">Tripoli</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Time Sheet</p>
-                  <p className="text-sm text-muted-foreground">Mitchell Admin</p>
+            </div>
+
+            {/* Approvers */}
+            <div>
+              <h3 className="text-base font-semibold text-foreground mb-3">Approvers</h3>
+              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Expenses</p>
+                    <p className="text-sm text-muted-foreground">Mitchell Admin</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Attendance</p>
-                  <p className="text-sm text-muted-foreground">Mohamed Mostafa Fadl</p>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Time Off</p>
+                    <p className="text-sm text-muted-foreground">---</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Time Sheet</p>
+                    <p className="text-sm text-muted-foreground">Mitchell Admin</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Attendance</p>
+                    <p className="text-sm text-muted-foreground">Mohamed Mostafa Fadl</p>
+                  </div>
                 </div>
               </div>
             </div>
