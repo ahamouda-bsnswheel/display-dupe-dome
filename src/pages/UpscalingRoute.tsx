@@ -109,12 +109,9 @@ const UpscalingRoute = () => {
                 className="bg-card border border-border rounded-lg overflow-hidden"
               >
                 <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-muted/50 [&[data-state=open]>svg]:rotate-180">
-                  <div className="flex items-center justify-between w-full">
-                    <div className="text-left">
-                      <p className="text-base font-semibold text-foreground">{level.title}</p>
-                      <p className="text-sm text-muted-foreground">Proficiency Level</p>
-                    </div>
-                    <ChevronDown className="h-5 w-5 text-muted-foreground transition-transform duration-200" />
+                  <div className="text-left">
+                    <p className="text-base font-semibold text-foreground">{level.title}</p>
+                    <p className="text-sm text-muted-foreground">Proficiency Level</p>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-4 pb-4">
