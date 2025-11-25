@@ -26,7 +26,9 @@ const Profile = () => {
   const [selectedWorkExpIndex, setSelectedWorkExpIndex] = useState<number | null>(null);
   const [isAddSkillOpen, setIsAddSkillOpen] = useState(false);
   const [isEditSkillOpen, setIsEditSkillOpen] = useState(false);
+  const [isDeleteSkillDialogOpen, setIsDeleteSkillDialogOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<any>(null);
+  const [selectedSkillIndex, setSelectedSkillIndex] = useState<number | null>(null);
   const employeeData = authStorage.getEmployeeData();
   
   const user = {
@@ -79,7 +81,19 @@ const Profile = () => {
     setIsEditSkillOpen(true);
   };
 
-  const skills = [
+  const handleDeleteSkill = (index: number) => {
+    setSelectedSkillIndex(index);
+    setIsDeleteSkillDialogOpen(true);
+  };
+
+  const confirmDeleteSkill = () => {
+    if (selectedSkillIndex !== null) {
+      setSkills(skills.filter((_, i) => i !== selectedSkillIndex));
+      setSelectedSkillIndex(null);
+    }
+  };
+
+  const [skills, setSkills] = useState([
     {
       name: "Arabic",
       level: "Expert (100%)",
@@ -95,7 +109,7 @@ const Profile = () => {
       level: "L1 (25%)",
       category: "Marketing",
     },
-  ];
+  ]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -251,7 +265,10 @@ const Profile = () => {
                         >
                           <Edit className="h-4 w-4" />
                         </button>
-                        <button className="text-muted-foreground hover:text-destructive">
+                        <button 
+                          onClick={() => handleDeleteSkill(index)}
+                          className="text-muted-foreground hover:text-destructive"
+                        >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
@@ -309,6 +326,13 @@ const Profile = () => {
         onOpenChange={setIsEditSkillOpen}
         editData={selectedSkill}
         isEditMode={true}
+      />
+
+      {/* Delete Skill Confirmation Dialog */}
+      <DeleteWorkExperienceDialog
+        open={isDeleteSkillDialogOpen}
+        onOpenChange={setIsDeleteSkillDialogOpen}
+        onConfirm={confirmDeleteSkill}
       />
     </div>
   );
