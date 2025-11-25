@@ -45,21 +45,21 @@ const More = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto">
       {/* Profile Section */}
-      <div className="bg-card px-6 py-8 flex flex-col items-center">
-        <Avatar className="h-32 w-32 mb-4">
+      <div className="bg-card px-4 sm:px-6 md:px-8 py-6 sm:py-8 flex flex-col items-center">
+        <Avatar className="h-24 w-24 sm:h-32 sm:w-32 mb-4">
           <AvatarImage src={userImageUrl} alt={user.name} />
-          <AvatarFallback className="bg-muted text-2xl">
+          <AvatarFallback className="bg-muted text-xl sm:text-2xl">
             {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <h2 className="text-2xl font-semibold text-primary mb-1">{user.name}</h2>
-        <p className="text-muted-foreground">{user.role}</p>
+        <h2 className="text-xl sm:text-2xl font-semibold text-primary mb-1 text-center px-4">{user.name}</h2>
+        <p className="text-muted-foreground text-sm sm:text-base text-center">{user.role}</p>
       </div>
 
       {/* Menu Items */}
-      <div className="px-4 py-6">
+      <div className="px-4 sm:px-6 py-4 sm:py-6">
         {menuItems.map((item, index) => (
           <button
             key={index}

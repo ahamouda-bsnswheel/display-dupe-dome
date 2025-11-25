@@ -90,20 +90,20 @@ const OrganizationChart = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col max-w-screen-xl mx-auto">
       {/* Header */}
-      <div className="bg-card border-b border-border px-4 py-3 flex items-center">
+      <div className="bg-card border-b border-border px-4 sm:px-6 py-3 flex items-center">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-foreground"
         >
           <ChevronLeft className="h-6 w-6" />
-          <span className="text-lg font-medium">Organization Chart</span>
+          <span className="text-base sm:text-lg font-medium">Organization Chart</span>
         </button>
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="p-4 pb-8">
+        <div className="p-3 sm:p-4 md:p-6 pb-8">
           {loading ? (
             <div className="flex items-center justify-center py-8">
               <p className="text-muted-foreground">Loading organization chart...</p>
@@ -137,7 +137,7 @@ const OrganizationChart = () => {
 
               {/* Team Members Grid */}
               {employees.length > 0 ? (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {employees.map((employee) => {
                     const empData = orgChartData.find(e => e.name === employee.name);
                     return (

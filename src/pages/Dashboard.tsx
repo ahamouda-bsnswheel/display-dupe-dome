@@ -69,26 +69,26 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto">
       {/* Header */}
-      <header className="relative bg-gradient-hero px-4 py-6 overflow-hidden">
+      <header className="relative bg-gradient-hero px-4 sm:px-6 py-6 sm:py-8 overflow-hidden">
         {/* Decorative background */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10"></div>
         
         <div className="relative flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative">
               <div className="absolute inset-0 bg-white/30 rounded-full blur-md"></div>
-              <Avatar className="relative h-10 w-10 border-2 border-white/50 shadow-lg">
+              <Avatar className="relative h-10 w-10 sm:h-12 sm:w-12 border-2 border-white/50 shadow-lg">
                 <AvatarImage src={userImageUrl} alt={user.name} />
-                <AvatarFallback className="bg-white/90 text-primary font-bold">
+                <AvatarFallback className="bg-white/90 text-primary font-bold text-sm sm:text-base">
                   {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </div>
             <div>
-              <p className="text-sm text-white/80">Hello,</p>
-              <p className="font-bold text-white drop-shadow-md">{user.name}!</p>
+              <p className="text-xs sm:text-sm text-white/80">Hello,</p>
+              <p className="font-bold text-white drop-shadow-md text-sm sm:text-base truncate max-w-[150px] sm:max-w-none">{user.name}!</p>
             </div>
           </div>
           <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
@@ -98,7 +98,7 @@ const Dashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="px-4 py-6 space-y-6">
+      <main className="px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         {/* Manager Stats */}
         {user.isManager && (
           <>
@@ -148,16 +148,16 @@ const Dashboard = () => {
                 See All
               </Button>
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
               {modules.map((module, index) => (
                 <button
                   key={index}
                   className="flex flex-col items-center gap-2"
                 >
-                  <div className={`${module.color} rounded-2xl p-4 w-16 h-16 flex items-center justify-center`}>
-                    <module.icon className="h-6 w-6" />
+                  <div className={`${module.color} rounded-2xl p-3 sm:p-4 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center`}>
+                    <module.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                   </div>
-                  <span className="text-xs text-center">{module.title}</span>
+                  <span className="text-xs text-center leading-tight">{module.title}</span>
                 </button>
               ))}
             </div>
