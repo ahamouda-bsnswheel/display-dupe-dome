@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authStorage } from "@/lib/auth";
+import { CompetencyPuzzle } from "@/components/CompetencyPuzzle";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -132,13 +133,7 @@ const Profile = () => {
             {/* Competencies */}
             <div>
               <h3 className="text-base font-semibold text-foreground mb-3">Competencies</h3>
-              <div className="bg-card rounded-lg overflow-hidden">
-                <img 
-                  src="/placeholder.svg" 
-                  alt="Competencies puzzle" 
-                  className="w-full h-48 object-cover"
-                />
-              </div>
+              <CompetencyPuzzle />
             </div>
 
             {/* Work Experience */}
