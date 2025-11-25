@@ -4,7 +4,7 @@ import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useAuthImage } from "@/hooks/use-auth-image";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import {
+import { 
   User, 
   LayoutGrid, 
   Globe, 
@@ -12,6 +12,7 @@ import {
   FileText, 
   LogOut,
   ChevronRight,
+  ChevronLeft,
   Home,
   Grid3x3,
   Bell,
@@ -20,7 +21,7 @@ import {
 
 const More = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const authData = authStorage.getAuthData();
   const employeeData = authStorage.getEmployeeData();
   
@@ -45,6 +46,8 @@ const More = () => {
     { icon: FileText, label: t('more.privacyPolicy'), onClick: () => {} },
     { icon: FileText, label: t('more.termsAndConditions'), onClick: () => {} },
   ];
+
+  const ChevronIcon = language === 'ar' ? ChevronLeft : ChevronRight;
 
   return (
     <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto">
@@ -72,7 +75,7 @@ const More = () => {
               <item.icon className="h-6 w-6 text-foreground" />
               <span className="text-base font-medium">{item.label}</span>
             </div>
-            <ChevronRight className="h-5 w-5 text-primary" />
+            <ChevronIcon className="h-5 w-5 text-primary" />
           </button>
         ))}
 
