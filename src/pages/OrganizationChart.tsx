@@ -9,7 +9,6 @@ interface Employee {
   name: string;
   position: string;
   image?: string;
-  hasPlaceholder?: boolean;
 }
 
 const OrganizationChart = () => {
@@ -24,92 +23,48 @@ const OrganizationChart = () => {
 
   const { blobUrl: userImageUrl } = useAuthImage(user.image);
 
-  const ceo: Employee = {
-    name: "Abdulkareem Essaied Shuia",
-    position: "CHRO",
-    image: "",
-  };
+  // Build organizational hierarchy from employee data
+  const managers: Employee[] = [];
+  
+  // Add attendance manager if available
+  if (employeeData?.attendance_manager_id && Array.isArray(employeeData.attendance_manager_id)) {
+    managers.push({
+      name: employeeData.attendance_manager_id[1],
+      position: "Manager",
+      image: "",
+    });
+  }
+  
+  // Add expense manager if different from attendance manager
+  if (employeeData?.expense_manager_id && Array.isArray(employeeData.expense_manager_id)) {
+    const expenseManagerName = employeeData.expense_manager_id[1];
+    if (!managers.find(m => m.name === expenseManagerName)) {
+      managers.push({
+        name: expenseManagerName,
+        position: "Expense Manager",
+        image: "",
+      });
+    }
+  }
+  
+  // Add timesheet manager if different from others
+  if (employeeData?.timesheet_manager_id && Array.isArray(employeeData.timesheet_manager_id)) {
+    const timesheetManagerName = employeeData.timesheet_manager_id[1];
+    if (!managers.find(m => m.name === timesheetManagerName)) {
+      managers.push({
+        name: timesheetManagerName,
+        position: "Timesheet Manager",
+        image: "",
+      });
+    }
+  }
 
   const employees: Employee[] = [
+    ...managers,
     {
       name: user.name,
       position: user.position,
       image: user.image,
-    },
-    {
-      name: "Abdul Salam Ali Masoud Angam",
-      position: "Administrative Office C...",
-      hasPlaceholder: true,
-    },
-    {
-      name: "Aisha Mukhtar Ibrahim Al-Hashani",
-      position: "Administrative Office M...",
-      hasPlaceholder: true,
-    },
-    {
-      name: "Al-Hadi Nasr Khalifa Al-Hussan",
-      position: "Administrative Office C...",
-      hasPlaceholder: true,
-    },
-    {
-      name: "Al-Moataz Billah Mohammed Abuduweij",
-      position: "HR Policy & Compliance...",
-      image: "",
-    },
-    {
-      name: "Essam Nasr Khalifa Al-Halak",
-      position: "Administrative Office C...",
-      image: "",
-    },
-    {
-      name: "Huda Adel Ali Al-Haddad",
-      position: "Data Management Direc...",
-      hasPlaceholder: true,
-    },
-    {
-      name: "Laila Ali Abdulqader Bin Omran",
-      position: "Data Management Spec...",
-      image: "",
-    },
-    {
-      name: "Mohamed Mostafa Fadl",
-      position: "Data Management Secti...",
-      image: "",
-    },
-    {
-      name: "Mohammed Al-Sharif Asim Kurban",
-      position: "Administrative Office S...",
-      hasPlaceholder: true,
-    },
-    {
-      name: "Mohannad Wagdy Suileiman Al-Tamzeeni",
-      position: "Administrative Office S...",
-      hasPlaceholder: true,
-    },
-    {
-      name: "Muna Abdul Basit Al-Naas",
-      position: "Data Management Spec...",
-      hasPlaceholder: true,
-    },
-    {
-      name: "Rafaa Abdul Razzaq bin Aluwa",
-      position: "Administrative Office S...",
-      image: "",
-    },
-    {
-      name: "Taqwa Abdel Nasser Bin Nafi",
-      position: "HR Policy & Compliance...",
-      image: "",
-    },
-    {
-      name: "Tehani Mansour Al-Ahrash",
-      position: "Data Management Senio...",
-      image: "",
-    },
-    {
-      name: "Umm Al-Saad Al-Mahdi Futuraik",
-      position: "Administrative Office S...",
-      image: "",
     },
   ];
 
@@ -128,45 +83,43 @@ const OrganizationChart = () => {
 
       <ScrollArea className="flex-1">
         <div className="p-4 pb-8">
-          {/* CEO/Top Level */}
-          <div className="flex flex-col items-center mb-6">
-            <div className="bg-card rounded-2xl border-2 border-border p-4 w-full max-w-[280px]">
-              <div className="flex flex-col items-center">
-                <Avatar className="h-16 w-16 mb-3">
-                  <AvatarImage src={ceo.image} alt={ceo.name} />
-                  <AvatarFallback className="bg-muted">
-                    {ceo.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <p className="text-sm font-semibold text-primary text-center mb-1">
-                  {ceo.name}
-                </p>
-                <p className="text-xs text-muted-foreground text-center">{ceo.position}</p>
+          {/* Department Head / Top Manager */}
+          {managers.length > 0 && (
+            <>
+              <div className="flex flex-col items-center mb-6">
+                <div className="bg-card rounded-2xl border-2 border-border p-4 w-full max-w-[280px]">
+                  <div className="flex flex-col items-center">
+                    <Avatar className="h-16 w-16 mb-3">
+                      <AvatarImage src={managers[0].image} alt={managers[0].name} />
+                      <AvatarFallback className="bg-muted">
+                        {managers[0].name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className="text-sm font-semibold text-primary text-center mb-1">
+                      {managers[0].name}
+                    </p>
+                    <p className="text-xs text-muted-foreground text-center">{managers[0].position}</p>
+                  </div>
+                </div>
+                
+                {/* Connecting Line */}
+                <div className="w-0.5 h-8 bg-border" />
               </div>
-            </div>
-            
-            {/* Connecting Line */}
-            <div className="w-0.5 h-8 bg-border" />
-          </div>
+            </>
+          )}
 
-          {/* Employees Grid */}
+          {/* Team Members Grid */}
           <div className="grid grid-cols-2 gap-4">
-            {employees.map((employee, index) => (
+            {employees.slice(managers.length > 0 ? 1 : 0).map((employee, index) => (
               <div key={index} className="flex flex-col items-center">
                 <div className="bg-card rounded-2xl border-2 border-border p-4 w-full">
                   <div className="flex flex-col items-center">
-                    {employee.hasPlaceholder ? (
-                      <div className="h-16 w-16 mb-3 rounded-full bg-primary flex items-center justify-center">
-                        <User className="h-8 w-8 text-primary-foreground" />
-                      </div>
-                    ) : (
-                      <Avatar className="h-16 w-16 mb-3">
-                        <AvatarImage src={employee.image} alt={employee.name} />
-                        <AvatarFallback className="bg-muted">
-                          {employee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
+                    <Avatar className="h-16 w-16 mb-3">
+                      <AvatarImage src={employee.name === user.name ? userImageUrl : employee.image} alt={employee.name} />
+                      <AvatarFallback className="bg-muted">
+                        {employee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <p className="text-sm font-semibold text-primary text-center mb-1 leading-tight">
                       {employee.name}
                     </p>

@@ -494,19 +494,24 @@ const Profile = () => {
               <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
-                  <p className="text-sm font-semibold text-foreground">Roles</p>
+                  <p className="text-sm font-semibold text-foreground">Reporting Structure</p>
                 </div>
                 <div className="space-y-3 ml-5">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src="" alt="Abdulkareem Essaied Shuia" />
-                      <AvatarFallback className="bg-muted text-sm">AE</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Abdulkareem Essaied Shuia</p>
-                      <p className="text-sm text-muted-foreground">CHRO</p>
+                  {/* Show managers if available */}
+                  {employeeData?.attendance_manager_id && Array.isArray(employeeData.attendance_manager_id) && (
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src="" alt={employeeData.attendance_manager_id[1]} />
+                        <AvatarFallback className="bg-muted text-sm">
+                          {employeeData.attendance_manager_id[1].split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{employeeData.attendance_manager_id[1]}</p>
+                        <p className="text-sm text-muted-foreground">Manager</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={userImageUrl} alt={user.name} />
@@ -526,22 +531,14 @@ const Profile = () => {
             {/* Job Description Section */}
             <div>
               <h3 className="text-base font-semibold text-foreground mb-3">Job Description</h3>
-              <div className="bg-card p-4 rounded-lg border border-border space-y-4">
-                <div>
-                  <h4 className="text-sm font-bold text-foreground mb-2">Job Summary:</h4>
-                  <p className="text-sm text-foreground leading-relaxed">
-                    The Administrative Office Specialist is responsible for providing high-level administrative, clerical, and operational support to the office or department, ensuring efficient day-to-day operations. This role serves as a central point of contact, manages vital information flow, and performs specialized administrative duties that require a high degree of confidentiality, organization, and problem-solving skills.
+              <div className="bg-card p-4 rounded-lg border border-border">
+                {employeeData?.job_description ? (
+                  <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                    {employeeData.job_description}
                   </p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-foreground mb-2">Key Responsibilities:</h4>
-                  <div className="space-y-2">
-                    <p className="text-sm font-semibold text-foreground">1. Administrative and Clerical Support:</p>
-                    <p className="text-sm text-foreground ml-4">
-                      • <span className="font-medium">Correspondence Management:</span> Manage incoming and outgoing communications, including answering and directing phone calls.
-                    </p>
-                  </div>
-                </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No job description available</p>
+                )}
               </div>
             </div>
           </TabsContent>
