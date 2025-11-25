@@ -108,7 +108,7 @@ const UpscalingRoute = () => {
                 value={level.id}
                 className="bg-card border border-border rounded-lg overflow-hidden"
               >
-                <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-muted/50 [&[data-state=open]>svg]:rotate-180">
+                <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-muted/50">
                   <div className="text-left">
                     <p className="text-base font-semibold text-foreground">{level.title}</p>
                     <p className="text-sm text-muted-foreground">Proficiency Level</p>
