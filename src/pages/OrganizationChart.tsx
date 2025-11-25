@@ -1,8 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authStorage } from "@/lib/auth";
+
+interface Employee {
+  name: string;
+  position: string;
+  image?: string;
+  hasPlaceholder?: boolean;
+}
 
 const OrganizationChart = () => {
   const navigate = useNavigate();
@@ -14,16 +21,92 @@ const OrganizationChart = () => {
     image: employeeData?.image,
   };
 
-  const roles = [
-    {
-      name: "Abdulkareem Essaied Shuia",
-      position: "CHRO",
-      image: "",
-    },
+  const ceo: Employee = {
+    name: "Abdulkareem Essaied Shuia",
+    position: "CHRO",
+    image: "",
+  };
+
+  const employees: Employee[] = [
     {
       name: user.name,
       position: user.position,
       image: user.image,
+    },
+    {
+      name: "Abdul Salam Ali Masoud Angam",
+      position: "Administrative Office C...",
+      hasPlaceholder: true,
+    },
+    {
+      name: "Aisha Mukhtar Ibrahim Al-Hashani",
+      position: "Administrative Office M...",
+      hasPlaceholder: true,
+    },
+    {
+      name: "Al-Hadi Nasr Khalifa Al-Hussan",
+      position: "Administrative Office C...",
+      hasPlaceholder: true,
+    },
+    {
+      name: "Al-Moataz Billah Mohammed Abuduweij",
+      position: "HR Policy & Compliance...",
+      image: "",
+    },
+    {
+      name: "Essam Nasr Khalifa Al-Halak",
+      position: "Administrative Office C...",
+      image: "",
+    },
+    {
+      name: "Huda Adel Ali Al-Haddad",
+      position: "Data Management Direc...",
+      hasPlaceholder: true,
+    },
+    {
+      name: "Laila Ali Abdulqader Bin Omran",
+      position: "Data Management Spec...",
+      image: "",
+    },
+    {
+      name: "Mohamed Mostafa Fadl",
+      position: "Data Management Secti...",
+      image: "",
+    },
+    {
+      name: "Mohammed Al-Sharif Asim Kurban",
+      position: "Administrative Office S...",
+      hasPlaceholder: true,
+    },
+    {
+      name: "Mohannad Wagdy Suileiman Al-Tamzeeni",
+      position: "Administrative Office S...",
+      hasPlaceholder: true,
+    },
+    {
+      name: "Muna Abdul Basit Al-Naas",
+      position: "Data Management Spec...",
+      hasPlaceholder: true,
+    },
+    {
+      name: "Rafaa Abdul Razzaq bin Aluwa",
+      position: "Administrative Office S...",
+      image: "",
+    },
+    {
+      name: "Taqwa Abdel Nasser Bin Nafi",
+      position: "HR Policy & Compliance...",
+      image: "",
+    },
+    {
+      name: "Tehani Mansour Al-Ahrash",
+      position: "Data Management Senio...",
+      image: "",
+    },
+    {
+      name: "Umm Al-Saad Al-Mahdi Futuraik",
+      position: "Administrative Office S...",
+      image: "",
     },
   ];
 
@@ -41,29 +124,56 @@ const OrganizationChart = () => {
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="p-4">
-          {/* Roles Section */}
-          <div className="bg-card p-4 rounded-lg border border-border">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
-              <h3 className="text-base font-semibold text-foreground">Roles</h3>
+        <div className="p-4 pb-8">
+          {/* CEO/Top Level */}
+          <div className="flex flex-col items-center mb-6">
+            <div className="bg-card rounded-2xl border-2 border-border p-4 w-full max-w-[280px]">
+              <div className="flex flex-col items-center">
+                <Avatar className="h-16 w-16 mb-3">
+                  <AvatarImage src={ceo.image} alt={ceo.name} />
+                  <AvatarFallback className="bg-muted">
+                    {ceo.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <p className="text-sm font-semibold text-primary text-center mb-1">
+                  {ceo.name}
+                </p>
+                <p className="text-xs text-muted-foreground text-center">{ceo.position}</p>
+              </div>
             </div>
-            <div className="space-y-4 ml-5">
-              {roles.map((role, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={role.image} alt={role.name} />
-                    <AvatarFallback className="bg-muted">
-                      {role.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{role.name}</p>
-                    <p className="text-sm text-muted-foreground">{role.position}</p>
+            
+            {/* Connecting Line */}
+            <div className="w-0.5 h-8 bg-border" />
+          </div>
+
+          {/* Employees Grid */}
+          <div className="grid grid-cols-2 gap-4">
+            {employees.map((employee, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <div className="bg-card rounded-2xl border-2 border-border p-4 w-full">
+                  <div className="flex flex-col items-center">
+                    {employee.hasPlaceholder ? (
+                      <div className="h-16 w-16 mb-3 rounded-full bg-primary flex items-center justify-center">
+                        <User className="h-8 w-8 text-primary-foreground" />
+                      </div>
+                    ) : (
+                      <Avatar className="h-16 w-16 mb-3">
+                        <AvatarImage src={employee.image} alt={employee.name} />
+                        <AvatarFallback className="bg-muted">
+                          {employee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <p className="text-sm font-semibold text-primary text-center mb-1 leading-tight">
+                      {employee.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground text-center leading-tight">
+                      {employee.position}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </ScrollArea>
