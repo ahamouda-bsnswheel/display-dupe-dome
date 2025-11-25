@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ChevronLeft, Power, Plus, Edit, Trash2, Phone, Mail, Check } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ interface WorkExperience {
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "resume";
   const [isAddWorkExpOpen, setIsAddWorkExpOpen] = useState(false);
@@ -195,7 +197,7 @@ const Profile = () => {
           className="flex items-center gap-2 text-foreground"
         >
           <ChevronLeft className="h-6 w-6" />
-          <span className="text-lg font-medium">Profile</span>
+          <span className="text-lg font-medium">{t('profile.title')}</span>
         </button>
         <button onClick={handleLogout}>
           <Power className="h-6 w-6 text-destructive" />
@@ -252,39 +254,39 @@ const Profile = () => {
               value="resume" 
               className="flex-shrink-0 rounded-none border-b-2 border-transparent text-muted-foreground data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:bg-gradient-to-t data-[state=active]:from-primary/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-all"
             >
-              Resume
+              {t('profile.resume')}
             </TabsTrigger>
             <TabsTrigger 
               value="work-info"
               className="flex-shrink-0 rounded-none border-b-2 border-transparent text-muted-foreground data-[state=active]:text-secondary data-[state=active]:border-secondary data-[state=active]:bg-gradient-to-t data-[state=active]:from-secondary/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-all"
             >
-              Work Info
+              {t('profile.workInfo')}
             </TabsTrigger>
             <TabsTrigger 
               value="private-info"
               className="flex-shrink-0 rounded-none border-b-2 border-transparent text-muted-foreground data-[state=active]:text-accent data-[state=active]:border-accent data-[state=active]:bg-gradient-to-t data-[state=active]:from-accent/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-all"
             >
-              Private Info
+              {t('profile.privateInfo')}
             </TabsTrigger>
             <TabsTrigger 
               value="achievements"
               className="flex-shrink-0 rounded-none border-b-2 border-transparent text-muted-foreground data-[state=active]:text-coral data-[state=active]:border-coral data-[state=active]:bg-gradient-to-t data-[state=active]:from-coral/5 data-[state=active]:to-transparent px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-all"
             >
-              My Achievement
+              {t('profile.myAchievement')}
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="resume" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Competencies */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">Competencies</h3>
+              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.competencies')}</h3>
               <CompetencyPuzzle competencies={competencies} />
             </div>
 
             {/* Work Experience */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-secondary">Work Experience</h3>
+                <h3 className="text-base font-semibold text-secondary">{t('profile.workExperience')}</h3>
                 <Button 
                   size="icon" 
                   variant="ghost" 
@@ -328,7 +330,7 @@ const Profile = () => {
             {/* Skills */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-primary">Skills</h3>
+                <h3 className="text-base font-semibold text-primary">{t('profile.skills')}</h3>
                 <Button 
                   size="icon" 
                   variant="ghost" 
@@ -371,12 +373,12 @@ const Profile = () => {
           <TabsContent value="work-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Private Contact */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">Private Contact</h3>
+              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.privateContact')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Work Address</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.workAddress')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.address_id && Array.isArray(employeeData.address_id)
                         ? employeeData.address_id[1] 
@@ -387,7 +389,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Work Location</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.workLocation')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.work_location_id && Array.isArray(employeeData.work_location_id)
                         ? employeeData.work_location_id[1]
@@ -400,12 +402,12 @@ const Profile = () => {
 
             {/* Approvers */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">Approvers</h3>
+              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.approvers')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Expenses</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.expenses')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.expense_manager_id && Array.isArray(employeeData.expense_manager_id)
                         ? employeeData.expense_manager_id[1]
@@ -416,14 +418,14 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Time Off</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.timeOff')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Time Sheet</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.timeSheet')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.timesheet_manager_id && Array.isArray(employeeData.timesheet_manager_id)
                         ? employeeData.timesheet_manager_id[1]
@@ -434,7 +436,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Attendance</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.attendance')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.attendance_manager_id && Array.isArray(employeeData.attendance_manager_id)
                         ? employeeData.attendance_manager_id[1]
@@ -447,12 +449,12 @@ const Profile = () => {
 
             {/* Schedule Section */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">Schedule</h3>
+              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.schedule')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Working Hours</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.workingHours')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.resource_calendar_id && Array.isArray(employeeData.resource_calendar_id)
                         ? employeeData.resource_calendar_id[1]
@@ -463,7 +465,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Work Location Plan</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.workLocationPlan')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.work_location_plan_id && Array.isArray(employeeData.work_location_plan_id)
                         ? employeeData.work_location_plan_id[1]
@@ -474,7 +476,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Time Zone</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.timeZone')}</p>
                     <p className="text-sm text-muted-foreground">{employeeData?.tz || "---"}</p>
                   </div>
                 </div>
@@ -483,16 +485,16 @@ const Profile = () => {
 
             {/* Planning Section */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">Planning</h3>
+              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.planning')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Roles</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.roles')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.planning_role_ids && employeeData.planning_role_ids.length > 0
                         ? employeeData.planning_role_ids.join(", ")
-                        : "No Roles"}
+                        : t('profile.noRoles')}
                     </p>
                   </div>
                 </div>
@@ -502,19 +504,19 @@ const Profile = () => {
             {/* Organization Chart Section */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-primary">Organization Chart</h3>
+                <h3 className="text-base font-semibold text-primary">{t('profile.organizationChart')}</h3>
                 <Button 
                   variant="link" 
                   className="h-auto p-0 text-secondary hover:text-secondary/80"
                   onClick={() => navigate("/organization-chart")}
                 >
-                  See All
+                  {t('profile.seeAll')}
                 </Button>
               </div>
               <div className="bg-card p-4 rounded-lg border border-primary/20">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
-                  <p className="text-sm font-semibold text-primary">Reporting Structure</p>
+                  <p className="text-sm font-semibold text-primary">{t('profile.reportingStructure')}</p>
                 </div>
                 <div className="space-y-3 ml-5">
                   {/* Show managers if available */}
@@ -528,7 +530,7 @@ const Profile = () => {
                       </Avatar>
                       <div>
                         <p className="text-sm font-medium text-foreground">{employeeData.attendance_manager_id[1]}</p>
-                        <p className="text-sm text-muted-foreground">Manager</p>
+                        <p className="text-sm text-muted-foreground">{t('profile.manager')}</p>
                       </div>
                     </div>
                   )}
@@ -550,7 +552,7 @@ const Profile = () => {
 
             {/* Job Description Section */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">Job Description</h3>
+              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.jobDescription')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20">
                 {employeeData?.job_description ? (
                   <div 
@@ -563,7 +565,7 @@ const Profile = () => {
                     }}
                   />
                 ) : (
-                  <p className="text-sm text-muted-foreground">No job description available</p>
+                  <p className="text-sm text-muted-foreground">{t('profile.noJobDescription')}</p>
                 )}
               </div>
             </div>
@@ -572,13 +574,13 @@ const Profile = () => {
           <TabsContent value="private-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Private Contact */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">Private Contact</h3>
+              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.privateContact')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-sm font-semibold text-primary">Private Address</p>
+                      <p className="text-sm font-semibold text-primary">{t('profile.privateAddress')}</p>
                       <p className="text-sm text-muted-foreground">
                         {employeeData?.private_street || "---"}
                       </p>
@@ -594,7 +596,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Email</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.email')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.private_email || "---"}
                     </p>
@@ -603,7 +605,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Phone</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.phone')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.private_phone || "---"}
                     </p>
@@ -612,7 +614,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Bank Account Number</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.bankAccountNumber')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.bank_account_id && Array.isArray(employeeData.bank_account_id)
                         ? employeeData.bank_account_id[1]
@@ -623,7 +625,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Language</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.language')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.lang || "---"}
                     </p>
@@ -632,14 +634,14 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Home Work Distance</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.homeWorkDistance')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Private Car Plate</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.privateCarPlate')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
@@ -648,13 +650,13 @@ const Profile = () => {
 
             {/* Family Status */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">Family Status</h3>
+              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.familyStatus')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-sm font-semibold text-primary">Marital Status</p>
+                      <p className="text-sm font-semibold text-primary">{t('profile.maritalStatus')}</p>
                       <p className="text-sm text-muted-foreground">
                         {employeeData?.marital 
                           ? employeeData.marital.charAt(0).toUpperCase() + employeeData.marital.slice(1)
@@ -672,7 +674,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Number of Children</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.numberOfChildren')}</p>
                     <p className="text-sm text-muted-foreground">
                       {employeeData?.children ?? "---"}
                     </p>
@@ -683,13 +685,13 @@ const Profile = () => {
 
             {/* Emergency */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">Emergency</h3>
+              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.emergency')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-sm font-semibold text-primary">Contact Name</p>
+                      <p className="text-sm font-semibold text-primary">{t('profile.contactName')}</p>
                       <p className="text-sm text-muted-foreground">---</p>
                     </div>
                   </div>
@@ -703,7 +705,7 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Contact Phone</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.contactPhone')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
@@ -712,13 +714,13 @@ const Profile = () => {
 
             {/* Education */}
             <div>
-              <h3 className="text-base font-semibold text-secondary mb-3">Education</h3>
+              <h3 className="text-base font-semibold text-secondary mb-3">{t('profile.education')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-sm font-semibold text-primary">Certificate Level</p>
+                      <p className="text-sm font-semibold text-primary">{t('profile.certificateLevel')}</p>
                       <p className="text-sm text-muted-foreground">Bachelor</p>
                     </div>
                   </div>
@@ -732,14 +734,14 @@ const Profile = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">Field of Study</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.fieldOfStudy')}</p>
                     <p className="text-sm text-muted-foreground">محاسبة</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-primary">School</p>
+                    <p className="text-sm font-semibold text-primary">{t('profile.school')}</p>
                     <p className="text-sm text-muted-foreground">---</p>
                   </div>
                 </div>
@@ -762,16 +764,16 @@ const Profile = () => {
                 </Avatar>
               </div>
               <p className="text-base font-semibold text-foreground">
-                Get <span className="text-primary">{karmaValue}</span> xp to level up!
+                {t('profile.getLevelUp')} <span className="text-primary">{karmaValue}</span> {t('profile.xpToLevelUp')}
               </p>
             </div>
 
             {/* Badges Section */}
             <div>
-              <h3 className="text-lg font-semibold text-foreground mb-4">Badges</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-4">{t('profile.badges')}</h3>
               <div className="space-y-3">
                 {badges.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">No badges earned yet</p>
+                  <p className="text-center text-muted-foreground py-8">{t('profile.noBadges')}</p>
                 ) : (
                   badges.map((badge) => (
                     <div 
