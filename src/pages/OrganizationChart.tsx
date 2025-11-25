@@ -3,6 +3,7 @@ import { ChevronLeft, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
+import { useAuthImage } from "@/hooks/use-auth-image";
 
 interface Employee {
   name: string;
@@ -20,6 +21,8 @@ const OrganizationChart = () => {
     position: employeeData?.job_title || "Employee",
     image: getSecureImageUrl(employeeData?.image_url),
   };
+
+  const { blobUrl: userImageUrl } = useAuthImage(user.image);
 
   const ceo: Employee = {
     name: "Abdulkareem Essaied Shuia",
@@ -130,7 +133,7 @@ const OrganizationChart = () => {
             <div className="bg-card rounded-2xl border-2 border-border p-4 w-full max-w-[280px]">
               <div className="flex flex-col items-center">
                 <Avatar className="h-16 w-16 mb-3">
-                  <AvatarImage src={ceo.image} alt={ceo.name} crossOrigin="anonymous" />
+                  <AvatarImage src={ceo.image} alt={ceo.name} />
                   <AvatarFallback className="bg-muted">
                     {ceo.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -158,7 +161,7 @@ const OrganizationChart = () => {
                       </div>
                     ) : (
                       <Avatar className="h-16 w-16 mb-3">
-                        <AvatarImage src={employee.image} alt={employee.name} crossOrigin="anonymous" />
+                        <AvatarImage src={employee.image} alt={employee.name} />
                         <AvatarFallback className="bg-muted">
                           {employee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                         </AvatarFallback>

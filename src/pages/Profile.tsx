@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
+import { useAuthImage } from "@/hooks/use-auth-image";
 import { CompetencyPuzzle } from "@/components/CompetencyPuzzle";
 import { AddWorkExperienceModal } from "@/components/AddWorkExperienceModal";
 import { DeleteWorkExperienceDialog } from "@/components/DeleteWorkExperienceDialog";
@@ -52,6 +53,8 @@ const Profile = () => {
     department: employeeData?.department_id ? employeeData.department_id[1] : "Human Resource",
     image: getSecureImageUrl(employeeData?.image_url),
   };
+
+  const { blobUrl: userImageUrl } = useAuthImage(user.image);
 
   const handleLogout = () => {
     authStorage.clearAuthData();
@@ -145,7 +148,7 @@ const Profile = () => {
         <div className="bg-card px-6 py-6">
           <div className="flex flex-col items-center mb-4">
             <Avatar className="h-24 w-24 mb-3">
-              <AvatarImage src={user.image} alt={user.name} crossOrigin="anonymous" />
+              <AvatarImage src={userImageUrl} alt={user.name} />
               <AvatarFallback className="bg-muted text-xl">
                 {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
               </AvatarFallback>
@@ -447,7 +450,7 @@ const Profile = () => {
                 <div className="space-y-3 ml-5">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src="" alt="Abdulkareem Essaied Shuia" crossOrigin="anonymous" />
+                      <AvatarImage src="" alt="Abdulkareem Essaied Shuia" />
                       <AvatarFallback className="bg-muted text-sm">AE</AvatarFallback>
                     </Avatar>
                     <div>
@@ -457,7 +460,7 @@ const Profile = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={user.image} alt={user.name} crossOrigin="anonymous" />
+                      <AvatarImage src={userImageUrl} alt={user.name} />
                       <AvatarFallback className="bg-muted text-sm">
                         {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                       </AvatarFallback>
