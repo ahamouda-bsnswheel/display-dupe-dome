@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
+import { useAuthImage } from "@/hooks/use-auth-image";
 import { useNavigate } from "react-router-dom";
 import { 
   Search, 
@@ -31,6 +32,8 @@ const Dashboard = () => {
     userId: authData?.user_id,
     isManager: authData?.is_manager || false,
   };
+
+  const { blobUrl: userImageUrl } = useAuthImage(user.image);
 
   const modules = [
     { icon: Clock, title: "Time Tracker", color: "bg-blue-50" },
@@ -72,7 +75,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={user.image} alt={user.name} crossOrigin="anonymous" />
+              <AvatarImage src={userImageUrl} alt={user.name} />
               <AvatarFallback className="bg-muted">
                 {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
               </AvatarFallback>

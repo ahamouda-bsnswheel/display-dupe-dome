@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
+import { useAuthImage } from "@/hooks/use-auth-image";
 import { useNavigate } from "react-router-dom";
 import { 
   User, 
@@ -27,6 +28,8 @@ const More = () => {
     image: getSecureImageUrl(employeeData?.image_url),
   };
 
+  const { blobUrl: userImageUrl } = useAuthImage(user.image);
+
   const handleLogout = () => {
     authStorage.clearAuthData();
     navigate("/");
@@ -46,7 +49,7 @@ const More = () => {
       {/* Profile Section */}
       <div className="bg-card px-6 py-8 flex flex-col items-center">
         <Avatar className="h-32 w-32 mb-4">
-          <AvatarImage src={user.image} alt={user.name} crossOrigin="anonymous" />
+          <AvatarImage src={userImageUrl} alt={user.name} />
           <AvatarFallback className="bg-muted text-2xl">
             {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
           </AvatarFallback>
