@@ -280,14 +280,14 @@ const Profile = () => {
           <TabsContent value="resume" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
             {/* Competencies */}
             <div>
-              <h3 className="text-base font-semibold text-primary mb-3">{t('profile.competencies')}</h3>
+              <h3 className={`text-base font-semibold text-primary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.competencies')}</h3>
               <CompetencyPuzzle competencies={competencies} />
             </div>
 
             {/* Work Experience */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-secondary">{t('profile.workExperience')}</h3>
+              <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <h3 className={`text-base font-semibold text-secondary ${isRTL ? 'text-right' : ''}`}>{t('profile.workExperience')}</h3>
                 <Button 
                   size="icon" 
                   variant="ghost" 
@@ -300,7 +300,7 @@ const Profile = () => {
               <div className="space-y-3">
                 {workExperience.map((exp, index) => (
                   <div key={index} className="bg-card p-4 rounded-lg border border-primary/20">
-                    <div className="flex items-start justify-between">
+                    <div className={`flex items-start justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <div className={`flex-1 ${isRTL ? 'text-right' : ''}`}>
                         <p className="text-sm text-secondary mb-1">{exp.dates}</p>
                         <p className="text-sm font-medium text-primary">{exp.title}</p>
@@ -330,8 +330,8 @@ const Profile = () => {
 
             {/* Skills */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-semibold text-primary">{t('profile.skills')}</h3>
+              <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <h3 className={`text-base font-semibold text-primary ${isRTL ? 'text-right' : ''}`}>{t('profile.skills')}</h3>
                 <Button 
                   size="icon" 
                   variant="ghost" 
@@ -344,7 +344,7 @@ const Profile = () => {
               <div className="space-y-3">
                 {skills.map((skill, index) => (
                   <div key={index} className="bg-card p-4 rounded-lg border border-secondary/20">
-                    <div className="flex items-start justify-between">
+                    <div className={`flex items-start justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <div className={`flex-1 ${isRTL ? 'text-right' : ''}`}>
                         <p className="text-sm font-medium text-secondary mb-1">{skill.name}</p>
                         <p className="text-sm text-primary">{skill.level}</p>
@@ -504,7 +504,7 @@ const Profile = () => {
 
             {/* Organization Chart Section */}
             <div>
-              <div className="flex items-center justify-between mb-3">
+              <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <h3 className={`text-base font-semibold text-primary ${isRTL ? 'text-right' : ''}`}>{t('profile.organizationChart')}</h3>
                 <Button 
                   variant="link" 
@@ -577,7 +577,7 @@ const Profile = () => {
             <div>
               <h3 className={`text-base font-semibold text-primary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.privateContact')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
-                <div className="flex items-start justify-between">
+                <div className={`flex items-start justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className={`flex items-center gap-3 flex-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? 'text-right' : ''}>
@@ -653,7 +653,7 @@ const Profile = () => {
             <div>
               <h3 className={`text-base font-semibold text-secondary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.familyStatus')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
-                <div className="flex items-start justify-between">
+                <div className={`flex items-start justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className={`flex items-center gap-3 flex-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? 'text-right' : ''}>
@@ -688,7 +688,7 @@ const Profile = () => {
             <div>
               <h3 className={`text-base font-semibold text-primary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.emergency')}</h3>
               <div className="bg-card p-4 rounded-lg border border-primary/20 space-y-4">
-                <div className="flex items-start justify-between">
+                <div className={`flex items-start justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className={`flex items-center gap-3 flex-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? 'text-right' : ''}>
@@ -717,7 +717,7 @@ const Profile = () => {
             <div>
               <h3 className={`text-base font-semibold text-secondary mb-3 ${isRTL ? 'text-right' : ''}`}>{t('profile.education')}</h3>
               <div className="bg-card p-4 rounded-lg border border-secondary/20 space-y-4">
-                <div className="flex items-start justify-between">
+                <div className={`flex items-start justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className={`flex items-center gap-3 flex-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? 'text-right' : ''}>
@@ -779,7 +779,7 @@ const Profile = () => {
                   badges.map((badge) => (
                     <div 
                       key={badge.id}
-                      className="bg-card p-4 rounded-lg border border-border flex items-center justify-between"
+                     className={`bg-card p-4 rounded-lg border border-border flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}
                     >
                       <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                         <BadgeImage
