@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { authStorage } from "@/lib/auth";
+import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
 import { 
   Search, 
@@ -24,7 +24,7 @@ const Dashboard = () => {
   const user = {
     name: employeeData?.name || "User",
     email: employeeData?.work_email || "",
-    image: employeeData?.image_url,
+    image: getSecureImageUrl(employeeData?.image_url),
     jobTitle: employeeData?.job_title || "",
     department: employeeData?.department_id ? employeeData.department_id[1] : "",
     employeeId: authData?.employee_id,

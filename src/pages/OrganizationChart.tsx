@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { authStorage } from "@/lib/auth";
+import { authStorage, getSecureImageUrl } from "@/lib/auth";
 
 interface Employee {
   name: string;
@@ -18,7 +18,7 @@ const OrganizationChart = () => {
   const user = {
     name: employeeData?.name || "User",
     position: employeeData?.job_title || "Employee",
-    image: employeeData?.image_url,
+    image: getSecureImageUrl(employeeData?.image_url),
   };
 
   const ceo: Employee = {

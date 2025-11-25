@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { authStorage } from "@/lib/auth";
+import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { CompetencyPuzzle } from "@/components/CompetencyPuzzle";
 import { AddWorkExperienceModal } from "@/components/AddWorkExperienceModal";
 import { DeleteWorkExperienceDialog } from "@/components/DeleteWorkExperienceDialog";
@@ -50,7 +50,7 @@ const Profile = () => {
     email: employeeData?.work_email || "user@example.com",
     position: employeeData?.job_title || "Employee",
     department: employeeData?.department_id ? employeeData.department_id[1] : "Human Resource",
-    image: employeeData?.image_url,
+    image: getSecureImageUrl(employeeData?.image_url),
   };
 
   const handleLogout = () => {

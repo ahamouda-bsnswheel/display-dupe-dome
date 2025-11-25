@@ -11,6 +11,12 @@ interface AuthData {
 const AUTH_STORAGE_KEY = "noc_auth_data";
 const EMPLOYEE_STORAGE_KEY = "noc_employee_data";
 
+// Utility function to convert HTTP image URLs to HTTPS
+export const getSecureImageUrl = (url: string | undefined): string | undefined => {
+  if (!url) return undefined;
+  return url.replace(/^http:\/\//i, 'https://');
+};
+
 export const authStorage = {
   // Store auth data
   setAuthData: (data: AuthData) => {

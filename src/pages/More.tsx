@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { authStorage } from "@/lib/auth";
+import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
 import { 
   User, 
@@ -24,7 +24,7 @@ const More = () => {
   const user = {
     name: employeeData?.name || "User",
     role: employeeData?.job_title || "Employee",
-    image: employeeData?.image_url,
+    image: getSecureImageUrl(employeeData?.image_url),
   };
 
   const handleLogout = () => {
