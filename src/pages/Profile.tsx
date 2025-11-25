@@ -47,10 +47,10 @@ const Profile = () => {
   const user = {
     name: employeeData?.name || "User",
     employeeId: "G-62519723",
-    email: employeeData?.email || "user@example.com",
-    position: (employeeData as any)?.position || "Employee",
-    department: "Human Resource",
-    image: employeeData?.image,
+    email: employeeData?.work_email || "user@example.com",
+    position: employeeData?.job_title || "Employee",
+    department: employeeData?.department_id ? employeeData.department_id[1] : "Human Resource",
+    image: employeeData?.image_url,
   };
 
   const handleLogout = () => {
@@ -305,14 +305,22 @@ const Profile = () => {
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Work Address</p>
-                    <p className="text-sm text-muted-foreground">Jannah Al-Areef</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.address_id && Array.isArray(employeeData.address_id)
+                        ? employeeData.address_id[1] 
+                        : "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Work Location</p>
-                    <p className="text-sm text-muted-foreground">Tripoli</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.work_location_id && Array.isArray(employeeData.work_location_id)
+                        ? employeeData.work_location_id[1]
+                        : "---"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -326,7 +334,11 @@ const Profile = () => {
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Expenses</p>
-                    <p className="text-sm text-muted-foreground">Mitchell Admin</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.expense_manager_id && Array.isArray(employeeData.expense_manager_id)
+                        ? employeeData.expense_manager_id[1]
+                        : "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -340,14 +352,22 @@ const Profile = () => {
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Time Sheet</p>
-                    <p className="text-sm text-muted-foreground">Mitchell Admin</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.timesheet_manager_id && Array.isArray(employeeData.timesheet_manager_id)
+                        ? employeeData.timesheet_manager_id[1]
+                        : "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Attendance</p>
-                    <p className="text-sm text-muted-foreground">Mohamed Mostafa Fadl</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.attendance_manager_id && Array.isArray(employeeData.attendance_manager_id)
+                        ? employeeData.attendance_manager_id[1]
+                        : "---"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -361,21 +381,29 @@ const Profile = () => {
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Working Hours</p>
-                    <p className="text-sm text-muted-foreground">Standard 40 hours/week</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.resource_calendar_id && Array.isArray(employeeData.resource_calendar_id)
+                        ? employeeData.resource_calendar_id[1]
+                        : "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Work Location Plan</p>
-                    <p className="text-sm text-muted-foreground">Work Location Plan - Portal User 01</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.work_location_plan_id && Array.isArray(employeeData.work_location_plan_id)
+                        ? employeeData.work_location_plan_id[1]
+                        : "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Time Zone</p>
-                    <p className="text-sm text-muted-foreground">Libya</p>
+                    <p className="text-sm text-muted-foreground">{employeeData?.tz || "---"}</p>
                   </div>
                 </div>
               </div>
@@ -389,7 +417,11 @@ const Profile = () => {
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Roles</p>
-                    <p className="text-sm text-muted-foreground">No Roles</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.planning_role_ids && employeeData.planning_role_ids.length > 0
+                        ? employeeData.planning_role_ids.join(", ")
+                        : "No Roles"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -472,7 +504,9 @@ const Profile = () => {
                     <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
                     <div>
                       <p className="text-sm font-semibold text-foreground">Private Address</p>
-                      <p className="text-sm text-muted-foreground">---</p>
+                      <p className="text-sm text-muted-foreground">
+                        {employeeData?.private_street || "---"}
+                      </p>
                     </div>
                   </div>
                   <button 
@@ -486,28 +520,38 @@ const Profile = () => {
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Email</p>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.private_email || "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Phone</p>
-                    <p className="text-sm text-muted-foreground">926319723</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.private_phone || "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Bank Account Number</p>
-                    <p className="text-sm text-muted-foreground">---</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.bank_account_id && Array.isArray(employeeData.bank_account_id)
+                        ? employeeData.bank_account_id[1]
+                        : "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Language</p>
-                    <p className="text-sm text-muted-foreground">english</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.lang || "---"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -536,7 +580,11 @@ const Profile = () => {
                     <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
                     <div>
                       <p className="text-sm font-semibold text-foreground">Marital Status</p>
-                      <p className="text-sm text-muted-foreground">---</p>
+                      <p className="text-sm text-muted-foreground">
+                        {employeeData?.marital 
+                          ? employeeData.marital.charAt(0).toUpperCase() + employeeData.marital.slice(1)
+                          : "---"}
+                      </p>
                     </div>
                   </div>
                   <button 
@@ -550,7 +598,9 @@ const Profile = () => {
                   <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">Number of Children</p>
-                    <p className="text-sm text-muted-foreground">0</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.children ?? "---"}
+                    </p>
                   </div>
                 </div>
               </div>

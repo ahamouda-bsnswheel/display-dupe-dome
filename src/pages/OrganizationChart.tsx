@@ -17,8 +17,8 @@ const OrganizationChart = () => {
   
   const user = {
     name: employeeData?.name || "User",
-    position: (employeeData as any)?.position || "Employee",
-    image: employeeData?.image,
+    position: employeeData?.job_title || "Employee",
+    image: employeeData?.image_url,
   };
 
   const ceo: Employee = {
