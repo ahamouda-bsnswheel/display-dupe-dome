@@ -100,6 +100,11 @@ const Profile = () => {
             }));
             setSkills(formattedSkills);
           }
+
+          // Populate competencies
+          if (data.competencies && data.competencies.length > 0) {
+            setCompetencies(data.competencies);
+          }
         }
       } catch (error) {
         console.error("Error fetching employee details:", error);
@@ -165,6 +170,7 @@ const Profile = () => {
   };
 
   const [skills, setSkills] = useState([]);
+  const [competencies, setCompetencies] = useState<any[]>([]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -252,7 +258,7 @@ const Profile = () => {
             {/* Competencies */}
             <div>
               <h3 className="text-base font-semibold text-foreground mb-3">Competencies</h3>
-              <CompetencyPuzzle />
+              <CompetencyPuzzle competencies={competencies} />
             </div>
 
             {/* Work Experience */}

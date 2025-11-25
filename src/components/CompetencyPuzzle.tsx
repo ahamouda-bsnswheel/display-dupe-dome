@@ -12,38 +12,34 @@ interface Competency {
   position: { top: string; right: string; width: string; height: string };
 }
 
-const competencies: Competency[] = [
-  {
-    id: "resilience",
-    name: "Psychological Resilience",
-    jobLevel: "Competent",
-    progress: 0,
-    position: { top: "0", right: "25%", width: "25%", height: "25%" },
-  },
-  {
-    id: "critical-thinking",
-    name: "Critical Thinking",
-    jobLevel: "Developing",
-    progress: 35,
-    position: { top: "0", right: "0", width: "25%", height: "25%" },
-  },
-  {
-    id: "communication",
-    name: "Communication",
-    jobLevel: "Advanced",
-    progress: 60,
-    position: { top: "25%", right: "25%", width: "25%", height: "25%" },
-  },
-  {
-    id: "accountability",
-    name: "Accountability",
-    jobLevel: "Competent",
-    progress: 45,
-    position: { top: "25%", right: "0", width: "25%", height: "25%" },
-  },
-];
+interface ApiCompetency {
+  id: number;
+  code: string;
+  competency_id: string;
+  job_level_id: string;
+  progress: number;
+}
 
-export const CompetencyPuzzle = () => {
+interface CompetencyPuzzleProps {
+  competencies?: ApiCompetency[];
+}
+
+const positionMap: Record<string, { top: string; right: string; width: string; height: string }> = {
+  "PSR": { top: "0", right: "25%", width: "25%", height: "25%" },
+  "CRT": { top: "0", right: "0", width: "25%", height: "25%" },
+  "COM": { top: "25%", right: "25%", width: "25%", height: "25%" },
+  "ACC": { top: "25%", right: "0", width: "25%", height: "25%" },
+};
+
+export const CompetencyPuzzle = ({ competencies: apiCompetencies = [] }: CompetencyPuzzleProps) => {
+  // Map API data to component format, merging with position data
+  const competencies: Competency[] = apiCompetencies.map((comp) => ({
+    id: comp.code.toLowerCase(),
+    name: comp.competency_id,
+    jobLevel: comp.job_level_id,
+    progress: comp.progress,
+    position: positionMap[comp.code] || { top: "0", right: "0", width: "25%", height: "25%" },
+  }));
   const [selectedCompetency, setSelectedCompetency] = useState<Competency | null>(null);
   const navigate = useNavigate();
 
