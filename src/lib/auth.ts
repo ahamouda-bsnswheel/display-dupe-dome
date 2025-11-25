@@ -37,7 +37,7 @@ export const authStorage = {
   // Get auth headers for API requests
   getAuthHeaders: (): Record<string, string> => {
     const apiKey = authStorage.getApiKey();
-    return apiKey ? { "x-api-key": apiKey } : {};
+    return apiKey ? { "Authorization": apiKey } : {};
   },
 
   // Check if user is authenticated

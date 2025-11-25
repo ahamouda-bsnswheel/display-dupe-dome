@@ -43,7 +43,7 @@ const Login = () => {
             `https://bsnswheel.org/api/v1/employees/${data.employee_id}?context={"lang": "ar_001"}`,
             {
               headers: {
-                "x-api-key": data["x-api-key"],
+                "Authorization": data["x-api-key"],
               },
             }
           );
