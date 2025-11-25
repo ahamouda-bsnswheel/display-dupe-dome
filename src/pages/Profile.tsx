@@ -25,6 +25,8 @@ const Profile = () => {
   const [selectedWorkExp, setSelectedWorkExp] = useState<WorkExperience | null>(null);
   const [selectedWorkExpIndex, setSelectedWorkExpIndex] = useState<number | null>(null);
   const [isAddSkillOpen, setIsAddSkillOpen] = useState(false);
+  const [isEditSkillOpen, setIsEditSkillOpen] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState<any>(null);
   const employeeData = authStorage.getEmployeeData();
   
   const user = {
@@ -70,6 +72,11 @@ const Profile = () => {
       setWorkExperience(workExperience.filter((_, i) => i !== selectedWorkExpIndex));
       setSelectedWorkExpIndex(null);
     }
+  };
+
+  const handleEditSkill = (skill: any) => {
+    setSelectedSkill(skill);
+    setIsEditSkillOpen(true);
   };
 
   const skills = [
@@ -238,7 +245,10 @@ const Profile = () => {
                         <p className="text-sm text-muted-foreground">{skill.category}</p>
                       </div>
                       <div className="flex gap-2 ml-2">
-                        <button className="text-muted-foreground hover:text-foreground">
+                        <button 
+                          onClick={() => handleEditSkill(skill)}
+                          className="text-muted-foreground hover:text-foreground"
+                        >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button className="text-muted-foreground hover:text-destructive">
@@ -291,6 +301,14 @@ const Profile = () => {
       <AddSkillModal 
         open={isAddSkillOpen}
         onOpenChange={setIsAddSkillOpen}
+      />
+
+      {/* Edit Skill Modal */}
+      <AddSkillModal 
+        open={isEditSkillOpen}
+        onOpenChange={setIsEditSkillOpen}
+        editData={selectedSkill}
+        isEditMode={true}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
@@ -15,9 +15,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+interface Skill {
+  name: string;
+  level: string;
+  category: string;
+}
+
 interface AddSkillModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  editData?: Skill;
+  isEditMode?: boolean;
 }
 
 const SKILLS_DATA = {
@@ -63,10 +71,33 @@ const SKILLS_DATA = {
   },
 };
 
-export const AddSkillModal = ({ open, onOpenChange }: AddSkillModalProps) => {
+export const AddSkillModal = ({ 
+  open, 
+  onOpenChange,
+  editData,
+  isEditMode = false 
+}: AddSkillModalProps) => {
   const [skillType, setSkillType] = useState<string>("");
   const [skill, setSkill] = useState<string>("");
   const [skillLevel, setSkillLevel] = useState<string>("");
+
+  // Pre-fill data when in edit mode
+  useEffect(() => {
+    if (isEditMode && editData) {
+      setSkillType(editData.category);
+      setSkill(editData.name);
+      // Extract level from "Expert (100%)" format
+      const levelMatch = editData.level.match(/^([^(]+)/);
+      if (levelMatch) {
+        setSkillLevel(levelMatch[1].trim());
+      }
+    } else {
+      // Reset form when opening in add mode
+      setSkillType("");
+      setSkill("");
+      setSkillLevel("");
+    }
+  }, [isEditMode, editData, open]);
 
   const skillTypes = Object.keys(SKILLS_DATA);
   const availableSkills = skillType
