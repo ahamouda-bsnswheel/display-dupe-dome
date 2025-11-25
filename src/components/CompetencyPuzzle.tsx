@@ -18,28 +18,28 @@ const competencies: Competency[] = [
     name: "Psychological Resilience",
     jobLevel: "Competent",
     progress: 0,
-    position: { top: "2%", left: "34%", width: "30%", height: "23%" },
+    position: { top: "4%", left: "36%", width: "28%", height: "20%" },
   },
   {
     id: "critical-thinking",
     name: "Critical Thinking",
     jobLevel: "Developing",
     progress: 35,
-    position: { top: "2%", left: "66%", width: "33%", height: "23%" },
+    position: { top: "4%", left: "67%", width: "29%", height: "20%" },
   },
   {
     id: "communication",
     name: "Communication",
     jobLevel: "Advanced",
     progress: 60,
-    position: { top: "26%", left: "34%", width: "32%", height: "22%" },
+    position: { top: "27%", left: "36%", width: "28%", height: "20%" },
   },
   {
     id: "accountability",
     name: "Accountability",
     jobLevel: "Competent",
     progress: 45,
-    position: { top: "26%", left: "67%", width: "32%", height: "22%" },
+    position: { top: "27%", left: "67%", width: "29%", height: "20%" },
   },
 ];
 
