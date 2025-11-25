@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ChevronLeft, Power, Plus, Edit, Trash2, Phone, Mail } from "lucide-react";
+import { ChevronLeft, Power, Plus, Edit, Trash2, Phone, Mail, Check } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -728,8 +728,93 @@ const Profile = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="achievements" className="p-4">
-            <p className="text-muted-foreground">My Achievement content coming soon...</p>
+          <TabsContent value="achievements" className="p-4 space-y-6">
+            {/* User Level Section */}
+            <div className="flex flex-col items-center justify-center py-6">
+              <div className="relative w-48 h-48 mb-4">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 blur-xl" />
+                <Avatar className="relative w-48 h-48 ring-4 ring-primary/20">
+                  <AvatarImage 
+                    src={userImageUrl} 
+                    alt={user.name}
+                  />
+                  <AvatarFallback className="text-4xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">
+                    {user.name.split(' ').map(n => n[0]).join('')}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <p className="text-base font-semibold text-foreground">
+                Get <span className="text-primary">0</span> xp to level up!
+              </p>
+            </div>
+
+            {/* Badges Section */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-4">Badges</h3>
+              <div className="space-y-3">
+                {/* Badge Item 1 */}
+                <div className="bg-card p-4 rounded-lg border border-border flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-primary/80" />
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-foreground">Power User</p>
+                    </div>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                    <Check className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+
+                {/* Badge Item 2 */}
+                <div className="bg-card p-4 rounded-lg border border-border flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-primary/80" />
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-foreground">Problem Solver</p>
+                    </div>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                    <Check className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+
+                {/* Badge Item 3 */}
+                <div className="bg-card p-4 rounded-lg border border-border flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                      <div className="text-2xl">🏆</div>
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-foreground">Safety Champion</p>
+                      <p className="text-sm text-muted-foreground">You did great at your job.</p>
+                    </div>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                    <Check className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+
+                {/* Badge Item 4 */}
+                <div className="bg-card p-4 rounded-lg border border-border flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
+                      <div className="text-2xl">💡</div>
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-foreground">Brilliant</p>
+                      <p className="text-sm text-muted-foreground">With your brilliant ideas, you are an inspiration to others.</p>
+                    </div>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                    <Check className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </ScrollArea>
