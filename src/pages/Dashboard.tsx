@@ -14,7 +14,8 @@ import {
   Grid3x3, 
   Bell, 
   MoreHorizontal,
-  ChevronRight
+  ChevronRight,
+  Camera
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -113,8 +114,32 @@ const Dashboard = () => {
           </>
         )}
 
-        {/* Today Attendance */}
+        {/* Attendance Section */}
         <section>
+          <div className="flex items-center gap-2 mb-3">
+            <Clock className="h-5 w-5 text-primary" />
+            <h2 className="text-base font-semibold">Attendance</h2>
+          </div>
+          
+          {/* Quick Check-In */}
+          <Card className="p-4 mb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-primary/10 rounded-2xl p-3 w-12 h-12 flex items-center justify-center">
+                  <Camera className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-base">Quick Check-In</p>
+                  <p className="text-sm text-muted-foreground">Scan QR to clock in/out</p>
+                </div>
+              </div>
+              <Button size="icon" className="bg-primary hover:bg-primary/90 rounded-full h-12 w-12">
+                <Camera className="h-5 w-5" />
+              </Button>
+            </div>
+          </Card>
+
+          {/* Today Attendance */}
           <h2 className="text-base font-semibold mb-3">Today Attendance</h2>
           <Card className="p-4">
             <div className="flex justify-center items-center gap-2 mb-4">
