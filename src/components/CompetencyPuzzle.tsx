@@ -9,7 +9,7 @@ interface Competency {
   name: string;
   jobLevel: string;
   progress: number;
-  position: { top: string; left: string; width: string; height: string };
+  position: { top: string; right: string; width: string; height: string };
 }
 
 const competencies: Competency[] = [
