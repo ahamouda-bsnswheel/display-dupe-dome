@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authStorage } from "@/lib/auth";
 import { CompetencyPuzzle } from "@/components/CompetencyPuzzle";
+import { AddWorkExperienceModal } from "@/components/AddWorkExperienceModal";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const [isAddWorkExpOpen, setIsAddWorkExpOpen] = useState(false);
   const employeeData = authStorage.getEmployeeData();
   
   const user = {
@@ -140,7 +142,12 @@ const Profile = () => {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-base font-semibold text-foreground">Work Experience</h3>
-                <Button size="icon" variant="ghost" className="h-6 w-6">
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className="h-6 w-6"
+                  onClick={() => setIsAddWorkExpOpen(true)}
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -211,6 +218,12 @@ const Profile = () => {
           </TabsContent>
         </Tabs>
       </ScrollArea>
+
+      {/* Add Work Experience Modal */}
+      <AddWorkExperienceModal 
+        open={isAddWorkExpOpen}
+        onOpenChange={setIsAddWorkExpOpen}
+      />
     </div>
   );
 };
