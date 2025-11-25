@@ -204,33 +204,39 @@ const Profile = () => {
 
       <ScrollArea className="flex-1">
         {/* User Info Section */}
-        <div className="bg-card px-6 py-6">
-          <div className="flex flex-col items-center mb-4">
-            <Avatar className="h-24 w-24 mb-3">
-              <AvatarImage src={userImageUrl} alt={user.name} />
-              <AvatarFallback className="bg-muted text-xl">
-                {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <h2 className="text-xl font-semibold text-primary mb-1">{user.name}</h2>
-            <p className="text-sm text-muted-foreground mb-1 flex items-center gap-1.5">
+        <div className="relative bg-gradient-hero px-6 py-8 overflow-hidden">
+          {/* Decorative background elements */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+          
+          <div className="relative flex flex-col items-center mb-4">
+            <div className="relative mb-3">
+              <div className="absolute inset-0 bg-gradient-hero rounded-full blur-xl opacity-60 animate-pulse"></div>
+              <Avatar className="relative h-24 w-24 border-4 border-white/30 shadow-2xl">
+                <AvatarImage src={userImageUrl} alt={user.name} />
+                <AvatarFallback className="bg-white/90 text-primary text-xl font-bold">
+                  {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <h2 className="text-xl font-bold text-white mb-1 drop-shadow-lg">{user.name}</h2>
+            <p className="text-sm text-white/90 mb-1 flex items-center gap-1.5 drop-shadow">
               <Phone className="h-4 w-4" />
               {user.employeeId}
             </p>
-            <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+            <p className="text-sm text-white/90 flex items-center gap-1.5 drop-shadow">
               <Mail className="h-4 w-4" />
               {user.email}
             </p>
           </div>
           
-          <div className="text-sm space-y-1">
-            <p className="flex items-center gap-2">
-              <span className="text-foreground">•</span>
-              <span className="text-foreground">{user.position}</span>
+          <div className="relative text-sm space-y-1 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+            <p className="flex items-center gap-2 text-white">
+              <span>•</span>
+              <span>{user.position}</span>
             </p>
-            <p className="flex items-center gap-2">
-              <span className="text-foreground">•</span>
-              <span className="text-foreground">{user.department}</span>
+            <p className="flex items-center gap-2 text-white">
+              <span>•</span>
+              <span>{user.department}</span>
             </p>
           </div>
         </div>
@@ -244,25 +250,25 @@ const Profile = () => {
           <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0 h-auto">
             <TabsTrigger 
               value="resume" 
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-gradient-to-t data-[state=active]:from-primary/5 data-[state=active]:to-transparent px-4 py-3 transition-all"
             >
               Resume
             </TabsTrigger>
             <TabsTrigger 
               value="work-info"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-secondary data-[state=active]:bg-gradient-to-t data-[state=active]:from-secondary/5 data-[state=active]:to-transparent px-4 py-3 transition-all"
             >
               Work Info
             </TabsTrigger>
             <TabsTrigger 
               value="private-info"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-gradient-to-t data-[state=active]:from-accent/5 data-[state=active]:to-transparent px-4 py-3 transition-all"
             >
               Private Info
             </TabsTrigger>
             <TabsTrigger 
               value="achievements"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-coral data-[state=active]:bg-gradient-to-t data-[state=active]:from-coral/5 data-[state=active]:to-transparent px-4 py-3 transition-all"
             >
               My Achievement
             </TabsTrigger>

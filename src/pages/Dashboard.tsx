@@ -71,21 +71,27 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <header className="bg-card border-b border-border px-4 py-4">
-        <div className="flex items-center justify-between">
+      <header className="relative bg-gradient-hero px-4 py-6 overflow-hidden">
+        {/* Decorative background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10"></div>
+        
+        <div className="relative flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={userImageUrl} alt={user.name} />
-              <AvatarFallback className="bg-muted">
-                {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative">
+              <div className="absolute inset-0 bg-white/30 rounded-full blur-md"></div>
+              <Avatar className="relative h-10 w-10 border-2 border-white/50 shadow-lg">
+                <AvatarImage src={userImageUrl} alt={user.name} />
+                <AvatarFallback className="bg-white/90 text-primary font-bold">
+                  {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
             <div>
-              <p className="text-sm text-muted-foreground">Hello,</p>
-              <p className="font-semibold text-primary">{user.name}!</p>
+              <p className="text-sm text-white/80">Hello,</p>
+              <p className="font-bold text-white drop-shadow-md">{user.name}!</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
             <Search className="h-5 w-5" />
           </Button>
         </div>
