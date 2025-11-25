@@ -32,7 +32,7 @@ const OrganizationChart = () => {
       {/* Header */}
       <div className="bg-card border-b border-border px-4 py-3 flex items-center">
         <button
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-foreground"
         >
           <ChevronLeft className="h-6 w-6" />
