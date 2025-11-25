@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, CalendarIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import {
   Sheet,
@@ -74,14 +74,8 @@ export const AddWorkExperienceModal = ({
         </div>
 
         {/* Header */}
-        <SheetHeader className="px-6 pb-4 flex-row items-center justify-between space-y-0">
+        <SheetHeader className="px-6 pb-4">
           <SheetTitle className="text-xl font-semibold">Resume</SheetTitle>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="rounded-full p-1 hover:bg-muted"
-          >
-            <X className="h-5 w-5" />
-          </button>
         </SheetHeader>
 
         {/* Form Content */}
