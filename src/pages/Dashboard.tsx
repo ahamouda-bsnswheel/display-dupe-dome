@@ -6,10 +6,79 @@ import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useAuthImage } from "@/hooks/use-auth-image";
 import { useNavigate } from "react-router-dom";
 import { Search, Clock, Calendar, BookOpen, Home, Grid3x3, Bell, MoreHorizontal, ChevronRight, Camera } from "lucide-react";
+import { QRScannerModal } from "@/components/QRScannerModal";
+import { useState, useEffect, useCallback } from "react";
+import { useToast } from "@/hooks/use-toast";
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const authData = authStorage.getAuthData();
   const employeeData = authStorage.getEmployeeData();
+  
+  const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
+  const [isCheckedIn, setIsCheckedIn] = useState(false);
+  const [checkInTime, setCheckInTime] = useState<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  // Load check-in state from localStorage
+  useEffect(() => {
+    const savedCheckInTime = localStorage.getItem("checkInTime");
+    if (savedCheckInTime) {
+      const time = parseInt(savedCheckInTime, 10);
+      setCheckInTime(time);
+      setIsCheckedIn(true);
+      setElapsedTime(Math.floor((Date.now() - time) / 1000));
+    }
+  }, []);
+
+  // Update timer every second
+  useEffect(() => {
+    if (isCheckedIn && checkInTime) {
+      const interval = setInterval(() => {
+        setElapsedTime(Math.floor((Date.now() - checkInTime) / 1000));
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isCheckedIn, checkInTime]);
+
+  const formatTime = (seconds: number) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hrs).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
+
+  const handleCheckIn = useCallback(() => {
+    const now = Date.now();
+    setCheckInTime(now);
+    setIsCheckedIn(true);
+    setElapsedTime(0);
+    localStorage.setItem("checkInTime", now.toString());
+    toast({
+      title: "Checked In",
+      description: "Your attendance has been recorded.",
+    });
+  }, [toast]);
+
+  const handleCheckOut = useCallback(() => {
+    setIsCheckedIn(false);
+    setCheckInTime(null);
+    setElapsedTime(0);
+    localStorage.removeItem("checkInTime");
+    toast({
+      title: "Checked Out",
+      description: "Have a great day!",
+    });
+  }, [toast]);
+
+  const handleQRScan = useCallback((qrCode: string) => {
+    console.log("QR Code scanned:", qrCode);
+    if (!isCheckedIn) {
+      handleCheckIn();
+    } else {
+      handleCheckOut();
+    }
+  }, [isCheckedIn, handleCheckIn, handleCheckOut]);
   const user = {
     name: employeeData?.name || "User",
     email: employeeData?.work_email || "",
@@ -126,7 +195,11 @@ const Dashboard = () => {
                   <p className="text-sm text-muted-foreground">Scan QR to clock in/out</p>
                 </div>
               </div>
-              <Button size="icon" className="bg-primary hover:bg-primary/90 rounded-full h-12 w-12">
+              <Button 
+                size="icon" 
+                className="bg-primary hover:bg-primary/90 rounded-full h-12 w-12"
+                onClick={() => setIsQRScannerOpen(true)}
+              >
                 <Camera className="h-5 w-5" />
               </Button>
             </div>
@@ -136,20 +209,33 @@ const Dashboard = () => {
           <Card className="p-4 sm:p-6">
             <div className="flex items-start justify-between mb-3">
               <h3 className="text-sm text-muted-foreground">Today's Hours</h3>
-              <Badge variant="secondary" className="bg-muted text-foreground">
-                Not Started
+              <Badge 
+                variant="secondary" 
+                className={isCheckedIn ? "bg-success/20 text-success" : "bg-muted text-foreground"}
+              >
+                {isCheckedIn ? "Checked In" : "Not Started"}
               </Badge>
             </div>
             
             <div className="text-5xl sm:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-              00:00:00
+              {formatTime(elapsedTime)}
             </div>
             
-            <div className="h-2 bg-muted rounded-full mb-6" />
+            <div className="h-2 bg-muted rounded-full mb-6 overflow-hidden">
+              {isCheckedIn && (
+                <div 
+                  className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-1000"
+                  style={{ width: `${Math.min((elapsedTime / (9 * 3600)) * 100, 100)}%` }}
+                />
+              )}
+            </div>
             
-            <Button className="w-full bg-primary hover:bg-primary/90 text-lg py-6 rounded-2xl">
+            <Button 
+              className="w-full bg-primary hover:bg-primary/90 text-lg py-6 rounded-2xl"
+              onClick={isCheckedIn ? handleCheckOut : handleCheckIn}
+            >
               <Clock className="h-5 w-5 mr-2" />
-              Check In
+              {isCheckedIn ? "Check Out" : "Check In"}
             </Button>
             
             <p className="text-sm text-muted-foreground text-center mt-4">
@@ -243,6 +329,13 @@ const Dashboard = () => {
           </Button>
         </div>
       </nav>
+
+      {/* QR Scanner Modal */}
+      <QRScannerModal 
+        open={isQRScannerOpen}
+        onClose={() => setIsQRScannerOpen(false)}
+        onScanSuccess={handleQRScan}
+      />
     </div>;
 };
 export default Dashboard;
