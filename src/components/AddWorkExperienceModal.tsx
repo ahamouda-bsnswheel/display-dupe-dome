@@ -135,7 +135,7 @@ export const AddWorkExperienceModal = ({
       };
 
       const response = await fetch(
-        `https://bsnswheel.org/api/v1/skills_resume/custom/${editData.id}`,
+        `https://bsnswheel.org/api/v1/employee_resume/${employeeId}`,
         {
           method: "PUT",
           headers: {
