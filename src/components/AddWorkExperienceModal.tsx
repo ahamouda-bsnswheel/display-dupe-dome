@@ -97,10 +97,27 @@ export const AddWorkExperienceModal = ({
     }
 
     // Validation - only check required fields
+    console.log("Validation check:", {
+      companyName,
+      startDate,
+      employeeId,
+      editDataId: editData?.id,
+      lineTypeId: editData?.lineTypeId
+    });
+
     if (!companyName || !startDate || !employeeId || !editData?.id || !editData?.lineTypeId) {
+      const missingFields = [];
+      if (!companyName) missingFields.push("Company Name");
+      if (!startDate) missingFields.push("Start Date");
+      if (!employeeId) missingFields.push("Employee ID");
+      if (!editData?.id) missingFields.push("Work Experience ID");
+      if (!editData?.lineTypeId) missingFields.push("Line Type ID");
+      
+      console.error("Missing required fields:", missingFields);
+      
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields",
+        description: `Please fill in all required fields: ${missingFields.join(", ")}`,
         variant: "destructive",
       });
       return;
