@@ -116,6 +116,13 @@ const translations = {
     'profile.badges': 'Badges',
     'profile.noBadges': 'No badges earned yet',
     'profile.current': 'Current',
+    'profile.single': 'Single',
+    'profile.married': 'Married',
+    'profile.widower': 'Widower',
+    'profile.divorced': 'Divorced',
+    'profile.enterNumberOfChildren': 'Enter Number of Children',
+    // Common
+    'common.save': 'Save',
   },
   ar: {
     // Login Page
@@ -222,6 +229,13 @@ const translations = {
     'profile.badges': 'الشارات',
     'profile.noBadges': 'لم يتم الحصول على شارات بعد',
     'profile.current': 'حالياً',
+    'profile.single': 'أعزب',
+    'profile.married': 'متزوج',
+    'profile.widower': 'أرمل',
+    'profile.divorced': 'مطلق',
+    'profile.enterNumberOfChildren': 'أدخل عدد الأطفال',
+    // Common
+    'common.save': 'حفظ',
   },
 };
 
