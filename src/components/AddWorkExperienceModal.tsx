@@ -75,15 +75,21 @@ export const AddWorkExperienceModal = ({
       setCompanyName(editData.companyName || "");
       setTitleOfEmployee(editData.title || "");
       
-      // Parse dates from "DD/MM/YYYY - DD/MM/YYYY" format
+      // Parse dates from "DD/MM/YYYY - DD/MM/YYYY" or "DD/MM/YYYY - Current" format
       const dates = editData.dates.split(" - ");
       if (dates.length === 2) {
         const [startStr, endStr] = dates;
         const [startDay, startMonth, startYear] = startStr.split("/");
-        const [endDay, endMonth, endYear] = endStr.split("/");
         
         setStartDate(new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay)));
-        setEndDate(new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay)));
+        
+        // Only parse end date if it's not "Current" or "حالياً"
+        if (endStr && endStr !== "Current" && endStr !== "حالياً") {
+          const [endDay, endMonth, endYear] = endStr.split("/");
+          setEndDate(new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay)));
+        } else {
+          setEndDate(undefined);
+        }
       }
     }
   }, [isEditMode, editData]);
