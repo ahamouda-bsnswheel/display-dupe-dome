@@ -115,6 +115,7 @@ const translations = {
     'profile.xpToLevelUp': 'xp to level up!',
     'profile.badges': 'Badges',
     'profile.noBadges': 'No badges earned yet',
+    'profile.current': 'Current',
   },
   ar: {
     // Login Page
@@ -220,6 +221,7 @@ const translations = {
     'profile.xpToLevelUp': 'نقطة خبرة للارتقاء!',
     'profile.badges': 'الشارات',
     'profile.noBadges': 'لم يتم الحصول على شارات بعد',
+    'profile.current': 'حالياً',
   },
 };
 
