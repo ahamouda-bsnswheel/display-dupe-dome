@@ -864,8 +864,8 @@ const Profile = () => {
         open={isEditPrivateContactOpen}
         onOpenChange={setIsEditPrivateContactOpen}
         defaultValues={{
-          email: user.email,
-          phone: "926319723",
+          email: employeeData?.private_email || "",
+          phone: employeeData?.private_phone || "",
         }}
       />
 
@@ -874,8 +874,8 @@ const Profile = () => {
         open={isEditFamilyStatusOpen}
         onOpenChange={setIsEditFamilyStatusOpen}
         defaultValues={{
-          maritalStatus: "Single",
-          numberOfChildren: "0",
+          maritalStatus: employeeData?.marital || "",
+          numberOfChildren: employeeData?.children?.toString() || "0",
         }}
       />
 
@@ -894,9 +894,9 @@ const Profile = () => {
         open={isEditEducationOpen}
         onOpenChange={setIsEditEducationOpen}
         defaultValues={{
-          certificateLevel: "Bachelor",
-          fieldOfStudy: "محاسبة",
-          school: "",
+          certificateLevel: employeeData?.certificate || "",
+          fieldOfStudy: employeeData?.study_field || "",
+          school: employeeData?.study_school || "",
         }}
       />
     </div>
