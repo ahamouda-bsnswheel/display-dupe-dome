@@ -103,6 +103,12 @@ const translations = {
     'profile.privateCarPlate': 'Private Car Plate',
     'profile.familyStatus': 'Family Status',
     'profile.maritalStatus': 'Marital Status',
+    'profile.maritalStatus.title': 'Marital Status',
+    'profile.maritalStatus.single': 'Single',
+    'profile.maritalStatus.married': 'Married',
+    'profile.maritalStatus.cohabitant': 'Legal Cohabitant',
+    'profile.maritalStatus.widower': 'Widower',
+    'profile.maritalStatus.divorced': 'Divorced',
     'profile.numberOfChildren': 'Number of Children',
     'profile.emergency': 'Emergency',
     'profile.contactName': 'Contact Name',
@@ -116,6 +122,7 @@ const translations = {
     'profile.badges': 'Badges',
     'profile.noBadges': 'No badges earned yet',
     'profile.current': 'Current',
+    'common.save': 'Save',
   },
   ar: {
     // Login Page
@@ -209,6 +216,12 @@ const translations = {
     'profile.privateCarPlate': 'لوحة السيارة الخاصة',
     'profile.familyStatus': 'الحالة العائلية',
     'profile.maritalStatus': 'الحالة الاجتماعية',
+    'profile.maritalStatus.title': 'الحالة الاجتماعية',
+    'profile.maritalStatus.single': 'أعزب',
+    'profile.maritalStatus.married': 'متزوج',
+    'profile.maritalStatus.cohabitant': 'ساكن قانوني',
+    'profile.maritalStatus.widower': 'أرمل',
+    'profile.maritalStatus.divorced': 'مطلق',
     'profile.numberOfChildren': 'عدد الأطفال',
     'profile.emergency': 'الطوارئ',
     'profile.contactName': 'اسم جهة الاتصال',
@@ -222,6 +235,7 @@ const translations = {
     'profile.badges': 'الشارات',
     'profile.noBadges': 'لم يتم الحصول على شارات بعد',
     'profile.current': 'حالياً',
+    'common.save': 'حفظ',
   },
 };
 
