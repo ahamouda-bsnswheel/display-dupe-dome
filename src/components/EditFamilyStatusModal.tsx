@@ -8,7 +8,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface EditFamilyStatusModalProps {
@@ -68,27 +74,26 @@ export const EditFamilyStatusModal = ({
         {/* Form Content */}
         <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-6">
           {/* Marital Status */}
-          <div className="space-y-4">
-            <RadioGroup value={maritalStatus} onValueChange={setMaritalStatus}>
-              {maritalOptions.map((option) => (
-                <div
-                  key={option.value}
-                  className="flex items-center justify-between py-4 border-b border-border last:border-0"
-                >
-                  <Label
-                    htmlFor={option.value}
-                    className="text-base font-normal text-foreground cursor-pointer flex-1"
+          <div className="space-y-2">
+            <Label className="text-base font-normal text-foreground">
+              {t('profile.maritalStatus.title') || "Marital Status"}
+            </Label>
+            <Select value={maritalStatus} onValueChange={setMaritalStatus}>
+              <SelectTrigger className="h-14 rounded-xl border-border bg-background text-base">
+                <SelectValue placeholder={t('profile.maritalStatus.title') || "Select Marital Status"} />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                {maritalOptions.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    value={option.value}
+                    className="text-base"
                   >
                     {option.label}
-                  </Label>
-                  <RadioGroupItem
-                    value={option.value}
-                    id={option.value}
-                    className="h-6 w-6"
-                  />
-                </div>
-              ))}
-            </RadioGroup>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Number of Children */}
