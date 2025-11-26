@@ -103,7 +103,7 @@ const Profile = () => {
               dates: formatDateRange(line.date_start, line.date_end),
               title: line.description || "",
               companyName: line.name,
-              lineTypeId: line.line_type_id,
+              lineTypeId: line.id,
             }));
             setWorkExperience(formattedWorkExp);
           }
