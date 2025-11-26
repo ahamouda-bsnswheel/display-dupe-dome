@@ -101,8 +101,8 @@ const Profile = () => {
             const formattedWorkExp = workExpResume.lines.map((line: any) => ({
               id: line.id,
               dates: formatDateRange(line.date_start, line.date_end),
-              title: line.name,
-              companyName: line.description || "---",
+              title: line.description || "",
+              companyName: line.name,
               lineTypeId: workExpResume.id,
             }));
             setWorkExperience(formattedWorkExp);
