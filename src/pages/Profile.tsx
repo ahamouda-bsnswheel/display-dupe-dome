@@ -724,7 +724,11 @@ const Profile = () => {
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? 'text-right' : ''}>
                       <p className="text-sm font-semibold text-primary">{t('profile.certificateLevel')}</p>
-                      <p className="text-sm text-muted-foreground">Bachelor</p>
+                      <p className="text-sm text-muted-foreground">
+                        {employeeData?.certificate 
+                          ? employeeData.certificate.charAt(0).toUpperCase() + employeeData.certificate.slice(1)
+                          : "---"}
+                      </p>
                     </div>
                   </div>
                   <button 
@@ -738,14 +742,18 @@ const Profile = () => {
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.fieldOfStudy')}</p>
-                    <p className="text-sm text-muted-foreground">محاسبة</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.study_field || "---"}
+                    </p>
                   </div>
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.school')}</p>
-                    <p className="text-sm text-muted-foreground">---</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employeeData?.study_school || "---"}
+                    </p>
                   </div>
                 </div>
               </div>
