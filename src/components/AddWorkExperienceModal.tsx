@@ -110,10 +110,10 @@ export const AddWorkExperienceModal = ({
       const headers = authStorage.getAuthHeaders();
       const body = {
         employee_id: employeeId.toString(),
-        name: titleOfEmployee,
+        name: companyName,
         date_start: format(startDate, "yyyy-MM-dd"),
         date_end: endDate ? format(endDate, "yyyy-MM-dd") : null,
-        description: companyName || null,
+        description: titleOfEmployee || null,
         line_type_id: editData.lineTypeId,
       };
 
