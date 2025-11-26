@@ -8,6 +8,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface EditEducationModalProps {
   open: boolean;
@@ -24,13 +32,21 @@ export const EditEducationModal = ({
   onOpenChange,
   defaultValues,
 }: EditEducationModalProps) => {
+  const { t } = useLanguage();
   const [certificateLevel, setCertificateLevel] = useState("");
   const [fieldOfStudy, setFieldOfStudy] = useState("");
   const [school, setSchool] = useState("");
 
+  const certificateOptions = [
+    { value: "graduate", label: t('profile.certificateLevel.graduate') || "Graduate" },
+    { value: "bachelor", label: t('profile.certificateLevel.bachelor') || "Bachelor" },
+    { value: "master", label: t('profile.certificateLevel.master') || "Master" },
+    { value: "doctor", label: t('profile.certificateLevel.doctor') || "Doctor" },
+  ];
+
   useEffect(() => {
     if (defaultValues) {
-      setCertificateLevel(defaultValues.certificateLevel);
+      setCertificateLevel(defaultValues.certificateLevel?.toLowerCase() || "");
       setFieldOfStudy(defaultValues.fieldOfStudy);
       setSchool(defaultValues.school);
     }
@@ -54,7 +70,7 @@ export const EditEducationModal = ({
 
         {/* Header */}
         <SheetHeader className="px-6 pb-4">
-          <SheetTitle className="text-xl font-semibold">Education</SheetTitle>
+          <SheetTitle className="text-xl font-semibold">{t('profile.education') || "Education"}</SheetTitle>
         </SheetHeader>
 
         {/* Form Content */}
@@ -62,25 +78,35 @@ export const EditEducationModal = ({
           {/* Certificate Level */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Certificate Level
+              {t('profile.certificateLevel') || "Certificate Level"}
             </Label>
-            <Input
-              value={certificateLevel}
-              onChange={(e) => setCertificateLevel(e.target.value)}
-              placeholder="Enter Certificate Level"
-              className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
-            />
+            <Select value={certificateLevel} onValueChange={setCertificateLevel}>
+              <SelectTrigger className="h-14 rounded-xl border-border bg-background text-base">
+                <SelectValue placeholder={t('profile.certificateLevel') || "Select Certificate Level"} />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                {certificateOptions.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    value={option.value}
+                    className="text-base"
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Field of Study */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Field of Study
+              {t('profile.fieldOfStudy') || "Field of Study"}
             </Label>
             <Input
               value={fieldOfStudy}
               onChange={(e) => setFieldOfStudy(e.target.value)}
-              placeholder="Enter Field of Study"
+              placeholder={t('profile.fieldOfStudy') || "Enter Field of Study"}
               className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
             />
           </div>
@@ -88,12 +114,12 @@ export const EditEducationModal = ({
           {/* School */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              School
+              {t('profile.school') || "School"}
             </Label>
             <Input
               value={school}
               onChange={(e) => setSchool(e.target.value)}
-              placeholder="Enter School"
+              placeholder={t('profile.school') || "Enter School"}
               className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
             />
           </div>
@@ -105,7 +131,7 @@ export const EditEducationModal = ({
             onClick={handleSave}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            Save
+            {t('common.save') || "Save"}
           </Button>
         </div>
       </SheetContent>
