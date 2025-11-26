@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import OrganizationChart from "./pages/OrganizationChart";
 import EmployeeDetail from "./pages/EmployeeDetail";
 import UpscalingRoute from "./pages/UpscalingRoute";
+import LanguageSelection from "./pages/LanguageSelection";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/more" element={<ProtectedRoute><More /></ProtectedRoute>} />
+            <Route path="/language" element={<ProtectedRoute><LanguageSelection /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/organization-chart" element={<ProtectedRoute><OrganizationChart /></ProtectedRoute>} />
             <Route path="/employee/:employeeId" element={<ProtectedRoute><EmployeeDetail /></ProtectedRoute>} />

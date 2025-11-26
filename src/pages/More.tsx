@@ -41,7 +41,7 @@ const More = () => {
   const menuItems = [
     { icon: User, label: t('more.myProfile'), onClick: () => navigate("/profile") },
     { icon: LayoutGrid, label: t('more.myDashboard'), onClick: () => navigate("/dashboard") },
-    { icon: Globe, label: t('more.language'), onClick: toggleLanguage },
+    { icon: Globe, label: t('more.language'), onClick: () => navigate("/language") },
     { icon: BookOpen, label: t('more.myCourses'), onClick: () => {} },
     { icon: FileText, label: t('more.privacyPolicy'), onClick: () => {} },
     { icon: FileText, label: t('more.termsAndConditions'), onClick: () => {} },
