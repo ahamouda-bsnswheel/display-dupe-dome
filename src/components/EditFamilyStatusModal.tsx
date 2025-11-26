@@ -8,8 +8,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface EditFamilyStatusModalProps {
   open: boolean;
@@ -25,16 +23,8 @@ export const EditFamilyStatusModal = ({
   onOpenChange,
   defaultValues,
 }: EditFamilyStatusModalProps) => {
-  const { t } = useLanguage();
   const [maritalStatus, setMaritalStatus] = useState("");
   const [numberOfChildren, setNumberOfChildren] = useState("");
-
-  const maritalStatusOptions = [
-    { value: "single", label: t("profile.single") },
-    { value: "married", label: t("profile.married") },
-    { value: "widower", label: t("profile.widower") },
-    { value: "divorced", label: t("profile.divorced") },
-  ];
 
   useEffect(() => {
     if (defaultValues) {
@@ -67,47 +57,29 @@ export const EditFamilyStatusModal = ({
         {/* Form Content */}
         <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-6">
           {/* Marital Status */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              {t("profile.maritalStatus")}
+              Marital Status
             </Label>
-            <RadioGroup
+            <Input
               value={maritalStatus}
-              onValueChange={setMaritalStatus}
-              className="space-y-3"
-            >
-              {maritalStatusOptions.map((option) => (
-                <div
-                  key={option.value}
-                  className="flex items-center justify-between py-3"
-                >
-                  <Label
-                    htmlFor={option.value}
-                    className="text-base font-normal text-foreground cursor-pointer flex-1"
-                  >
-                    {option.label}
-                  </Label>
-                  <RadioGroupItem
-                    value={option.value}
-                    id={option.value}
-                    className="h-6 w-6"
-                  />
-                </div>
-              ))}
-            </RadioGroup>
+              onChange={(e) => setMaritalStatus(e.target.value)}
+              placeholder="Enter Marital Status"
+              className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
+            />
           </div>
 
           {/* Number of Children */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              {t("profile.numberOfChildren")}
+              Number of Children
             </Label>
             <Input
               value={numberOfChildren}
               onChange={(e) => setNumberOfChildren(e.target.value)}
               type="number"
               min="0"
-              placeholder={t("profile.enterNumberOfChildren")}
+              placeholder="Enter Number of Children"
               className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
             />
           </div>
@@ -119,7 +91,7 @@ export const EditFamilyStatusModal = ({
             onClick={handleSave}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            {t("common.save")}
+            Save
           </Button>
         </div>
       </SheetContent>
