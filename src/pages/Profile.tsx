@@ -619,9 +619,7 @@ const Profile = () => {
                   <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.bankAccountNumber')}</p>
                     <p className="text-sm text-muted-foreground">
-                      {employeeData?.bank_account_id && Array.isArray(employeeData.bank_account_id)
-                        ? employeeData.bank_account_id[1]
-                        : "---"}
+                      {employeeData?.bank_account_id || "---"}
                     </p>
                   </div>
                 </div>
