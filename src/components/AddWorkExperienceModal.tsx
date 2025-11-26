@@ -96,8 +96,8 @@ export const AddWorkExperienceModal = ({
       return;
     }
 
-    // Validation
-    if (!titleOfEmployee || !startDate || !employeeId || !editData?.id || !editData?.lineTypeId) {
+    // Validation - only check required fields
+    if (!companyName || !startDate || !employeeId || !editData?.id || !editData?.lineTypeId) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields",
@@ -196,20 +196,21 @@ export const AddWorkExperienceModal = ({
           {/* Company Name */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Company Name
+              Company Name <span className="text-destructive">*</span>
             </Label>
             <Input
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               placeholder="Enter Company Name"
               className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
+              required
             />
           </div>
 
           {/* Title of employee */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Title of employee
+              Title of employee <span className="text-muted-foreground text-sm">(Optional)</span>
             </Label>
             <Input
               value={titleOfEmployee}
@@ -222,7 +223,7 @@ export const AddWorkExperienceModal = ({
           {/* Start Date */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Start Date
+              Start Date <span className="text-destructive">*</span>
             </Label>
             <Popover>
               <PopoverTrigger asChild>
@@ -256,7 +257,7 @@ export const AddWorkExperienceModal = ({
           {/* End Date */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              End Date
+              End Date <span className="text-muted-foreground text-sm">(Optional)</span>
             </Label>
             <Popover>
               <PopoverTrigger asChild>
