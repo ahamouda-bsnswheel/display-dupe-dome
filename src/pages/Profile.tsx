@@ -24,6 +24,7 @@ interface WorkExperience {
   dates: string;
   title: string;
   companyName?: string;
+  lineTypeId?: number;
 }
 
 const Profile = () => {
@@ -63,72 +64,6 @@ const Profile = () => {
 
   const { blobUrl: userImageUrl } = useAuthImage(user.image);
 
-  // Fetch employee details for Resume tab
-  useEffect(() => {
-    const fetchEmployeeDetails = async () => {
-      if (!employeeId) return;
-
-      try {
-        const headers = authStorage.getAuthHeaders();
-        const response = await fetch(
-          `https://bsnswheel.org/api/v1/employee_details/custom/${employeeId}`,
-          {
-            method: "PUT",
-            headers,
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          
-          // Populate work experience from resumes
-          if (data.resumes && data.resumes.length > 0) {
-            const workExpResume = data.resumes.find((r: any) => r.type === "Work Experience");
-            if (workExpResume && workExpResume.lines) {
-              const formattedWorkExp = workExpResume.lines.map((line: any) => ({
-                id: line.id,
-                dates: formatDateRange(line.date_start, line.date_end),
-                title: line.name,
-                companyName: line.description || "---",
-              }));
-              setWorkExperience(formattedWorkExp);
-            }
-          }
-
-          // Populate skills
-          if (data.skills && data.skills.length > 0) {
-            const formattedSkills = data.skills.map((skill: any) => ({
-              id: skill.id,
-              name: skill.skill_id[1],
-              level: `${skill.skill_level_id[1]} (${skill.level_progress}%)`,
-              category: skill.skill_type_id[1],
-            }));
-            setSkills(formattedSkills);
-          }
-
-          // Populate competencies
-          if (data.competencies && data.competencies.length > 0) {
-            setCompetencies(data.competencies);
-          }
-
-          // Populate badges
-          if (data.badges && data.badges.length > 0) {
-            setBadges(data.badges);
-          }
-
-          // Populate karma value
-          if (data.ranks && data.ranks.karma_value !== undefined) {
-            setKarmaValue(data.ranks.karma_value);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching employee details:", error);
-      }
-    };
-
-    fetchEmployeeDetails();
-  }, [employeeId]);
-
   // Helper function to format date ranges
   const formatDateRange = (startDate: string, endDate: string) => {
     const formatDate = (dateStr: string) => {
@@ -141,6 +76,73 @@ const Profile = () => {
 
     return `${formatDate(startDate)} - ${formatDate(endDate)}`;
   };
+
+  // Fetch employee details for Resume tab
+  const fetchEmployeeDetails = async () => {
+    if (!employeeId) return;
+
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/employee_details/custom/${employeeId}`,
+        {
+          method: "PUT",
+          headers,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Populate work experience from resumes
+        if (data.resumes && data.resumes.length > 0) {
+          const workExpResume = data.resumes.find((r: any) => r.type === "Work Experience");
+          if (workExpResume && workExpResume.lines) {
+            const formattedWorkExp = workExpResume.lines.map((line: any) => ({
+              id: line.id,
+              dates: formatDateRange(line.date_start, line.date_end),
+              title: line.name,
+              companyName: line.description || "---",
+              lineTypeId: workExpResume.id,
+            }));
+            setWorkExperience(formattedWorkExp);
+          }
+        }
+
+        // Populate skills
+        if (data.skills && data.skills.length > 0) {
+          const formattedSkills = data.skills.map((skill: any) => ({
+            id: skill.id,
+            name: skill.skill_id[1],
+            level: `${skill.skill_level_id[1]} (${skill.level_progress}%)`,
+            category: skill.skill_type_id[1],
+          }));
+          setSkills(formattedSkills);
+        }
+
+        // Populate competencies
+        if (data.competencies && data.competencies.length > 0) {
+          setCompetencies(data.competencies);
+        }
+
+        // Populate badges
+        if (data.badges && data.badges.length > 0) {
+          setBadges(data.badges);
+        }
+
+        // Populate karma value
+        if (data.ranks && data.ranks.karma_value !== undefined) {
+          setKarmaValue(data.ranks.karma_value);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching employee details:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployeeDetails();
+  }, [employeeId]);
 
   const handleLogout = () => {
     authStorage.clearAuthData();
@@ -818,6 +820,8 @@ const Profile = () => {
         onOpenChange={setIsEditWorkExpOpen}
         editData={selectedWorkExp || undefined}
         isEditMode={true}
+        employeeId={employeeId}
+        onSuccess={fetchEmployeeDetails}
       />
 
       {/* Delete Confirmation Dialog */}

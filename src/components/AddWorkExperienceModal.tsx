@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
+import { authStorage } from "@/lib/auth";
 import {
   Sheet,
   SheetContent,
@@ -26,9 +28,11 @@ import {
 import { cn } from "@/lib/utils";
 
 interface WorkExperience {
+  id?: number;
   dates: string;
   title: string;
   companyName?: string;
+  lineTypeId?: number;
 }
 
 interface AddWorkExperienceModalProps {
@@ -36,6 +40,8 @@ interface AddWorkExperienceModalProps {
   onOpenChange: (open: boolean) => void;
   editData?: WorkExperience;
   isEditMode?: boolean;
+  employeeId?: number;
+  onSuccess?: () => void;
 }
 
 const resumeTypes = [
@@ -53,7 +59,10 @@ export const AddWorkExperienceModal = ({
   onOpenChange,
   editData,
   isEditMode = false,
+  employeeId,
+  onSuccess,
 }: AddWorkExperienceModalProps) => {
+  const { toast } = useToast();
   const [resumeType, setResumeType] = useState<string>("");
   const [companyName, setCompanyName] = useState("");
   const [titleOfEmployee, setTitleOfEmployee] = useState("");
@@ -61,7 +70,7 @@ export const AddWorkExperienceModal = ({
   const [endDate, setEndDate] = useState<Date>();
 
   // Pre-fill data when in edit mode
-  useState(() => {
+  useEffect(() => {
     if (isEditMode && editData) {
       setCompanyName(editData.companyName || "");
       setTitleOfEmployee(editData.title || "");
@@ -77,18 +86,72 @@ export const AddWorkExperienceModal = ({
         setEndDate(new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay)));
       }
     }
-  });
+  }, [isEditMode, editData]);
 
-  const handleSave = () => {
-    // TODO: Implement save logic
-    console.log({
-      resumeType,
-      companyName,
-      titleOfEmployee,
-      startDate,
-      endDate,
-    });
-    onOpenChange(false);
+  const handleSave = async () => {
+    if (!isEditMode) {
+      // TODO: Implement add logic
+      console.log("Add functionality not yet implemented");
+      onOpenChange(false);
+      return;
+    }
+
+    // Validation
+    if (!titleOfEmployee || !startDate || !employeeId || !editData?.id || !editData?.lineTypeId) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const body = {
+        employee_id: employeeId.toString(),
+        name: titleOfEmployee,
+        date_start: format(startDate, "yyyy-MM-dd"),
+        date_end: endDate ? format(endDate, "yyyy-MM-dd") : null,
+        description: companyName || null,
+        line_type_id: editData.lineTypeId,
+      };
+
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/skills_resume/custom/${editData.id}`,
+        {
+          method: "PUT",
+          headers: {
+            ...headers,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Work experience updated successfully",
+        });
+        onOpenChange(false);
+        onSuccess?.();
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        toast({
+          title: "Error",
+          description: errorData.message || "Failed to update work experience",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating work experience:", error);
+      toast({
+        title: "Error",
+        description: "An error occurred while updating work experience",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
