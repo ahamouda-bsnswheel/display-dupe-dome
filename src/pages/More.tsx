@@ -21,7 +21,7 @@ import {
 
 const More = () => {
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, language, toggleLanguage } = useLanguage();
   const authData = authStorage.getAuthData();
   const employeeData = authStorage.getEmployeeData();
   
@@ -41,7 +41,7 @@ const More = () => {
   const menuItems = [
     { icon: User, label: t('more.myProfile'), onClick: () => navigate("/profile") },
     { icon: LayoutGrid, label: t('more.myDashboard'), onClick: () => navigate("/dashboard") },
-    { icon: Globe, label: t('more.language'), onClick: () => {} },
+    { icon: Globe, label: t('more.language'), onClick: toggleLanguage },
     { icon: BookOpen, label: t('more.myCourses'), onClick: () => {} },
     { icon: FileText, label: t('more.privacyPolicy'), onClick: () => {} },
     { icon: FileText, label: t('more.termsAndConditions'), onClick: () => {} },
