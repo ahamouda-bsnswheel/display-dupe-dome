@@ -50,8 +50,6 @@ const Profile = () => {
   const [isEditEmergencyOpen, setIsEditEmergencyOpen] = useState(false);
   const [isEditEducationOpen, setIsEditEducationOpen] = useState(false);
   
-  const [fullEmployeeData, setFullEmployeeData] = useState<any>(null);
-  
   const employeeData = authStorage.getEmployeeData();
   const employeeId = employeeData?.id;
   
@@ -78,29 +76,6 @@ const Profile = () => {
 
     const endDateText = (typeof endDate === 'string') ? formatDate(endDate) : t('profile.current');
     return `${formatDate(startDate)} - ${endDateText}`;
-  };
-
-  // Fetch full employee data for Private Info tab
-  const fetchFullEmployeeData = async () => {
-    if (!employeeId) return;
-
-    try {
-      const headers = authStorage.getAuthHeaders();
-      const response = await fetch(
-        `https://bsnswheel.org/api/v1/employees/${employeeId}`,
-        {
-          method: "GET",
-          headers,
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setFullEmployeeData(data);
-      }
-    } catch (error) {
-      console.error("Error fetching full employee data:", error);
-    }
   };
 
   // Fetch employee details for Resume tab
@@ -168,7 +143,6 @@ const Profile = () => {
 
   useEffect(() => {
     fetchEmployeeDetails();
-    fetchFullEmployeeData();
   }, [employeeId]);
 
   const handleLogout = () => {
@@ -686,8 +660,8 @@ const Profile = () => {
                     <div className={isRTL ? 'text-right' : ''}>
                       <p className="text-sm font-semibold text-primary">{t('profile.maritalStatus')}</p>
                       <p className="text-sm text-muted-foreground">
-                        {fullEmployeeData?.marital 
-                          ? fullEmployeeData.marital.charAt(0).toUpperCase() + fullEmployeeData.marital.slice(1)
+                        {employeeData?.marital 
+                          ? employeeData.marital.charAt(0).toUpperCase() + employeeData.marital.slice(1)
                           : "---"}
                       </p>
                     </div>
@@ -704,7 +678,7 @@ const Profile = () => {
                   <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.numberOfChildren')}</p>
                     <p className="text-sm text-muted-foreground">
-                      {fullEmployeeData?.children ?? "---"}
+                      {employeeData?.children ?? "---"}
                     </p>
                   </div>
                 </div>
@@ -750,8 +724,8 @@ const Profile = () => {
                     <div className={isRTL ? 'text-right' : ''}>
                       <p className="text-sm font-semibold text-primary">{t('profile.certificateLevel')}</p>
                       <p className="text-sm text-muted-foreground">
-                        {fullEmployeeData?.certificate 
-                          ? fullEmployeeData.certificate.charAt(0).toUpperCase() + fullEmployeeData.certificate.slice(1)
+                        {employeeData?.certificate 
+                          ? employeeData.certificate.charAt(0).toUpperCase() + employeeData.certificate.slice(1)
                           : "---"}
                       </p>
                     </div>
@@ -768,7 +742,7 @@ const Profile = () => {
                   <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.fieldOfStudy')}</p>
                     <p className="text-sm text-muted-foreground">
-                      {fullEmployeeData?.study_field || "---"}
+                      {employeeData?.study_field || "---"}
                     </p>
                   </div>
                 </div>
@@ -777,7 +751,7 @@ const Profile = () => {
                   <div className={isRTL ? 'text-right' : ''}>
                     <p className="text-sm font-semibold text-primary">{t('profile.school')}</p>
                     <p className="text-sm text-muted-foreground">
-                      {fullEmployeeData?.study_school || "---"}
+                      {employeeData?.study_school || "---"}
                     </p>
                   </div>
                 </div>
