@@ -97,19 +97,24 @@ export const AddWorkExperienceModal = ({
     }
 
     // Validation - only check required fields
+    const authData = authStorage.getAuthData();
+    const userId = authData?.user_id;
+
     console.log("Validation check:", {
       companyName,
       startDate,
       employeeId,
+      userId,
       editDataId: editData?.id,
-      lineTypeId: editData?.lineTypeId
+      lineTypeId: editData?.lineTypeId,
     });
 
-    if (!companyName || !startDate || !employeeId || !editData?.id || !editData?.lineTypeId) {
-      const missingFields = [];
+    if (!companyName || !startDate || !employeeId || !userId || !editData?.id || !editData?.lineTypeId) {
+      const missingFields = [] as string[];
       if (!companyName) missingFields.push("Company Name");
       if (!startDate) missingFields.push("Start Date");
       if (!employeeId) missingFields.push("Employee ID");
+      if (!userId) missingFields.push("User ID");
       if (!editData?.id) missingFields.push("Work Experience ID");
       if (!editData?.lineTypeId) missingFields.push("Line Type ID");
       
@@ -135,7 +140,7 @@ export const AddWorkExperienceModal = ({
       };
 
       const response = await fetch(
-        `https://bsnswheel.org/api/v1/employee_resume/${employeeId}`,
+        `https://bsnswheel.org/api/v1/employee_resume/${authData?.user_id}`,
         {
           method: "PUT",
           headers: {
