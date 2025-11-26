@@ -65,7 +65,7 @@ const Profile = () => {
   const { blobUrl: userImageUrl } = useAuthImage(user.image);
 
   // Helper function to format date ranges
-  const formatDateRange = (startDate: string, endDate: string) => {
+  const formatDateRange = (startDate: string, endDate: string | boolean) => {
     const formatDate = (dateStr: string) => {
       const date = new Date(dateStr);
       const day = String(date.getDate()).padStart(2, '0');
@@ -74,7 +74,8 @@ const Profile = () => {
       return `${day}/${month}/${year}`;
     };
 
-    return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+    const endDateText = (typeof endDate === 'string') ? formatDate(endDate) : t('profile.current');
+    return `${formatDate(startDate)} - ${endDateText}`;
   };
 
   // Fetch employee details for Resume tab
