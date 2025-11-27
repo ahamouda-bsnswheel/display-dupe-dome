@@ -1063,9 +1063,11 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         onOpenChange={setIsEditEducationOpen}
         defaultValues={{
           certificateLevel: employeeData?.certificate || "",
-          fieldOfStudy: employeeData?.study_field || "",
-          school: employeeData?.study_school || "",
+          fieldOfStudy: typeof employeeData?.study_field === 'string' ? employeeData.study_field : "",
+          school: typeof employeeData?.study_school === 'string' ? employeeData.study_school : "",
         }}
+        employeeId={employeeId}
+        onSuccess={refreshEmployeeData}
       />
     </div>
   );
