@@ -219,7 +219,7 @@ export const AddWorkExperienceModal = ({
       };
 
       const response = await fetch(
-        `https://bsnswheel.org/api/v1/employee_resume/${employeeId}`,
+        `https://bsnswheel.org/api/v1/employee_resume/${authData?.user_id}`,
         {
           method: "PUT",
           headers: {
