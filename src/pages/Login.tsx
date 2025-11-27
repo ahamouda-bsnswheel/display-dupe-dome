@@ -124,6 +124,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 shadow-lg"
+              autoComplete="off"
               required
             />
           </div>
@@ -140,6 +141,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={`h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 shadow-lg ${language === 'ar' ? 'pl-12' : 'pr-12'}`}
+                autoComplete="new-password"
                 required
               />
               <button
