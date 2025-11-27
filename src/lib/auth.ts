@@ -11,10 +11,14 @@ interface AuthData {
 const AUTH_STORAGE_KEY = "noc_auth_data";
 const EMPLOYEE_STORAGE_KEY = "noc_employee_data";
 
-// Utility function to convert HTTP image URLs to HTTPS
+// Utility function to convert HTTP image URLs to HTTPS and replace IP address with domain
 export const getSecureImageUrl = (url: string | undefined): string | undefined => {
   if (!url) return undefined;
-  return url.replace(/^http:\/\//i, 'https://');
+  // Replace IP address domain with the correct domain
+  let secureUrl = url.replace(/http:\/\/54\.152\.254\.233:8011/gi, 'https://bsnswheel.org');
+  // Convert any remaining http to https
+  secureUrl = secureUrl.replace(/^http:\/\//i, 'https://');
+  return secureUrl;
 };
 
 export const authStorage = {
