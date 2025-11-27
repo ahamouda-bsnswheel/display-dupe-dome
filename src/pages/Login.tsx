@@ -9,8 +9,8 @@ import { Eye, EyeOff, Globe } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Login = () => {
-  const [email, setEmail] = useState("oidhaym@noc.ly");
-  const [password, setPassword] = useState("123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
