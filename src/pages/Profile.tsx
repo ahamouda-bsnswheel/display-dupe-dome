@@ -19,12 +19,17 @@ import { EditEducationModal } from "@/components/EditEducationModal";
 import { BadgeImage } from "@/components/BadgeImage";
 import DOMPurify from "dompurify";
 
-interface WorkExperience {
+interface ResumeEntry {
   id?: number;
   dates: string;
   title: string;
   companyName?: string;
   type?: string;
+}
+
+interface ResumeGroup {
+  type: string;
+  lines: ResumeEntry[];
 }
 
 const Profile = () => {
@@ -36,13 +41,14 @@ const Profile = () => {
   const [isAddWorkExpOpen, setIsAddWorkExpOpen] = useState(false);
   const [isEditWorkExpOpen, setIsEditWorkExpOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedWorkExp, setSelectedWorkExp] = useState<WorkExperience | null>(null);
+  const [selectedWorkExp, setSelectedWorkExp] = useState<ResumeEntry | null>(null);
   const [selectedWorkExpIndex, setSelectedWorkExpIndex] = useState<number | null>(null);
   const [isAddSkillOpen, setIsAddSkillOpen] = useState(false);
   const [isEditSkillOpen, setIsEditSkillOpen] = useState(false);
   const [isDeleteSkillDialogOpen, setIsDeleteSkillDialogOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<any>(null);
   const [selectedSkillIndex, setSelectedSkillIndex] = useState<number | null>(null);
+  const [selectedResumeType, setSelectedResumeType] = useState<string>("");
 
   // Private Info modals
   const [isEditPrivateContactOpen, setIsEditPrivateContactOpen] = useState(false);
@@ -118,19 +124,19 @@ const Profile = () => {
       if (response.ok) {
         const data = await response.json();
 
-        // Populate work experience from resumes
+        // Populate all resume groups
         if (data.resumes && data.resumes.length > 0) {
-          const workExpResume = data.resumes.find((r: any) => r.type === "Work Experience");
-          if (workExpResume && workExpResume.lines) {
-            const formattedWorkExp = workExpResume.lines.map((line: any) => ({
+          const formattedGroups = data.resumes.map((resumeGroup: any) => ({
+            type: resumeGroup.type,
+            lines: resumeGroup.lines?.map((line: any) => ({
               id: line.id,
               dates: formatDateRange(line.date_start, line.date_end),
               title: line.description || "",
               companyName: line.name,
-              type: line.type || workExpResume.type, // Get type from line or parent resume section
-            }));
-            setWorkExperience(formattedWorkExp);
-          }
+              type: line.type || resumeGroup.type,
+            })) || [],
+          }));
+          setResumeGroups(formattedGroups);
         }
 
         // Populate skills
@@ -179,23 +185,30 @@ const Profile = () => {
     navigate("/");
   };
 
-  const [workExperience, setWorkExperience] = useState<WorkExperience[]>([]);
+const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
 
-  const handleEditWorkExp = (exp: WorkExperience, index: number) => {
+  const handleEditWorkExp = (exp: ResumeEntry, index: number, groupType: string) => {
     setSelectedWorkExp(exp);
     setSelectedWorkExpIndex(index);
+    setSelectedResumeType(groupType);
     setIsEditWorkExpOpen(true);
   };
 
-  const handleDeleteWorkExp = (index: number) => {
+  const handleDeleteWorkExp = (index: number, groupType: string) => {
     setSelectedWorkExpIndex(index);
+    setSelectedResumeType(groupType);
     setIsDeleteDialogOpen(true);
   };
 
   const confirmDeleteWorkExp = () => {
-    if (selectedWorkExpIndex !== null) {
-      setWorkExperience(workExperience.filter((_, i) => i !== selectedWorkExpIndex));
+    if (selectedWorkExpIndex !== null && selectedResumeType) {
+      setResumeGroups(resumeGroups.map(group => 
+        group.type === selectedResumeType 
+          ? { ...group, lines: group.lines.filter((_, i) => i !== selectedWorkExpIndex) }
+          : group
+      ));
       setSelectedWorkExpIndex(null);
+      setSelectedResumeType("");
     }
   };
 
@@ -323,49 +336,51 @@ const Profile = () => {
               <CompetencyPuzzle competencies={competencies} />
             </div>
 
-            {/* Work Experience */}
-            <div>
-              <div className={`flex items-center justify-between mb-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <h3 className={`text-base font-semibold text-secondary ${isRTL ? "text-right" : ""}`}>
-                  {t("profile.workExperience")}
-                </h3>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-6 w-6 text-secondary hover:text-secondary/80"
-                  onClick={() => setIsAddWorkExpOpen(true)}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="space-y-3">
-                {workExperience.map((exp, index) => (
-                  <div key={index} className="bg-card p-4 rounded-lg border border-primary/20">
-                    <div className={`flex items-start justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
-                      <div className={`flex-1 ${isRTL ? "text-right" : ""}`}>
-                        <p className="text-sm text-secondary mb-1">{exp.dates}</p>
-                        <p className="text-sm font-medium text-primary">{exp.title}</p>
-                        {exp.companyName && <p className="text-sm text-muted-foreground">{exp.companyName}</p>}
-                      </div>
-                      <div className={`flex gap-2 ${isRTL ? "mr-2" : "ml-2"}`}>
-                        <button
-                          onClick={() => handleEditWorkExp(exp, index)}
-                          className="text-primary hover:text-primary/80"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteWorkExp(index)}
-                          className="text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+            {/* Resume Groups (Work Experience, Education, etc.) */}
+            {resumeGroups.map((group, groupIndex) => (
+              <div key={group.type}>
+                <div className={`flex items-center justify-between mb-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <h3 className={`text-base font-semibold text-secondary ${isRTL ? "text-right" : ""}`}>
+                    {group.type}
+                  </h3>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-6 w-6 text-secondary hover:text-secondary/80"
+                    onClick={() => setIsAddWorkExpOpen(true)}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="space-y-3">
+                  {group.lines.map((exp, index) => (
+                    <div key={exp.id || index} className="bg-card p-4 rounded-lg border border-primary/20">
+                      <div className={`flex items-start justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
+                        <div className={`flex-1 ${isRTL ? "text-right" : ""}`}>
+                          <p className="text-sm text-secondary mb-1">{exp.dates}</p>
+                          <p className="text-sm font-medium text-primary">{exp.title}</p>
+                          {exp.companyName && <p className="text-sm text-muted-foreground">{exp.companyName}</p>}
+                        </div>
+                        <div className={`flex gap-2 ${isRTL ? "mr-2" : "ml-2"}`}>
+                          <button
+                            onClick={() => handleEditWorkExp(exp, index, group.type)}
+                            className="text-primary hover:text-primary/80"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteWorkExp(index, group.type)}
+                            className="text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            ))}
 
             {/* Skills */}
             <div>
