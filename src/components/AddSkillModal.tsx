@@ -118,6 +118,9 @@ export const AddSkillModal = ({
         
         if (response.ok) {
           const data = await response.json();
+          console.log("Skills/Levels API response:", data);
+          console.log("Setting skills to:", data.skills);
+          console.log("Setting levels to:", data.levels);
           setSkills(data.skills || []);
           setSkillLevels(data.levels || []);
         }
@@ -277,7 +280,7 @@ export const AddSkillModal = ({
             <Select
               value={skillLevelId}
               onValueChange={setSkillLevelId}
-              disabled={!skillId || loadingSkills}
+              disabled={!skillTypeId || loadingSkills}
             >
               <SelectTrigger className="h-14 rounded-xl border-border bg-background text-base">
                 <SelectValue placeholder="Select Skill Level" />
