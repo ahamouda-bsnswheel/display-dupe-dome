@@ -119,7 +119,7 @@ export const AddSkillModal = ({
         if (response.ok) {
           const data = await response.json();
           setSkills(data.skills || []);
-          setSkillLevels(data.skill_levels || []);
+          setSkillLevels(data.levels || []);
         }
       } catch (error) {
         console.error("Error fetching skills:", error);
