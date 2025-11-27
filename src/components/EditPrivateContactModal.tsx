@@ -8,6 +8,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { authStorage } from "@/lib/auth";
+import { toast } from "@/hooks/use-toast";
 
 interface EditPrivateContactModalProps {
   open: boolean;
@@ -16,26 +18,78 @@ interface EditPrivateContactModalProps {
     email: string;
     phone: string;
   };
+  employeeId?: number;
+  onSuccess?: () => void;
 }
 
 export const EditPrivateContactModal = ({
   open,
   onOpenChange,
   defaultValues,
+  employeeId,
+  onSuccess,
 }: EditPrivateContactModalProps) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (defaultValues) {
-      setEmail(defaultValues.email);
-      setPhone(defaultValues.phone);
+    if (defaultValues && open) {
+      setEmail(defaultValues.email || "");
+      setPhone(defaultValues.phone || "");
     }
   }, [defaultValues, open]);
 
-  const handleSave = () => {
-    console.log({ email, phone });
-    onOpenChange(false);
+  const handleSave = async () => {
+    if (!employeeId) {
+      toast({
+        title: "Error",
+        description: "Employee ID not found",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const params = new URLSearchParams();
+      
+      if (email) params.append("private_email", email);
+      if (phone) params.append("private_phone", phone);
+
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/employees/${employeeId}?${params.toString()}`,
+        {
+          method: "PUT",
+          headers,
+        }
+      );
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Private contact updated successfully",
+        });
+        onOpenChange(false);
+        onSuccess?.();
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to update private contact",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating private contact:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update private contact",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -89,9 +143,10 @@ export const EditPrivateContactModal = ({
         <div className="px-6 pb-6">
           <Button
             onClick={handleSave}
+            disabled={isLoading}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            Save
+            {isLoading ? "Saving..." : "Save"}
           </Button>
         </div>
       </SheetContent>
