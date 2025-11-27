@@ -111,7 +111,7 @@ export const AddSkillModal = ({
         const response = await fetch(
           `https://bsnswheel.org/api/v1/skills/custom/${skillTypeId}`,
           {
-            method: "GET",
+            method: "PUT",
             headers,
           }
         );
