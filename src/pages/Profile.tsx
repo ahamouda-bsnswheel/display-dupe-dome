@@ -158,6 +158,11 @@ const Profile = () => {
         if (data.ranks && data.ranks.karma_value !== undefined) {
           setKarmaValue(data.ranks.karma_value);
         }
+
+        // Populate resume types
+        if (data.resume_types && data.resume_types.length > 0) {
+          setResumeTypes(data.resume_types);
+        }
       }
     } catch (error) {
       console.error("Error fetching employee details:", error);
@@ -215,6 +220,7 @@ const Profile = () => {
   const [competencies, setCompetencies] = useState<any[]>([]);
   const [badges, setBadges] = useState<any[]>([]);
   const [karmaValue, setKarmaValue] = useState(0);
+  const [resumeTypes, setResumeTypes] = useState<{id: number; name: string}[]>([]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-screen-xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
@@ -886,7 +892,13 @@ const Profile = () => {
       </ScrollArea>
 
       {/* Add Work Experience Modal */}
-      <AddWorkExperienceModal open={isAddWorkExpOpen} onOpenChange={setIsAddWorkExpOpen} />
+      <AddWorkExperienceModal 
+        open={isAddWorkExpOpen} 
+        onOpenChange={setIsAddWorkExpOpen} 
+        employeeId={employeeId}
+        resumeTypes={resumeTypes}
+        onSuccess={fetchEmployeeDetails}
+      />
 
       {/* Edit Work Experience Modal */}
       <AddWorkExperienceModal
@@ -895,6 +907,7 @@ const Profile = () => {
         editData={selectedWorkExp || undefined}
         isEditMode={true}
         employeeId={employeeId}
+        resumeTypes={resumeTypes}
         onSuccess={fetchEmployeeDetails}
       />
 
