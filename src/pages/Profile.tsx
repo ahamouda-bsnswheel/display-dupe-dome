@@ -194,21 +194,38 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
     setIsEditWorkExpOpen(true);
   };
 
-  const handleDeleteWorkExp = (index: number, groupType: string) => {
+  const handleDeleteWorkExp = (exp: ResumeEntry, index: number, groupType: string) => {
+    setSelectedWorkExp(exp);
     setSelectedWorkExpIndex(index);
     setSelectedResumeType(groupType);
     setIsDeleteDialogOpen(true);
   };
 
-  const confirmDeleteWorkExp = () => {
-    if (selectedWorkExpIndex !== null && selectedResumeType) {
-      setResumeGroups(resumeGroups.map(group => 
-        group.type === selectedResumeType 
-          ? { ...group, lines: group.lines.filter((_, i) => i !== selectedWorkExpIndex) }
-          : group
-      ));
-      setSelectedWorkExpIndex(null);
-      setSelectedResumeType("");
+  const confirmDeleteWorkExp = async () => {
+    if (selectedWorkExp?.id && selectedResumeType) {
+      try {
+        const headers = authStorage.getAuthHeaders();
+        const response = await fetch(
+          `https://bsnswheel.org/api/v1/employee_resume/${selectedWorkExp.id}`,
+          {
+            method: "DELETE",
+            headers,
+          }
+        );
+
+        if (response.ok) {
+          // Refresh the data from the server
+          fetchEmployeeDetails();
+        } else {
+          console.error("Failed to delete resume entry");
+        }
+      } catch (error) {
+        console.error("Error deleting resume entry:", error);
+      } finally {
+        setSelectedWorkExp(null);
+        setSelectedWorkExpIndex(null);
+        setSelectedResumeType("");
+      }
     }
   };
 
@@ -369,7 +386,7 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => handleDeleteWorkExp(index, group.type)}
+                            onClick={() => handleDeleteWorkExp(exp, index, group.type)}
                             className="text-muted-foreground hover:text-destructive"
                           >
                             <Trash2 className="h-4 w-4" />
