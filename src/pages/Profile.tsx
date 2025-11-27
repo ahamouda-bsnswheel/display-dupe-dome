@@ -951,7 +951,12 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
       />
 
       {/* Add Skill Modal */}
-      <AddSkillModal open={isAddSkillOpen} onOpenChange={setIsAddSkillOpen} />
+      <AddSkillModal 
+        open={isAddSkillOpen} 
+        onOpenChange={setIsAddSkillOpen}
+        employeeId={employeeId}
+        onSuccess={fetchEmployeeDetails}
+      />
 
       {/* Edit Skill Modal */}
       <AddSkillModal
@@ -959,6 +964,8 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         onOpenChange={setIsEditSkillOpen}
         editData={selectedSkill}
         isEditMode={true}
+        employeeId={employeeId}
+        onSuccess={fetchEmployeeDetails}
       />
 
       {/* Delete Skill Confirmation Dialog */}

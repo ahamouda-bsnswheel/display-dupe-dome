@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { authStorage } from "@/lib/auth";
+import { toast } from "@/hooks/use-toast";
 
 interface Skill {
   name: string;
@@ -21,106 +23,182 @@ interface Skill {
   category: string;
 }
 
+interface SkillType {
+  id: number;
+  name: string;
+}
+
+interface SkillOption {
+  id: number;
+  name: string;
+}
+
+interface SkillLevel {
+  id: number;
+  name: string;
+}
+
 interface AddSkillModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editData?: Skill;
   isEditMode?: boolean;
+  employeeId?: number;
+  onSuccess?: () => void;
 }
-
-const SKILLS_DATA = {
-  Interpersonal: {
-    skills: [
-      "Adaptability",
-      "Communication",
-      "Conflict Management",
-      "Critical Thinking",
-      "Leadership",
-      "Self-Education",
-      "Report Writing",
-      "Problem Solving",
-      "Team building",
-      "Mentoring",
-      "Searching",
-    ],
-    levels: ["Expert", "Professional", "Intermediate", "Elementary", "Beginner"],
-  },
-  Languages: {
-    skills: ["Arabic", "Bengali", "English", "Filipino", "German"],
-    levels: ["Expert", "Professional", "Intermediate", "Elementary", "Beginner"],
-  },
-  Marketing: {
-    skills: ["Communication", "Digital advertising", "Public Speaking"],
-    levels: ["L4", "L3", "L2", "L1"],
-  },
-  Technical: {
-    skills: [
-      "Agile and Scrum methodologies",
-      "Project Management",
-      "Power BI",
-      "Statistical Analysis (Excel, Power BI)",
-      "ICDL",
-      "Excel",
-      "Digital Archiving",
-      "KPI Tracking & Performance Analysis",
-      "SAP data entry",
-      "Microsoft Office",
-      "Translation",
-    ],
-    levels: ["Expert", "Professional", "Intermediate", "Elementary", "Beginner"],
-  },
-};
 
 export const AddSkillModal = ({ 
   open, 
   onOpenChange,
   editData,
-  isEditMode = false 
+  isEditMode = false,
+  employeeId,
+  onSuccess
 }: AddSkillModalProps) => {
-  const [skillType, setSkillType] = useState<string>("");
-  const [skill, setSkill] = useState<string>("");
-  const [skillLevel, setSkillLevel] = useState<string>("");
+  const [skillTypeId, setSkillTypeId] = useState<string>("");
+  const [skillId, setSkillId] = useState<string>("");
+  const [skillLevelId, setSkillLevelId] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Dynamic data from API
+  const [skillTypes, setSkillTypes] = useState<SkillType[]>([]);
+  const [skills, setSkills] = useState<SkillOption[]>([]);
+  const [skillLevels, setSkillLevels] = useState<SkillLevel[]>([]);
+  const [loadingTypes, setLoadingTypes] = useState(false);
+  const [loadingSkills, setLoadingSkills] = useState(false);
 
-  // Pre-fill data when in edit mode
+  // Fetch skill types on mount
   useEffect(() => {
-    if (isEditMode && editData) {
-      setSkillType(editData.category);
-      setSkill(editData.name);
-      // Extract level from "Expert (100%)" format
-      const levelMatch = editData.level.match(/^([^(]+)/);
-      if (levelMatch) {
-        setSkillLevel(levelMatch[1].trim());
+    const fetchSkillTypes = async () => {
+      setLoadingTypes(true);
+      try {
+        const headers = authStorage.getAuthHeaders();
+        const response = await fetch("https://bsnswheel.org/api/v1/skills_type", {
+          method: "GET",
+          headers,
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setSkillTypes(data.result || []);
+        }
+      } catch (error) {
+        console.error("Error fetching skill types:", error);
+      } finally {
+        setLoadingTypes(false);
       }
-    } else {
-      // Reset form when opening in add mode
-      setSkillType("");
-      setSkill("");
-      setSkillLevel("");
-    }
-  }, [isEditMode, editData, open]);
+    };
 
-  const skillTypes = Object.keys(SKILLS_DATA);
-  const availableSkills = skillType
-    ? SKILLS_DATA[skillType as keyof typeof SKILLS_DATA].skills
-    : [];
-  const availableLevels = skillType
-    ? SKILLS_DATA[skillType as keyof typeof SKILLS_DATA].levels
-    : [];
+    if (open) {
+      fetchSkillTypes();
+    }
+  }, [open]);
+
+  // Fetch skills and levels when skill type changes
+  useEffect(() => {
+    const fetchSkillsAndLevels = async () => {
+      if (!skillTypeId) {
+        setSkills([]);
+        setSkillLevels([]);
+        return;
+      }
+
+      setLoadingSkills(true);
+      try {
+        const headers = authStorage.getAuthHeaders();
+        const response = await fetch(
+          `https://bsnswheel.org/api/v1/skills/custom/${skillTypeId}`,
+          {
+            method: "GET",
+            headers,
+          }
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          setSkills(data.skills || []);
+          setSkillLevels(data.skill_levels || []);
+        }
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+      } finally {
+        setLoadingSkills(false);
+      }
+    };
+
+    fetchSkillsAndLevels();
+    // Reset skill and level when type changes
+    setSkillId("");
+    setSkillLevelId("");
+  }, [skillTypeId]);
+
+  // Reset form when opening/closing
+  useEffect(() => {
+    if (!open) {
+      setSkillTypeId("");
+      setSkillId("");
+      setSkillLevelId("");
+      setSkills([]);
+      setSkillLevels([]);
+    }
+  }, [open]);
 
   const handleSkillTypeChange = (value: string) => {
-    setSkillType(value);
-    setSkill(""); // Reset skill when type changes
-    setSkillLevel(""); // Reset level when type changes
+    setSkillTypeId(value);
   };
 
-  const handleSave = () => {
-    // TODO: Implement save logic
-    console.log({
-      skillType,
-      skill,
-      skillLevel,
-    });
-    onOpenChange(false);
+  const handleSave = async () => {
+    if (!skillTypeId || !skillId || !skillLevelId || !employeeId) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const params = new URLSearchParams({
+        employee_id: employeeId.toString(),
+        skill_id: skillId,
+        skill_type_id: skillTypeId,
+        skill_level_id: skillLevelId,
+      });
+
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/employee_skills?${params.toString()}`,
+        {
+          method: "POST",
+          headers,
+        }
+      );
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Skill added successfully",
+        });
+        onOpenChange(false);
+        onSuccess?.();
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to add skill",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error saving skill:", error);
+      toast({
+        title: "Error",
+        description: "An error occurred while saving",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -136,7 +214,9 @@ export const AddSkillModal = ({
 
         {/* Header */}
         <SheetHeader className="px-6 pb-4">
-          <SheetTitle className="text-xl font-semibold">Skill</SheetTitle>
+          <SheetTitle className="text-xl font-semibold">
+            {isEditMode ? "Edit Skill" : "Add Skill"}
+          </SheetTitle>
         </SheetHeader>
 
         {/* Form Content */}
@@ -146,14 +226,14 @@ export const AddSkillModal = ({
             <Label className="text-base font-normal text-foreground">
               Skill Type
             </Label>
-            <Select value={skillType} onValueChange={handleSkillTypeChange}>
+            <Select value={skillTypeId} onValueChange={handleSkillTypeChange} disabled={loadingTypes}>
               <SelectTrigger className="h-14 rounded-xl border-border bg-background text-base">
-                <SelectValue placeholder="Enter Skill Type" />
+                <SelectValue placeholder={loadingTypes ? "Loading..." : "Select Skill Type"} />
               </SelectTrigger>
               <SelectContent>
                 {skillTypes.map((type) => (
-                  <SelectItem key={type} value={type} className="text-base">
-                    {type}
+                  <SelectItem key={type.id} value={type.id.toString()} className="text-base">
+                    {type.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -166,21 +246,21 @@ export const AddSkillModal = ({
               Skill
             </Label>
             <Select
-              value={skill}
-              onValueChange={setSkill}
-              disabled={!skillType}
+              value={skillId}
+              onValueChange={setSkillId}
+              disabled={!skillTypeId || loadingSkills}
             >
               <SelectTrigger className="h-14 rounded-xl border-border bg-background text-base">
-                <SelectValue placeholder="Enter Skill" />
+                <SelectValue placeholder={loadingSkills ? "Loading..." : "Select Skill"} />
               </SelectTrigger>
               <SelectContent>
-                {availableSkills.map((skillOption) => (
+                {skills.map((skill) => (
                   <SelectItem
-                    key={skillOption}
-                    value={skillOption}
+                    key={skill.id}
+                    value={skill.id.toString()}
                     className="text-base"
                   >
-                    {skillOption}
+                    {skill.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -193,17 +273,17 @@ export const AddSkillModal = ({
               Skill Level
             </Label>
             <Select
-              value={skillLevel}
-              onValueChange={setSkillLevel}
-              disabled={!skill}
+              value={skillLevelId}
+              onValueChange={setSkillLevelId}
+              disabled={!skillId || loadingSkills}
             >
               <SelectTrigger className="h-14 rounded-xl border-border bg-background text-base">
-                <SelectValue placeholder="Enter Skill Level" />
+                <SelectValue placeholder="Select Skill Level" />
               </SelectTrigger>
               <SelectContent>
-                {availableLevels.map((level) => (
-                  <SelectItem key={level} value={level} className="text-base">
-                    {level}
+                {skillLevels.map((level) => (
+                  <SelectItem key={level.id} value={level.id.toString()} className="text-base">
+                    {level.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -215,9 +295,10 @@ export const AddSkillModal = ({
         <div className="px-6 pb-6">
           <Button
             onClick={handleSave}
+            disabled={isLoading || !skillTypeId || !skillId || !skillLevelId}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            Save
+            {isLoading ? "Saving..." : "Save"}
           </Button>
         </div>
       </SheetContent>
