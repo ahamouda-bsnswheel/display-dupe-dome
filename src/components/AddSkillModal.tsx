@@ -80,7 +80,7 @@ export const AddSkillModal = ({
         
         if (response.ok) {
           const data = await response.json();
-          setSkillTypes(data.result || []);
+          setSkillTypes(data.results || []);
         }
       } catch (error) {
         console.error("Error fetching skill types:", error);
