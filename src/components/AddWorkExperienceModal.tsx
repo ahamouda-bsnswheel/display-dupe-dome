@@ -35,6 +35,11 @@ interface WorkExperience {
   lineTypeId?: number;
 }
 
+interface ResumeType {
+  id: number;
+  name: string;
+}
+
 interface AddWorkExperienceModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -42,17 +47,8 @@ interface AddWorkExperienceModalProps {
   isEditMode?: boolean;
   employeeId?: number;
   onSuccess?: () => void;
+  resumeTypes?: ResumeType[];
 }
-
-const resumeTypes = [
-  "Trainings",
-  "Work Experience",
-  "Education",
-  "Side Projects",
-  "Study",
-  "Internal Certification",
-  "Completed Internal Training",
-];
 
 export const AddWorkExperienceModal = ({
   open,
@@ -61,6 +57,7 @@ export const AddWorkExperienceModal = ({
   isEditMode = false,
   employeeId,
   onSuccess,
+  resumeTypes = [],
 }: AddWorkExperienceModalProps) => {
   const { toast } = useToast();
   const [resumeType, setResumeType] = useState<string>("");
@@ -68,6 +65,17 @@ export const AddWorkExperienceModal = ({
   const [titleOfEmployee, setTitleOfEmployee] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+
+  // Reset form when modal opens in add mode
+  useEffect(() => {
+    if (open && !isEditMode) {
+      setResumeType("");
+      setCompanyName("");
+      setTitleOfEmployee("");
+      setStartDate(undefined);
+      setEndDate(undefined);
+    }
+  }, [open, isEditMode]);
 
   // Pre-fill data when in edit mode
   useEffect(() => {
@@ -95,17 +103,77 @@ export const AddWorkExperienceModal = ({
   }, [isEditMode, editData]);
 
   const handleSave = async () => {
-    if (!isEditMode) {
-      // TODO: Implement add logic
-      console.log("Add functionality not yet implemented");
-      onOpenChange(false);
-      return;
-    }
-
-    // Validation - only check required fields
     const authData = authStorage.getAuthData();
     const userId = authData?.user_id;
 
+    // Handle ADD mode
+    if (!isEditMode) {
+      const selectedResumeType = resumeTypes.find(rt => rt.id.toString() === resumeType);
+      
+      if (!resumeType || !companyName || !startDate || !employeeId || !userId) {
+        const missingFields = [] as string[];
+        if (!resumeType) missingFields.push("Resume Type");
+        if (!companyName) missingFields.push("Company Name");
+        if (!startDate) missingFields.push("Start Date");
+        
+        toast({
+          title: "Missing Information",
+          description: `Please fill in all required fields: ${missingFields.join(", ")}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      try {
+        const headers = authStorage.getAuthHeaders();
+        const body = {
+          employee_id: employeeId.toString(),
+          name: companyName,
+          date_start: format(startDate, "yyyy-MM-dd"),
+          date_end: endDate ? format(endDate, "yyyy-MM-dd") : null,
+          description: titleOfEmployee || null,
+          line_type_id: selectedResumeType?.id,
+        };
+
+        const response = await fetch(
+          `https://bsnswheel.org/api/v1/employee_resume`,
+          {
+            method: "POST",
+            headers: {
+              ...headers,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          }
+        );
+
+        if (response.ok) {
+          toast({
+            title: "Success",
+            description: "Work experience added successfully",
+          });
+          onOpenChange(false);
+          onSuccess?.();
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          toast({
+            title: "Error",
+            description: errorData.message || "Failed to add work experience",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Error adding work experience:", error);
+        toast({
+          title: "Error",
+          description: "An error occurred while adding work experience",
+          variant: "destructive",
+        });
+      }
+      return;
+    }
+
+    // EDIT mode - Validation
     console.log("Validation check:", {
       companyName,
       startDate,
@@ -212,8 +280,8 @@ export const AddWorkExperienceModal = ({
                 </SelectTrigger>
                 <SelectContent>
                   {resumeTypes.map((type) => (
-                    <SelectItem key={type} value={type} className="text-base">
-                      {type}
+                    <SelectItem key={type.id} value={type.id.toString()} className="text-base">
+                      {type.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
