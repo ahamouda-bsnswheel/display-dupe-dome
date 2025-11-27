@@ -234,15 +234,36 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
     setIsEditSkillOpen(true);
   };
 
-  const handleDeleteSkill = (index: number) => {
+  const handleDeleteSkill = (skill: any, index: number) => {
+    setSelectedSkill(skill);
     setSelectedSkillIndex(index);
     setIsDeleteSkillDialogOpen(true);
   };
 
-  const confirmDeleteSkill = () => {
-    if (selectedSkillIndex !== null) {
-      setSkills(skills.filter((_, i) => i !== selectedSkillIndex));
-      setSelectedSkillIndex(null);
+  const confirmDeleteSkill = async () => {
+    if (selectedSkill?.id) {
+      try {
+        const headers = authStorage.getAuthHeaders();
+        const response = await fetch(
+          `https://bsnswheel.org/api/v1/employee_skills/${selectedSkill.id}`,
+          {
+            method: "DELETE",
+            headers,
+          }
+        );
+
+        if (response.ok) {
+          // Refresh the data from the server
+          fetchEmployeeDetails();
+        } else {
+          console.error("Failed to delete skill");
+        }
+      } catch (error) {
+        console.error("Error deleting skill:", error);
+      } finally {
+        setSelectedSkill(null);
+        setSelectedSkillIndex(null);
+      }
     }
   };
 
@@ -431,7 +452,7 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => handleDeleteSkill(index)}
+                          onClick={() => handleDeleteSkill(skill, index)}
                           className="text-muted-foreground hover:text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />
