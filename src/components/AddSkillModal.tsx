@@ -80,6 +80,8 @@ export const AddSkillModal = ({
         
         if (response.ok) {
           const data = await response.json();
+          console.log("Skill types API response:", data);
+          console.log("Setting skill types to:", data.results);
           setSkillTypes(data.results || []);
         }
       } catch (error) {
