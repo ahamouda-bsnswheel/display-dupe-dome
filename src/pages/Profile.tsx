@@ -1050,9 +1050,11 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         open={isEditEmergencyOpen}
         onOpenChange={setIsEditEmergencyOpen}
         defaultValues={{
-          contactName: "",
-          contactPhone: "",
+          contactName: employeeData?.emergency_contact || "",
+          contactPhone: employeeData?.emergency_phone || "",
         }}
+        employeeId={employeeId}
+        onSuccess={refreshEmployeeData}
       />
 
       {/* Edit Education Modal */}
