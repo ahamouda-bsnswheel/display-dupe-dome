@@ -24,7 +24,7 @@ interface WorkExperience {
   dates: string;
   title: string;
   companyName?: string;
-  lineTypeId?: number;
+  type?: string;
 }
 
 const Profile = () => {
@@ -127,7 +127,7 @@ const Profile = () => {
               dates: formatDateRange(line.date_start, line.date_end),
               title: line.description || "",
               companyName: line.name,
-              lineTypeId: line.id,
+              type: line.type || workExpResume.type, // Get type from line or parent resume section
             }));
             setWorkExperience(formattedWorkExp);
           }
