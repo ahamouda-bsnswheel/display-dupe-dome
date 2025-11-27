@@ -28,6 +28,8 @@ export interface EmployeeData {
   certificate: string;
   lang: string;
   tz: string;
+  emergency_contact: string | false;
+  emergency_phone: string | false;
   
   // Education
   study_field: string | false;
