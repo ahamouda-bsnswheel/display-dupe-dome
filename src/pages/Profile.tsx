@@ -143,6 +143,9 @@ const Profile = () => {
         if (data.skills && data.skills.length > 0) {
           const formattedSkills = data.skills.map((skill: any) => ({
             id: skill.id,
+            skill_id: skill.skill_id[0],
+            skill_type_id: skill.skill_type_id[0],
+            skill_level_id: skill.skill_level_id[0],
             name: skill.skill_id[1],
             level: `${skill.skill_level_id[1]} (${skill.level_progress}%)`,
             category: skill.skill_type_id[1],

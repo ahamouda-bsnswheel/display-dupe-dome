@@ -17,7 +17,11 @@ import { Button } from "@/components/ui/button";
 import { authStorage } from "@/lib/auth";
 import { toast } from "@/hooks/use-toast";
 
-interface Skill {
+interface SkillEditData {
+  id: number;
+  skill_id: number;
+  skill_type_id: number;
+  skill_level_id: number;
   name: string;
   level: string;
   category: string;
@@ -36,12 +40,13 @@ interface SkillOption {
 interface SkillLevel {
   id: number;
   name: string;
+  level_progress?: number;
 }
 
 interface AddSkillModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  editData?: Skill;
+  editData?: SkillEditData | null;
   isEditMode?: boolean;
   employeeId?: number;
   onSuccess?: () => void;
@@ -137,16 +142,33 @@ export const AddSkillModal = ({
     setSkillLevelId("");
   }, [skillTypeId]);
 
-  // Reset form when opening/closing
+  // Pre-populate form when editing
   useEffect(() => {
-    if (!open) {
+    if (open && isEditMode && editData) {
+      // Set skill type first - this will trigger fetching skills and levels
+      if (editData.skill_type_id) {
+        setSkillTypeId(editData.skill_type_id.toString());
+      }
+    } else if (!open) {
       setSkillTypeId("");
       setSkillId("");
       setSkillLevelId("");
       setSkills([]);
       setSkillLevels([]);
     }
-  }, [open]);
+  }, [open, isEditMode, editData]);
+
+  // Set skill and level after skills/levels are loaded
+  useEffect(() => {
+    if (isEditMode && editData && skills.length > 0 && skillLevels.length > 0) {
+      if (editData.skill_id) {
+        setSkillId(editData.skill_id.toString());
+      }
+      if (editData.skill_level_id) {
+        setSkillLevelId(editData.skill_level_id.toString());
+      }
+    }
+  }, [isEditMode, editData, skills, skillLevels]);
 
   const handleSkillTypeChange = (value: string) => {
     setSkillTypeId(value);
@@ -165,32 +187,48 @@ export const AddSkillModal = ({
     setIsLoading(true);
     try {
       const headers = authStorage.getAuthHeaders();
+      
+      // Find the selected level to get level_progress
+      const selectedLevel = skillLevels.find(l => l.id.toString() === skillLevelId);
+      const levelProgress = selectedLevel?.level_progress || 0;
+
       const params = new URLSearchParams({
         employee_id: employeeId.toString(),
         skill_id: skillId,
         skill_type_id: skillTypeId,
         skill_level_id: skillLevelId,
+        level_progress: levelProgress.toString(),
       });
 
-      const response = await fetch(
-        `https://bsnswheel.org/api/v1/employee_skills?${params.toString()}`,
-        {
-          method: "POST",
-          headers,
-        }
-      );
+      let url: string;
+      let method: string;
+
+      if (isEditMode && editData?.id) {
+        // Update existing skill
+        url = `https://bsnswheel.org/api/v1/employee_skills/${editData.id}?${params.toString()}`;
+        method = "PUT";
+      } else {
+        // Create new skill
+        url = `https://bsnswheel.org/api/v1/employee_skills?${params.toString()}`;
+        method = "POST";
+      }
+
+      const response = await fetch(url, {
+        method,
+        headers,
+      });
 
       if (response.ok) {
         toast({
           title: "Success",
-          description: "Skill added successfully",
+          description: isEditMode ? "Skill updated successfully" : "Skill added successfully",
         });
         onOpenChange(false);
         onSuccess?.();
       } else {
         toast({
           title: "Error",
-          description: "Failed to add skill",
+          description: isEditMode ? "Failed to update skill" : "Failed to add skill",
           variant: "destructive",
         });
       }
