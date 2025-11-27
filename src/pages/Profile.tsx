@@ -59,8 +59,30 @@ const Profile = () => {
   // Organization chart manager
   const [directManager, setDirectManager] = useState<any>(null);
 
-  const employeeData = authStorage.getEmployeeData();
+  // Employee data state for reactivity
+  const [employeeData, setEmployeeDataState] = useState(authStorage.getEmployeeData());
   const employeeId = employeeData?.id;
+
+  // Function to refresh employee data from API
+  const refreshEmployeeData = async () => {
+    if (!employeeId) return;
+    
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const response = await fetch(`https://bsnswheel.org/api/v1/employees/${employeeId}`, {
+        method: "GET",
+        headers,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        authStorage.setEmployeeData(data);
+        setEmployeeDataState(data);
+      }
+    } catch (error) {
+      console.error("Error refreshing employee data:", error);
+    }
+  };
 
   const user = {
     name: employeeData?.name || "User",
@@ -1007,6 +1029,8 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
           email: employeeData?.private_email || "",
           phone: employeeData?.private_phone || "",
         }}
+        employeeId={employeeId}
+        onSuccess={refreshEmployeeData}
       />
 
       {/* Edit Family Status Modal */}
