@@ -32,7 +32,7 @@ interface WorkExperience {
   dates: string;
   title: string;
   companyName?: string;
-  lineTypeId?: number;
+  type?: string; // The type name from the API (e.g., "Work Experience")
 }
 
 interface ResumeType {
@@ -185,17 +185,20 @@ export const AddWorkExperienceModal = ({
       employeeId,
       userId,
       editDataId: editData?.id,
-      lineTypeId: editData?.lineTypeId,
+      editDataType: editData?.type,
     });
 
-    if (!companyName || !startDate || !employeeId || !userId || !editData?.id || !editData?.lineTypeId) {
+    // Find the line_type_id by matching the type name with resume_types
+    const matchingResumeType = resumeTypes.find(rt => rt.name === editData?.type);
+    
+    if (!companyName || !startDate || !employeeId || !userId || !editData?.id || !matchingResumeType) {
       const missingFields = [] as string[];
       if (!companyName) missingFields.push("Company Name");
       if (!startDate) missingFields.push("Start Date");
       if (!employeeId) missingFields.push("Employee ID");
       if (!userId) missingFields.push("User ID");
       if (!editData?.id) missingFields.push("Work Experience ID");
-      if (!editData?.lineTypeId) missingFields.push("Line Type ID");
+      if (!matchingResumeType) missingFields.push("Resume Type");
       
       console.error("Missing required fields:", missingFields);
       
@@ -215,7 +218,7 @@ export const AddWorkExperienceModal = ({
         date_start: format(startDate, "yyyy-MM-dd"),
         date_end: endDate ? format(endDate, "yyyy-MM-dd") : null,
         description: titleOfEmployee || null,
-        line_type_id: editData.lineTypeId,
+        line_type_id: matchingResumeType.id,
       };
 
       const response = await fetch(
