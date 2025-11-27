@@ -212,24 +212,27 @@ export const AddWorkExperienceModal = ({
 
     try {
       const headers = authStorage.getAuthHeaders();
-      const body = {
-        employee_id: employeeId.toString(),
-        name: companyName,
-        date_start: format(startDate, "yyyy-MM-dd"),
-        date_end: endDate ? format(endDate, "yyyy-MM-dd") : null,
-        description: titleOfEmployee || null,
-        line_type_id: matchingResumeType.id,
-      };
+      
+      // Build query parameters
+      const params = new URLSearchParams();
+      params.append("employee_id", employeeId.toString());
+      params.append("name", companyName);
+      params.append("date_start", format(startDate, "yyyy-MM-dd"));
+      if (endDate) {
+        params.append("date_end", format(endDate, "yyyy-MM-dd"));
+      }
+      if (titleOfEmployee) {
+        params.append("description", titleOfEmployee);
+      }
+      params.append("line_type_id", matchingResumeType.id.toString());
 
       const response = await fetch(
-        `https://bsnswheel.org/api/v1/employee_resume/${editData.id}`,
+        `https://bsnswheel.org/api/v1/employee_resume/${editData.id}?${params.toString()}`,
         {
           method: "PUT",
           headers: {
             ...headers,
-            "Content-Type": "application/json",
           },
-          body: JSON.stringify(body),
         }
       );
 
