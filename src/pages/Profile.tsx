@@ -50,6 +50,9 @@ const Profile = () => {
   const [isEditEmergencyOpen, setIsEditEmergencyOpen] = useState(false);
   const [isEditEducationOpen, setIsEditEducationOpen] = useState(false);
   
+  // Organization chart manager
+  const [directManager, setDirectManager] = useState<any>(null);
+  
   const employeeData = authStorage.getEmployeeData();
   const employeeId = employeeData?.id;
   
@@ -63,6 +66,7 @@ const Profile = () => {
   };
 
   const { blobUrl: userImageUrl } = useAuthImage(user.image);
+  const { blobUrl: managerImageUrl } = useAuthImage(getSecureImageUrl(directManager?.image_url));
 
   // Helper function to format date ranges
   const formatDateRange = (startDate: string, endDate: string | boolean) => {
@@ -76,6 +80,31 @@ const Profile = () => {
 
     const endDateText = (typeof endDate === 'string') ? formatDate(endDate) : t('profile.current');
     return `${formatDate(startDate)} - ${endDateText}`;
+  };
+
+  // Fetch organization chart data to get direct manager
+  const fetchOrgChartData = async () => {
+    if (!employeeId) return;
+
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/org_chart/custom/${employeeId}`,
+        {
+          method: "PUT",
+          headers,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        // Find the manager from the org chart data
+        const manager = data.result?.find((emp: any) => emp.type === "manager");
+        setDirectManager(manager);
+      }
+    } catch (error) {
+      console.error("Error fetching org chart data:", error);
+    }
   };
 
   // Fetch employee details for Resume tab
@@ -143,6 +172,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchEmployeeDetails();
+    fetchOrgChartData();
   }, [employeeId]);
 
   const handleLogout = () => {
@@ -523,18 +553,18 @@ const Profile = () => {
                   <p className={`text-sm font-semibold text-primary ${isRTL ? 'text-right' : ''}`}>{t('profile.reportingStructure')}</p>
                 </div>
                 <div className={`space-y-3 ${isRTL ? 'mr-5' : 'ml-5'}`}>
-                  {/* Show managers if available */}
-                  {employeeData?.attendance_manager_id && Array.isArray(employeeData.attendance_manager_id) && (
+                  {/* Show direct manager from org chart */}
+                  {directManager && (
                     <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src="" alt={employeeData.attendance_manager_id[1]} />
+                        <AvatarImage src={managerImageUrl} alt={directManager.name} />
                         <AvatarFallback className="bg-muted text-sm">
-                          {employeeData.attendance_manager_id[1].split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                          {directManager.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div className={isRTL ? 'text-right' : ''}>
-                        <p className="text-sm font-medium text-foreground">{employeeData.attendance_manager_id[1]}</p>
-                        <p className="text-sm text-muted-foreground">{t('profile.manager')}</p>
+                        <p className="text-sm font-medium text-foreground">{directManager.name}</p>
+                        <p className="text-sm text-muted-foreground">{directManager.job || t('profile.manager')}</p>
                       </div>
                     </div>
                   )}
