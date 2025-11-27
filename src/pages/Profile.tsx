@@ -1041,6 +1041,8 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
           maritalStatus: employeeData?.marital || "",
           numberOfChildren: employeeData?.children?.toString() || "0",
         }}
+        employeeId={employeeId}
+        onSuccess={refreshEmployeeData}
       />
 
       {/* Edit Emergency Modal */}

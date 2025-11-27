@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { authStorage } from "@/lib/auth";
+import { toast } from "@/hooks/use-toast";
 
 interface EditFamilyStatusModalProps {
   open: boolean;
@@ -24,16 +26,21 @@ interface EditFamilyStatusModalProps {
     maritalStatus: string;
     numberOfChildren: string;
   };
+  employeeId?: number;
+  onSuccess?: () => void;
 }
 
 export const EditFamilyStatusModal = ({
   open,
   onOpenChange,
   defaultValues,
+  employeeId,
+  onSuccess,
 }: EditFamilyStatusModalProps) => {
   const { t } = useLanguage();
   const [maritalStatus, setMaritalStatus] = useState("");
   const [numberOfChildren, setNumberOfChildren] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const maritalOptions = [
     { value: "single", label: t('profile.maritalStatus.single') || "Single" },
@@ -44,15 +51,62 @@ export const EditFamilyStatusModal = ({
   ];
 
   useEffect(() => {
-    if (defaultValues) {
+    if (defaultValues && open) {
       setMaritalStatus(defaultValues.maritalStatus?.toLowerCase() || "");
-      setNumberOfChildren(defaultValues.numberOfChildren);
+      setNumberOfChildren(defaultValues.numberOfChildren || "");
     }
   }, [defaultValues, open]);
 
-  const handleSave = () => {
-    console.log({ maritalStatus, numberOfChildren });
-    onOpenChange(false);
+  const handleSave = async () => {
+    if (!employeeId) {
+      toast({
+        title: "Error",
+        description: "Employee ID not found",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const params = new URLSearchParams();
+      
+      if (maritalStatus) params.append("marital", maritalStatus);
+      params.append("children", numberOfChildren || "0");
+
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/employees/${employeeId}?${params.toString()}`,
+        {
+          method: "PUT",
+          headers,
+        }
+      );
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Marital status updated successfully",
+        });
+        onOpenChange(false);
+        onSuccess?.();
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to update marital status",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating marital status:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update marital status",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -116,9 +170,10 @@ export const EditFamilyStatusModal = ({
         <div className="px-6 pb-6">
           <Button
             onClick={handleSave}
+            disabled={isLoading}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            {t('common.save') || "Save"}
+            {isLoading ? (t('common.saving') || "Saving...") : (t('common.save') || "Save")}
           </Button>
         </div>
       </SheetContent>
