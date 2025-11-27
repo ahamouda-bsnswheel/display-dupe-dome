@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Modules from "./pages/Modules";
+import Notifications from "./pages/Notifications";
 import More from "./pages/More";
 import Profile from "./pages/Profile";
 import OrganizationChart from "./pages/OrganizationChart";
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/modules" element={<ProtectedRoute><Modules /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
             <Route path="/more" element={<ProtectedRoute><More /></ProtectedRoute>} />
             <Route path="/language" element={<ProtectedRoute><LanguageSelection /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

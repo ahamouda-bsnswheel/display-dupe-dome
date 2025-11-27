@@ -328,7 +328,7 @@ const Dashboard = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate("/modules")}>
             <Grid3x3 className="h-6 w-6" />
           </Button>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/notifications")}>
             <Bell className="h-6 w-6" />
           </Button>
           <Button variant="ghost" size="icon" onClick={() => navigate("/more")}>

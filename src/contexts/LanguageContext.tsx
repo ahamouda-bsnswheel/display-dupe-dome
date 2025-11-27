@@ -137,6 +137,19 @@ const translations = {
     "profile.noBadges": "No badges earned yet",
     "profile.current": "Current",
     "common.save": "Save",
+    // Notifications Page
+    "notifications.title": "Notifications",
+    "notifications.notificationsTab": "Notifications",
+    "notifications.modulesTab": "Modules",
+    "notifications.appraisalToFill": "Appraisal to fill",
+    "notifications.appraisalFor": "Appraisal for",
+    "notifications.appraisalDesc": "Your appraisal is created and you can fill it here.",
+    "notifications.annualLeaveRequest": "New Annual Leave Request created by",
+    "notifications.timeOff": "Time Off",
+    "notifications.employeeAppraisal": "Employee Appraisal",
+    "notifications.approve": "Approve",
+    "notifications.today": "Today",
+    "notifications.future": "Future",
   },
   ar: {
     // Login Page
@@ -264,6 +277,19 @@ const translations = {
     "profile.noBadges": "لم يتم الحصول على شارات بعد",
     "profile.current": "حالياً",
     "common.save": "حفظ",
+    // Notifications Page
+    "notifications.title": "الإشعارات",
+    "notifications.notificationsTab": "الإشعارات",
+    "notifications.modulesTab": "الوحدات",
+    "notifications.appraisalToFill": "تقييم للتعبئة",
+    "notifications.appraisalFor": "تقييم لـ",
+    "notifications.appraisalDesc": "تم إنشاء تقييمك ويمكنك تعبئته هنا.",
+    "notifications.annualLeaveRequest": "طلب إجازة سنوية جديد تم إنشاؤه بواسطة",
+    "notifications.timeOff": "الإجازات",
+    "notifications.employeeAppraisal": "تقييم الموظف",
+    "notifications.approve": "موافقة",
+    "notifications.today": "اليوم",
+    "notifications.future": "مستقبلي",
   },
 };
 
