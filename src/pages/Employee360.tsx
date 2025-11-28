@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Filter, Mail, Phone, Loader2 } from "lucide-react";
+import { ArrowLeft, Filter, Mail, Phone, Loader2, Eye, Check, X, FileSearch } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuthImage } from "@/hooks/use-auth-image";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
+
+type ApprovalState = "draft" | "submitted" | "approved" | "reject";
 
 interface Employee {
   id: string;
@@ -15,6 +18,7 @@ interface Employee {
   email: string;
   phone: string;
   imageUrl?: string;
+  approvalState: ApprovalState;
 }
 
 interface OrgChartEmployee {
@@ -34,15 +38,61 @@ interface ApiEmployee {
   work_phone: string | false;
   mobile_phone: string | false;
   image_url: string;
+  approval_state: ApprovalState;
 }
 
+const getApprovalBadgeVariant = (state: ApprovalState): "default" | "secondary" | "destructive" | "outline" => {
+  switch (state) {
+    case "submitted":
+      return "secondary";
+    case "approved":
+      return "default";
+    case "reject":
+      return "destructive";
+    default:
+      return "outline";
+  }
+};
+
+const getApprovalBadgeLabel = (state: ApprovalState, t: (key: string) => string): string => {
+  switch (state) {
+    case "submitted":
+      return t("employee360.submitted") || "Submitted";
+    case "approved":
+      return t("employee360.approved") || "Approved";
+    case "reject":
+      return t("employee360.rejected") || "Rejected";
+    default:
+      return state;
+  }
+};
+
 // Employee card component to handle individual image loading
-const EmployeeCard = ({ employee, onClick }: { employee: Employee; onClick: () => void }) => {
+const EmployeeCard = ({ 
+  employee, 
+  onClick,
+  onReview,
+  onApprove,
+  onReject,
+  onViewSubmission,
+  t
+}: { 
+  employee: Employee; 
+  onClick: () => void;
+  onReview: () => void;
+  onApprove: () => void;
+  onReject: () => void;
+  onViewSubmission: () => void;
+  t: (key: string) => string;
+}) => {
   const { blobUrl } = useAuthImage(employee.imageUrl);
+  const showBadge = employee.approvalState !== "draft";
+  const showSubmittedActions = employee.approvalState === "submitted";
+  const showViewSubmission = employee.approvalState === "approved" || employee.approvalState === "reject";
 
   return (
-    <Card className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-card" onClick={onClick}>
-      <div className="flex gap-4">
+    <Card className="p-4 bg-card">
+      <div className="flex gap-4 cursor-pointer" onClick={onClick}>
         <Avatar className="h-24 w-24 shrink-0">
           <AvatarImage src={blobUrl} alt={employee.name} className="object-cover" />
           <AvatarFallback className="bg-slate-800 text-primary text-2xl">
@@ -55,7 +105,14 @@ const EmployeeCard = ({ employee, onClick }: { employee: Employee; onClick: () =
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col justify-center min-w-0 flex-1">
-          <h3 className="font-semibold text-foreground text-lg leading-tight mb-1">{employee.name}</h3>
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="font-semibold text-foreground text-lg leading-tight">{employee.name}</h3>
+            {showBadge && (
+              <Badge variant={getApprovalBadgeVariant(employee.approvalState)}>
+                {getApprovalBadgeLabel(employee.approvalState, t)}
+              </Badge>
+            )}
+          </div>
           <p className="text-muted-foreground text-sm mb-3">{employee.jobTitle}</p>
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -69,6 +126,53 @@ const EmployeeCard = ({ employee, onClick }: { employee: Employee; onClick: () =
           </div>
         </div>
       </div>
+      
+      {/* Action Buttons */}
+      {showSubmittedActions && (
+        <div className="flex gap-2 mt-4 pt-4 border-t border-border">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1"
+            onClick={(e) => { e.stopPropagation(); onReview(); }}
+          >
+            <Eye className="h-4 w-4 mr-1" />
+            {t("employee360.review") || "Review"}
+          </Button>
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="flex-1"
+            onClick={(e) => { e.stopPropagation(); onApprove(); }}
+          >
+            <Check className="h-4 w-4 mr-1" />
+            {t("employee360.approve") || "Approve"}
+          </Button>
+          <Button 
+            variant="destructive" 
+            size="sm" 
+            className="flex-1"
+            onClick={(e) => { e.stopPropagation(); onReject(); }}
+          >
+            <X className="h-4 w-4 mr-1" />
+            {t("employee360.reject") || "Reject"}
+          </Button>
+        </div>
+      )}
+      
+      {showViewSubmission && (
+        <div className="flex gap-2 mt-4 pt-4 border-t border-border">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full"
+            onClick={(e) => { e.stopPropagation(); onViewSubmission(); }}
+          >
+            <FileSearch className="h-4 w-4 mr-1" />
+            {t("employee360.viewSubmission") || "View Submission"}
+          </Button>
+        </div>
+      )}
     </Card>
   );
 };
@@ -184,6 +288,7 @@ const Employee360 = () => {
             email: emp.work_email || "",
             phone: emp.work_phone || emp.mobile_phone || "",
             imageUrl: getSecureImageUrl(emp.image_url),
+            approvalState: emp.approval_state || "draft",
           }));
 
         foundEmployees = managedEmployees;
@@ -224,6 +329,26 @@ const Employee360 = () => {
     navigate(`/employee/${employeeId}`);
   };
 
+  const handleReview = (employeeId: string) => {
+    // TODO: Implement review functionality
+    console.log("Review employee:", employeeId);
+  };
+
+  const handleApprove = (employeeId: string) => {
+    // TODO: Implement approve functionality
+    console.log("Approve employee:", employeeId);
+  };
+
+  const handleReject = (employeeId: string) => {
+    // TODO: Implement reject functionality
+    console.log("Reject employee:", employeeId);
+  };
+
+  const handleViewSubmission = (employeeId: string) => {
+    // TODO: Implement view submission functionality
+    console.log("View submission for employee:", employeeId);
+  };
+
   return (
     <div className="min-h-screen bg-background max-w-screen-xl mx-auto">
       {/* Header */}
@@ -260,7 +385,16 @@ const Employee360 = () => {
               {t("employee360.employees") || "employees"}
             </p>
             {employees.map((employee) => (
-              <EmployeeCard key={employee.id} employee={employee} onClick={() => handleEmployeeClick(employee.id)} />
+              <EmployeeCard 
+                key={employee.id} 
+                employee={employee} 
+                onClick={() => handleEmployeeClick(employee.id)}
+                onReview={() => handleReview(employee.id)}
+                onApprove={() => handleApprove(employee.id)}
+                onReject={() => handleReject(employee.id)}
+                onViewSubmission={() => handleViewSubmission(employee.id)}
+                t={t}
+              />
             ))}
             {hasMore && (
               <Button variant="outline" className="w-full mt-4" onClick={handleLoadMore} disabled={loadingMore}>
