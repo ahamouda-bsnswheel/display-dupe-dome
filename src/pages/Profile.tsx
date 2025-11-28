@@ -338,7 +338,7 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
     <div className="min-h-screen bg-background flex flex-col max-w-screen-xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
       {/* Header */}
       <div className="bg-card border-b border-border px-4 sm:px-6 py-3 flex items-center justify-between">
-        <button onClick={() => isReadOnly ? navigate(-1) : navigate("/more")} className="flex items-center gap-2 text-foreground">
+        <button onClick={() => isReadOnly ? navigate("/employee-360") : navigate("/more")} className="flex items-center gap-2 text-foreground">
           {isRTL ? <ChevronRight className="h-6 w-6" /> : <ChevronLeft className="h-6 w-6" />}
           <span className="text-lg font-medium">
             {isReadOnly ? t("profile.employeeProfile") : t("profile.title")}
