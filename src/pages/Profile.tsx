@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Power, Plus, Edit, Trash2, Phone, Mail, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, Power, Plus, Edit, Trash2, Phone, Mail, Check, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -783,6 +784,24 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
           </TabsContent>
 
           <TabsContent value="private-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
+            {/* Approval Status Alert */}
+            {employeeData?.approval_state === "reject" && (
+              <Alert variant="destructive" className={`${isRTL ? "text-right" : ""}`}>
+                <AlertCircle className={`h-4 w-4 ${isRTL ? "ml-2" : ""}`} />
+                <AlertDescription className={isRTL ? "mr-6" : ""}>
+                  <span className="font-semibold">{t("profile.rejectReason")}:</span> {employeeData?.reject_reason || "---"}
+                </AlertDescription>
+              </Alert>
+            )}
+            {employeeData?.approval_state === "approved" && (
+              <Alert className={`border-success bg-success/10 text-success ${isRTL ? "text-right" : ""}`}>
+                <CheckCircle2 className={`h-4 w-4 text-success ${isRTL ? "ml-2" : ""}`} />
+                <AlertDescription className={`text-success ${isRTL ? "mr-6" : ""}`}>
+                  {t("profile.submissionApproved")}
+                </AlertDescription>
+              </Alert>
+            )}
+
             {/* Private Contact */}
             <div>
               <h3 className={`text-base font-semibold text-primary mb-3 ${isRTL ? "text-right" : ""}`}>

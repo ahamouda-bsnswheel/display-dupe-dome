@@ -139,6 +139,8 @@ const translations = {
     "profile.badges": "Badges",
     "profile.noBadges": "No badges earned yet",
     "profile.current": "Current",
+    "profile.rejectReason": "Reject Reason",
+    "profile.submissionApproved": "Your submission was approved by your manager.",
     "common.save": "Save",
     // Notifications Page
     "notifications.title": "Notifications",
@@ -312,6 +314,8 @@ const translations = {
     "profile.badges": "الشارات",
     "profile.noBadges": "لم يتم الحصول على شارات بعد",
     "profile.current": "حالياً",
+    "profile.rejectReason": "سبب الرفض",
+    "profile.submissionApproved": "تمت الموافقة على طلبك من قبل مديرك.",
     "common.save": "حفظ",
     // Notifications Page
     "notifications.title": "الإشعارات",
