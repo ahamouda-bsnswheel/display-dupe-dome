@@ -16,7 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { authStorage } from "@/lib/auth";
 import { toast } from "@/hooks/use-toast";
 
 interface EditFamilyStatusModalProps {
@@ -27,6 +26,7 @@ interface EditFamilyStatusModalProps {
     numberOfChildren: string;
   };
   employeeId?: number;
+  onSave?: (changes: { marital?: string; children?: string }) => void;
   onSuccess?: () => void;
 }
 
@@ -35,12 +35,12 @@ export const EditFamilyStatusModal = ({
   onOpenChange,
   defaultValues,
   employeeId,
+  onSave,
   onSuccess,
 }: EditFamilyStatusModalProps) => {
   const { t } = useLanguage();
   const [maritalStatus, setMaritalStatus] = useState("");
   const [numberOfChildren, setNumberOfChildren] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const maritalOptions = [
     { value: "single", label: t('profile.maritalStatus.single') || "Single" },
@@ -57,56 +57,35 @@ export const EditFamilyStatusModal = ({
     }
   }, [defaultValues, open]);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!employeeId) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Employee ID not found",
         variant: "destructive",
       });
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const headers = authStorage.getAuthHeaders();
-      const params = new URLSearchParams();
-      
-      if (maritalStatus) params.append("marital", maritalStatus);
-      params.append("children", numberOfChildren || "0");
-
-      const response = await fetch(
-        `https://bsnswheel.org/api/v1/employees/${employeeId}?${params.toString()}`,
-        {
-          method: "PUT",
-          headers,
-        }
-      );
-
-      if (response.ok) {
-        toast({
-          title: "Success",
-          description: "Marital status updated successfully",
-        });
-        onOpenChange(false);
-        onSuccess?.();
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to update marital status",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error updating marital status:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update marital status",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+    // Save to localStorage via callback instead of API
+    const changes: { marital?: string; children?: string } = {};
+    if (maritalStatus !== (defaultValues?.maritalStatus?.toLowerCase() || "")) {
+      changes.marital = maritalStatus;
     }
+    if (numberOfChildren !== (defaultValues?.numberOfChildren || "")) {
+      changes.children = numberOfChildren || "0";
+    }
+
+    if (Object.keys(changes).length > 0) {
+      onSave?.(changes);
+      toast({
+        title: t("common.success"),
+        description: t("profile.changesSaved"),
+      });
+    }
+    
+    onOpenChange(false);
+    onSuccess?.();
   };
 
   return (
@@ -170,10 +149,9 @@ export const EditFamilyStatusModal = ({
         <div className="px-6 pb-6">
           <Button
             onClick={handleSave}
-            disabled={isLoading}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            {isLoading ? (t('common.saving') || "Saving...") : (t('common.save') || "Save")}
+            {t('common.save') || "Save"}
           </Button>
         </div>
       </SheetContent>

@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { authStorage } from "@/lib/auth";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
 
 interface EditPrivateContactModalProps {
@@ -19,6 +19,7 @@ interface EditPrivateContactModalProps {
     phone: string;
   };
   employeeId?: number;
+  onSave?: (changes: { private_email?: string; private_phone?: string }) => void;
   onSuccess?: () => void;
 }
 
@@ -27,11 +28,12 @@ export const EditPrivateContactModal = ({
   onOpenChange,
   defaultValues,
   employeeId,
+  onSave,
   onSuccess,
 }: EditPrivateContactModalProps) => {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (defaultValues && open) {
@@ -40,56 +42,35 @@ export const EditPrivateContactModal = ({
     }
   }, [defaultValues, open]);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!employeeId) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Employee ID not found",
         variant: "destructive",
       });
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const headers = authStorage.getAuthHeaders();
-      const params = new URLSearchParams();
-      
-      if (email) params.append("private_email", email);
-      if (phone) params.append("private_phone", phone);
-
-      const response = await fetch(
-        `https://bsnswheel.org/api/v1/employees/${employeeId}?${params.toString()}`,
-        {
-          method: "PUT",
-          headers,
-        }
-      );
-
-      if (response.ok) {
-        toast({
-          title: "Success",
-          description: "Private contact updated successfully",
-        });
-        onOpenChange(false);
-        onSuccess?.();
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to update private contact",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error updating private contact:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update private contact",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+    // Save to localStorage via callback instead of API
+    const changes: { private_email?: string; private_phone?: string } = {};
+    if (email !== (defaultValues?.email || "")) {
+      changes.private_email = email;
     }
+    if (phone !== (defaultValues?.phone || "")) {
+      changes.private_phone = phone;
+    }
+
+    if (Object.keys(changes).length > 0) {
+      onSave?.(changes);
+      toast({
+        title: t("common.success"),
+        description: t("profile.changesSaved"),
+      });
+    }
+    
+    onOpenChange(false);
+    onSuccess?.();
   };
 
   return (
@@ -105,7 +86,7 @@ export const EditPrivateContactModal = ({
 
         {/* Header */}
         <SheetHeader className="px-6 pb-4">
-          <SheetTitle className="text-xl font-semibold">Private Contact</SheetTitle>
+          <SheetTitle className="text-xl font-semibold">{t("profile.privateContact")}</SheetTitle>
         </SheetHeader>
 
         {/* Form Content */}
@@ -113,13 +94,13 @@ export const EditPrivateContactModal = ({
           {/* Private Email */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Private Email
+              {t("profile.email")}
             </Label>
             <Input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
-              placeholder="Enter Private Email"
+              placeholder={t("profile.email")}
               className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
             />
           </div>
@@ -127,13 +108,13 @@ export const EditPrivateContactModal = ({
           {/* Private Phone */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Private Phone
+              {t("profile.phone")}
             </Label>
             <Input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               type="tel"
-              placeholder="Enter Private Phone"
+              placeholder={t("profile.phone")}
               className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
             />
           </div>
@@ -143,10 +124,9 @@ export const EditPrivateContactModal = ({
         <div className="px-6 pb-6">
           <Button
             onClick={handleSave}
-            disabled={isLoading}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            {isLoading ? "Saving..." : "Save"}
+            {t("common.save")}
           </Button>
         </div>
       </SheetContent>

@@ -16,7 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { authStorage } from "@/lib/auth";
 import { toast } from "@/hooks/use-toast";
 
 interface EditEducationModalProps {
@@ -28,6 +27,7 @@ interface EditEducationModalProps {
     school: string;
   };
   employeeId?: number;
+  onSave?: (changes: { certificate?: string; study_field?: string; study_school?: string }) => void;
   onSuccess?: () => void;
 }
 
@@ -36,13 +36,13 @@ export const EditEducationModal = ({
   onOpenChange,
   defaultValues,
   employeeId,
+  onSave,
   onSuccess,
 }: EditEducationModalProps) => {
   const { t } = useLanguage();
   const [certificateLevel, setCertificateLevel] = useState("");
   const [fieldOfStudy, setFieldOfStudy] = useState("");
   const [school, setSchool] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const certificateOptions = [
     { value: "graduate", label: t('profile.certificateLevel.graduate') || "Graduate" },
@@ -59,57 +59,38 @@ export const EditEducationModal = ({
     }
   }, [defaultValues, open]);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!employeeId) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Employee ID not found",
         variant: "destructive",
       });
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const headers = authStorage.getAuthHeaders();
-      const params = new URLSearchParams();
-      
-      if (certificateLevel) params.append("certificate", certificateLevel);
-      if (fieldOfStudy) params.append("study_field", fieldOfStudy);
-      if (school) params.append("study_school", school);
-
-      const response = await fetch(
-        `https://bsnswheel.org/api/v1/employees/${employeeId}?${params.toString()}`,
-        {
-          method: "PUT",
-          headers,
-        }
-      );
-
-      if (response.ok) {
-        toast({
-          title: "Success",
-          description: "Education updated successfully",
-        });
-        onOpenChange(false);
-        onSuccess?.();
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to update education",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error updating education:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update education",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+    // Save to localStorage via callback instead of API
+    const changes: { certificate?: string; study_field?: string; study_school?: string } = {};
+    if (certificateLevel !== (defaultValues?.certificateLevel?.toLowerCase() || "")) {
+      changes.certificate = certificateLevel;
     }
+    if (fieldOfStudy !== (defaultValues?.fieldOfStudy || "")) {
+      changes.study_field = fieldOfStudy;
+    }
+    if (school !== (defaultValues?.school || "")) {
+      changes.study_school = school;
+    }
+
+    if (Object.keys(changes).length > 0) {
+      onSave?.(changes);
+      toast({
+        title: t("common.success"),
+        description: t("profile.changesSaved"),
+      });
+    }
+    
+    onOpenChange(false);
+    onSuccess?.();
   };
 
   return (
@@ -184,10 +165,9 @@ export const EditEducationModal = ({
         <div className="px-6 pb-6">
           <Button
             onClick={handleSave}
-            disabled={isLoading}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            {isLoading ? "Saving..." : (t('common.save') || "Save")}
+            {t('common.save') || "Save"}
           </Button>
         </div>
       </SheetContent>

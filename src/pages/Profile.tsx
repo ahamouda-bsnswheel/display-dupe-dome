@@ -18,6 +18,9 @@ import { EditFamilyStatusModal } from "@/components/EditFamilyStatusModal";
 import { EditEmergencyModal } from "@/components/EditEmergencyModal";
 import { EditEducationModal } from "@/components/EditEducationModal";
 import { BadgeImage } from "@/components/BadgeImage";
+import { PendingChangeBadge } from "@/components/PendingChangeBadge";
+import { PendingChangesBanner } from "@/components/PendingChangesBanner";
+import { usePendingProfileChanges } from "@/hooks/use-pending-profile-changes";
 import DOMPurify from "dompurify";
 
 interface ResumeEntry {
@@ -75,6 +78,22 @@ const Profile = ({ readOnly: propReadOnly }: ProfileProps = {}) => {
   );
   // Convert routeEmployeeId to number if present, otherwise use logged-in employee's ID
   const employeeId = routeEmployeeId ? parseInt(routeEmployeeId, 10) : employeeData?.id;
+
+  // Pending profile changes hook for Private Info tab
+  const {
+    pendingChanges,
+    saveChanges,
+    clearChanges,
+    hasChange,
+    getPendingValue,
+    hasPendingChanges,
+  } = usePendingProfileChanges(employeeId);
+
+  // Handle successful submission - clear pending changes and refresh data
+  const handleSubmitSuccess = async () => {
+    clearChanges();
+    await refreshEmployeeData();
+  };
 
   // Fetch employee data when viewing another employee
   useEffect(() => {
@@ -784,6 +803,16 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
           </TabsContent>
 
           <TabsContent value="private-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
+            {/* Pending Changes Banner */}
+            {!isReadOnly && hasPendingChanges && (
+              <PendingChangesBanner
+                pendingChanges={pendingChanges}
+                employeeId={employeeId}
+                onSubmitSuccess={handleSubmitSuccess}
+                isRTL={isRTL}
+              />
+            )}
+
             {/* Approval Status Alert */}
             {employeeData?.approval_state === "reject" && (
               <Alert variant="destructive" className={`${isRTL ? "text-right" : ""}`}>
@@ -836,15 +865,25 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.email")}</p>
-                    <p className="text-sm text-muted-foreground">{employeeData?.private_email || "---"}</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.email")}
+                      {hasChange("private_email") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("private_email") || employeeData?.private_email || "---"}
+                    </p>
                   </div>
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.phone")}</p>
-                    <p className="text-sm text-muted-foreground">{employeeData?.private_phone || "---"}</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.phone")}
+                      {hasChange("private_phone") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("private_phone") || employeeData?.private_phone || "---"}
+                    </p>
                   </div>
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
@@ -888,11 +927,15 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                   <div className={`flex items-center gap-3 flex-1 ${isRTL ? "flex-row-reverse" : ""}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? "text-right" : ""}>
-                      <p className="text-sm font-semibold text-primary">{t("profile.maritalStatus")}</p>
+                      <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                        {t("profile.maritalStatus")}
+                        {hasChange("marital") && <PendingChangeBadge isRTL={isRTL} />}
+                      </p>
                       <p className="text-sm text-muted-foreground">
-                        {employeeData?.marital
-                          ? employeeData.marital.charAt(0).toUpperCase() + employeeData.marital.slice(1)
-                          : "---"}
+                        {(() => {
+                          const value = getPendingValue("marital") || employeeData?.marital;
+                          return value ? value.charAt(0).toUpperCase() + value.slice(1) : "---";
+                        })()}
                       </p>
                     </div>
                   </div>
@@ -908,8 +951,13 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.numberOfChildren")}</p>
-                    <p className="text-sm text-muted-foreground">{employeeData?.children ?? "---"}</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.numberOfChildren")}
+                      {hasChange("children") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("children") ?? employeeData?.children ?? "---"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -925,8 +973,13 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                   <div className={`flex items-center gap-3 flex-1 ${isRTL ? "flex-row-reverse" : ""}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? "text-right" : ""}>
-                      <p className="text-sm font-semibold text-primary">{t("profile.contactName")}</p>
-                      <p className="text-sm text-muted-foreground">---</p>
+                      <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                        {t("profile.contactName")}
+                        {hasChange("emergency_contact") && <PendingChangeBadge isRTL={isRTL} />}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {getPendingValue("emergency_contact") || employeeData?.emergency_contact || "---"}
+                      </p>
                     </div>
                   </div>
                   {!isReadOnly && (
@@ -941,8 +994,13 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.contactPhone")}</p>
-                    <p className="text-sm text-muted-foreground">---</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.contactPhone")}
+                      {hasChange("emergency_phone") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("emergency_phone") || employeeData?.emergency_phone || "---"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -958,11 +1016,15 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                   <div className={`flex items-center gap-3 flex-1 ${isRTL ? "flex-row-reverse" : ""}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? "text-right" : ""}>
-                      <p className="text-sm font-semibold text-primary">{t("profile.certificateLevel")}</p>
+                      <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                        {t("profile.certificateLevel")}
+                        {hasChange("certificate") && <PendingChangeBadge isRTL={isRTL} />}
+                      </p>
                       <p className="text-sm text-muted-foreground">
-                        {employeeData?.certificate
-                          ? employeeData.certificate.charAt(0).toUpperCase() + employeeData.certificate.slice(1)
-                          : "---"}
+                        {(() => {
+                          const value = getPendingValue("certificate") || employeeData?.certificate;
+                          return value ? value.charAt(0).toUpperCase() + value.slice(1) : "---";
+                        })()}
                       </p>
                     </div>
                   </div>
@@ -978,15 +1040,25 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.fieldOfStudy")}</p>
-                    <p className="text-sm text-muted-foreground">{employeeData?.study_field || "---"}</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.fieldOfStudy")}
+                      {hasChange("study_field") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("study_field") || employeeData?.study_field || "---"}
+                    </p>
                   </div>
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.school")}</p>
-                    <p className="text-sm text-muted-foreground">{employeeData?.study_school || "---"}</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.school")}
+                      {hasChange("study_school") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("study_school") || employeeData?.study_school || "---"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1109,11 +1181,11 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         open={isEditPrivateContactOpen}
         onOpenChange={setIsEditPrivateContactOpen}
         defaultValues={{
-          email: employeeData?.private_email || "",
-          phone: employeeData?.private_phone || "",
+          email: getPendingValue("private_email") || employeeData?.private_email || "",
+          phone: getPendingValue("private_phone") || employeeData?.private_phone || "",
         }}
         employeeId={employeeId}
-        onSuccess={refreshEmployeeData}
+        onSave={saveChanges}
       />
 
       {/* Edit Family Status Modal */}
@@ -1121,11 +1193,11 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         open={isEditFamilyStatusOpen}
         onOpenChange={setIsEditFamilyStatusOpen}
         defaultValues={{
-          maritalStatus: employeeData?.marital || "",
-          numberOfChildren: employeeData?.children?.toString() || "0",
+          maritalStatus: getPendingValue("marital") || employeeData?.marital || "",
+          numberOfChildren: getPendingValue("children") || employeeData?.children?.toString() || "0",
         }}
         employeeId={employeeId}
-        onSuccess={refreshEmployeeData}
+        onSave={saveChanges}
       />
 
       {/* Edit Emergency Modal */}
@@ -1133,11 +1205,11 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         open={isEditEmergencyOpen}
         onOpenChange={setIsEditEmergencyOpen}
         defaultValues={{
-          contactName: employeeData?.emergency_contact || "",
-          contactPhone: employeeData?.emergency_phone || "",
+          contactName: getPendingValue("emergency_contact") || employeeData?.emergency_contact || "",
+          contactPhone: getPendingValue("emergency_phone") || employeeData?.emergency_phone || "",
         }}
         employeeId={employeeId}
-        onSuccess={refreshEmployeeData}
+        onSave={saveChanges}
       />
 
       {/* Edit Education Modal */}
@@ -1145,12 +1217,12 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         open={isEditEducationOpen}
         onOpenChange={setIsEditEducationOpen}
         defaultValues={{
-          certificateLevel: employeeData?.certificate || "",
-          fieldOfStudy: typeof employeeData?.study_field === 'string' ? employeeData.study_field : "",
-          school: typeof employeeData?.study_school === 'string' ? employeeData.study_school : "",
+          certificateLevel: getPendingValue("certificate") || employeeData?.certificate || "",
+          fieldOfStudy: getPendingValue("study_field") || (typeof employeeData?.study_field === 'string' ? employeeData.study_field : ""),
+          school: getPendingValue("study_school") || (typeof employeeData?.study_school === 'string' ? employeeData.study_school : ""),
         }}
         employeeId={employeeId}
-        onSuccess={refreshEmployeeData}
+        onSave={saveChanges}
       />
     </div>
   );
