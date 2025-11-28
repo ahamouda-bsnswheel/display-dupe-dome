@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Filter, Mail, Phone } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, Filter, Mail, Phone, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuthImage } from "@/hooks/use-auth-image";
+import { authStorage, getSecureImageUrl } from "@/lib/auth";
 
 interface Employee {
   id: string;
@@ -14,6 +15,25 @@ interface Employee {
   email: string;
   phone: string;
   imageUrl?: string;
+}
+
+interface OrgChartEmployee {
+  id: string;
+  name: string;
+  job: string;
+  type: string;
+  level: number;
+  image_url: string;
+}
+
+interface ApiEmployee {
+  id: number;
+  name: string;
+  job_title: string;
+  work_email: string;
+  work_phone: string | false;
+  mobile_phone: string | false;
+  image_url: string;
 }
 
 // Employee card component to handle individual image loading
@@ -59,52 +79,91 @@ const Employee360 = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data - will be replaced with API integration
-  const employees: Employee[] = [
-    {
-      id: "882",
-      name: "Abdul Salam Ali Masoud Angam",
-      jobTitle: "Administrative Office Coordinator",
-      email: "Aengam@noc.ly",
-      phone: "925595195",
-    },
-    {
-      id: "891",
-      name: "Abdulkareem Essaied Shuia",
-      jobTitle: "CHRO",
-      email: "ashuia@noc.ly",
-      phone: "912192636",
-    },
-    {
-      id: "892",
-      name: "Aisha Mukhtar Ibrahim Al-Hashani",
-      jobTitle: "Administrative Office Manager",
-      email: "aelhashani@noc.ly",
-      phone: "927586697",
-    },
-    {
-      id: "893",
-      name: "Al-Hadi Nasr Khalifa Al-Hussan",
-      jobTitle: "Administrative Office Coordinator",
-      email: "aelhsan@noc.ly",
-      phone: "925047673",
-    },
-    {
-      id: "894",
-      name: "Al-Moataz Billah Mohammed Abuduweij",
-      jobTitle: "HR Policy & Compliance Specialist",
-      email: "aaboudweeh@noc.ly",
-      phone: "912427790",
-    },
-    {
-      id: "895",
-      name: "Essam Nasr Khalifa Al-Halak",
-      jobTitle: "Administrative Office Coordinator",
-      email: "ealhalak@noc.ly",
-      phone: "912345678",
-    },
-  ];
+  useEffect(() => {
+    const fetchManagedEmployees = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const authData = authStorage.getAuthData();
+        const headers = authStorage.getAuthHeaders();
+        
+        if (!authData?.employee_id) {
+          throw new Error("No employee ID found");
+        }
+
+        // Step 1: Fetch org chart to get child employee IDs
+        const orgChartResponse = await fetch(
+          `https://bsnswheel.org/api/v1/org_chart/custom/${authData.employee_id}`,
+          {
+            method: 'PUT',
+            headers: {
+              ...headers,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (!orgChartResponse.ok) {
+          throw new Error("Failed to fetch org chart");
+        }
+
+        const orgChartData = await orgChartResponse.json();
+        const childEmployeeIds = (orgChartData.result as OrgChartEmployee[])
+          .filter(emp => emp.type === "child")
+          .map(emp => parseInt(emp.id));
+
+        console.log("Child employee IDs:", childEmployeeIds);
+
+        if (childEmployeeIds.length === 0) {
+          setEmployees([]);
+          setLoading(false);
+          return;
+        }
+
+        // Step 2: Fetch all employees
+        const employeesResponse = await fetch(
+          `https://bsnswheel.org/api/v1/employees`,
+          {
+            method: 'GET',
+            headers,
+          }
+        );
+
+        if (!employeesResponse.ok) {
+          throw new Error("Failed to fetch employees");
+        }
+
+        const employeesData = await employeesResponse.json();
+        
+        // Step 3: Filter employees by child IDs
+        const managedEmployees = (employeesData.results as ApiEmployee[])
+          .filter(emp => childEmployeeIds.includes(emp.id))
+          .map(emp => ({
+            id: emp.id.toString(),
+            name: emp.name,
+            jobTitle: emp.job_title || "",
+            email: emp.work_email || "",
+            phone: emp.work_phone || emp.mobile_phone || "",
+            imageUrl: getSecureImageUrl(emp.image_url),
+          }));
+
+        console.log("Managed employees:", managedEmployees);
+        setEmployees(managedEmployees);
+      } catch (err) {
+        console.error("Error fetching managed employees:", err);
+        setError(err instanceof Error ? err.message : "Failed to load employees");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchManagedEmployees();
+  }, []);
 
   const handleEmployeeClick = (employeeId: string) => {
     navigate(`/employee/${employeeId}`);
@@ -137,13 +196,27 @@ const Employee360 = () => {
 
       {/* Employee List */}
       <main className="px-4 py-4 space-y-3">
-        {employees.map((employee) => (
-          <EmployeeCard 
-            key={employee.id} 
-            employee={employee} 
-            onClick={() => handleEmployeeClick(employee.id)}
-          />
-        ))}
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : error ? (
+          <div className="text-center py-12 text-destructive">
+            {error}
+          </div>
+        ) : employees.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            {t('employee360.noEmployees') || 'No employees found'}
+          </div>
+        ) : (
+          employees.map((employee) => (
+            <EmployeeCard 
+              key={employee.id} 
+              employee={employee} 
+              onClick={() => handleEmployeeClick(employee.id)}
+            />
+          ))
+        )}
       </main>
     </div>
   );
