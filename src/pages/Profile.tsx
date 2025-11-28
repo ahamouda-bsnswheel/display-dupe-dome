@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Power, Plus, Edit, Trash2, Phone, Mail, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,10 +32,15 @@ interface ResumeGroup {
   lines: ResumeEntry[];
 }
 
-const Profile = () => {
+interface ProfileProps {
+  readOnly?: boolean;
+}
+
+const Profile = ({ readOnly: propReadOnly }: ProfileProps = {}) => {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { employeeId: routeEmployeeId } = useParams();
   const isRTL = language === "ar";
   const activeTab = searchParams.get("tab") || "resume";
   const [isAddWorkExpOpen, setIsAddWorkExpOpen] = useState(false);
@@ -59,13 +64,44 @@ const Profile = () => {
   // Organization chart manager
   const [directManager, setDirectManager] = useState<any>(null);
 
-  // Employee data state for reactivity
-  const [employeeData, setEmployeeDataState] = useState(authStorage.getEmployeeData());
-  const employeeId = employeeData?.id;
+  // Determine if we're viewing another employee (read-only mode)
+  const loggedInEmployeeData = authStorage.getEmployeeData();
+  const isReadOnly = propReadOnly || !!routeEmployeeId;
+  
+  // Employee data state - either viewing own profile or another employee's
+  const [employeeData, setEmployeeDataState] = useState(
+    routeEmployeeId ? null : loggedInEmployeeData
+  );
+  // Convert routeEmployeeId to number if present, otherwise use logged-in employee's ID
+  const employeeId = routeEmployeeId ? parseInt(routeEmployeeId, 10) : employeeData?.id;
+
+  // Fetch employee data when viewing another employee
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      if (!routeEmployeeId) return;
+      
+      try {
+        const headers = authStorage.getAuthHeaders();
+        const response = await fetch(`https://bsnswheel.org/api/v1/employees/${routeEmployeeId}`, {
+          method: "GET",
+          headers,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setEmployeeDataState(data);
+        }
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    };
+
+    fetchEmployeeData();
+  }, [routeEmployeeId]);
 
   // Function to refresh employee data from API
   const refreshEmployeeData = async () => {
-    if (!employeeId) return;
+    if (!employeeId || isReadOnly) return;
     
     try {
       const headers = authStorage.getAuthHeaders();
@@ -302,13 +338,17 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
     <div className="min-h-screen bg-background flex flex-col max-w-screen-xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
       {/* Header */}
       <div className="bg-card border-b border-border px-4 sm:px-6 py-3 flex items-center justify-between">
-        <button onClick={() => navigate("/more")} className="flex items-center gap-2 text-foreground">
+        <button onClick={() => isReadOnly ? navigate(-1) : navigate("/more")} className="flex items-center gap-2 text-foreground">
           {isRTL ? <ChevronRight className="h-6 w-6" /> : <ChevronLeft className="h-6 w-6" />}
-          <span className="text-lg font-medium">{t("profile.title")}</span>
+          <span className="text-lg font-medium">
+            {isReadOnly ? t("profile.employeeProfile") : t("profile.title")}
+          </span>
         </button>
-        <button onClick={handleLogout}>
-          <Power className="h-6 w-6 text-destructive" />
-        </button>
+        {!isReadOnly && (
+          <button onClick={handleLogout}>
+            <Power className="h-6 w-6 text-destructive" />
+          </button>
+        )}
       </div>
 
       <ScrollArea className="flex-1">
@@ -406,14 +446,16 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                   <h3 className={`text-base font-semibold text-secondary ${isRTL ? "text-right" : ""}`}>
                     {group.type}
                   </h3>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-6 w-6 text-secondary hover:text-secondary/80"
-                    onClick={() => setIsAddWorkExpOpen(true)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                  {!isReadOnly && (
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6 text-secondary hover:text-secondary/80"
+                      onClick={() => setIsAddWorkExpOpen(true)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
                 <div className="space-y-3">
                   {group.lines.map((exp, index) => (
@@ -424,20 +466,22 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                           <p className="text-sm font-medium text-primary">{exp.title}</p>
                           {exp.companyName && <p className="text-sm text-muted-foreground">{exp.companyName}</p>}
                         </div>
-                        <div className={`flex gap-2 ${isRTL ? "mr-2" : "ml-2"}`}>
-                          <button
-                            onClick={() => handleEditWorkExp(exp, index, group.type)}
-                            className="text-primary hover:text-primary/80"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteWorkExp(exp, index, group.type)}
-                            className="text-muted-foreground hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
+                        {!isReadOnly && (
+                          <div className={`flex gap-2 ${isRTL ? "mr-2" : "ml-2"}`}>
+                            <button
+                              onClick={() => handleEditWorkExp(exp, index, group.type)}
+                              className="text-primary hover:text-primary/80"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteWorkExp(exp, index, group.type)}
+                              className="text-muted-foreground hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -451,14 +495,16 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                 <h3 className={`text-base font-semibold text-primary ${isRTL ? "text-right" : ""}`}>
                   {t("profile.skills")}
                 </h3>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-6 w-6 text-primary hover:text-primary/80"
-                  onClick={() => setIsAddSkillOpen(true)}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
+                {!isReadOnly && (
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-6 w-6 text-primary hover:text-primary/80"
+                    onClick={() => setIsAddSkillOpen(true)}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
               <div className="space-y-3">
                 {skills.map((skill, index) => (
@@ -469,20 +515,22 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                         <p className="text-sm text-primary">{skill.level}</p>
                         <p className="text-sm text-muted-foreground">{skill.category}</p>
                       </div>
-                      <div className={`flex gap-2 ${isRTL ? "mr-2" : "ml-2"}`}>
-                        <button
-                          onClick={() => handleEditSkill(skill)}
-                          className="text-secondary hover:text-secondary/80"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteSkill(skill, index)}
-                          className="text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
+                      {!isReadOnly && (
+                        <div className={`flex gap-2 ${isRTL ? "mr-2" : "ml-2"}`}>
+                          <button
+                            onClick={() => handleEditSkill(skill)}
+                            className="text-secondary hover:text-secondary/80"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteSkill(skill, index)}
+                            className="text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -749,12 +797,14 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                       <p className="text-sm text-muted-foreground">{employeeData?.private_street || "---"}</p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setIsEditPrivateContactOpen(true)}
-                    className={`text-primary hover:text-primary/80 ${isRTL ? "mr-2" : "ml-2"}`}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </button>
+                  {!isReadOnly && (
+                    <button
+                      onClick={() => setIsEditPrivateContactOpen(true)}
+                      className={`text-primary hover:text-primary/80 ${isRTL ? "mr-2" : "ml-2"}`}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
@@ -819,12 +869,14 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setIsEditFamilyStatusOpen(true)}
-                    className={`text-secondary hover:text-secondary/80 ${isRTL ? "mr-2" : "ml-2"}`}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </button>
+                  {!isReadOnly && (
+                    <button
+                      onClick={() => setIsEditFamilyStatusOpen(true)}
+                      className={`text-secondary hover:text-secondary/80 ${isRTL ? "mr-2" : "ml-2"}`}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
@@ -850,12 +902,14 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                       <p className="text-sm text-muted-foreground">---</p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setIsEditEmergencyOpen(true)}
-                    className={`text-primary hover:text-primary/80 ${isRTL ? "mr-2" : "ml-2"}`}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </button>
+                  {!isReadOnly && (
+                    <button
+                      onClick={() => setIsEditEmergencyOpen(true)}
+                      className={`text-primary hover:text-primary/80 ${isRTL ? "mr-2" : "ml-2"}`}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
@@ -885,12 +939,14 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setIsEditEducationOpen(true)}
-                    className={`text-secondary hover:text-secondary/80 ${isRTL ? "mr-2" : "ml-2"}`}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </button>
+                  {!isReadOnly && (
+                    <button
+                      onClick={() => setIsEditEducationOpen(true)}
+                      className={`text-secondary hover:text-secondary/80 ${isRTL ? "mr-2" : "ml-2"}`}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />

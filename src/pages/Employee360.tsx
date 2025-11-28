@@ -330,8 +330,7 @@ const Employee360 = () => {
   };
 
   const handleReview = (employeeId: string) => {
-    // TODO: Implement review functionality
-    console.log("Review employee:", employeeId);
+    navigate(`/employee/${employeeId}/review`);
   };
 
   const handleApprove = (employeeId: string) => {
