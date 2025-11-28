@@ -209,6 +209,12 @@ const Employee360 = () => {
   const [employeeToApprove, setEmployeeToApprove] = useState<Employee | null>(null);
   const [isApproving, setIsApproving] = useState(false);
 
+  // Rejection confirmation state
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [employeeToReject, setEmployeeToReject] = useState<Employee | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+  const [isRejecting, setIsRejecting] = useState(false);
+
   // Fetch child employee IDs on mount
   useEffect(() => {
     const fetchChildIds = async () => {
@@ -398,9 +404,55 @@ const Employee360 = () => {
     }
   };
 
-  const handleReject = (employeeId: string) => {
-    // TODO: Implement reject functionality
-    console.log("Reject employee:", employeeId);
+  const handleReject = (employee: Employee) => {
+    setEmployeeToReject(employee);
+    setRejectReason("");
+    setRejectDialogOpen(true);
+  };
+
+  const confirmReject = async () => {
+    if (!employeeToReject || !rejectReason.trim()) return;
+    
+    setIsRejecting(true);
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const encodedReason = encodeURIComponent(rejectReason.trim());
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/employees/${employeeToReject.id}?approval_state=reject&reject_reason=${encodedReason}`,
+        {
+          method: "PUT",
+          headers,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to reject employee");
+      }
+
+      // Update local state
+      setEmployees((prev) =>
+        prev.map((emp) =>
+          emp.id === employeeToReject.id ? { ...emp, approvalState: "reject" as ApprovalState } : emp
+        )
+      );
+
+      toast({
+        title: t("employee360.rejectSuccess") || "Employee Rejected",
+        description: `${employeeToReject.name} ${t("employee360.hasBeenRejected") || "has been rejected."}`,
+      });
+    } catch (err) {
+      console.error("Error rejecting employee:", err);
+      toast({
+        title: t("employee360.rejectError") || "Error",
+        description: t("employee360.rejectErrorDescription") || "Failed to reject employee. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRejecting(false);
+      setRejectDialogOpen(false);
+      setEmployeeToReject(null);
+      setRejectReason("");
+    }
   };
 
   const handleViewSubmission = (employeeId: string) => {
@@ -449,7 +501,7 @@ const Employee360 = () => {
                 onClick={() => handleEmployeeClick(employee.id)}
                 onReview={() => handleReview(employee.id)}
                 onApprove={() => handleApprove(employee)}
-                onReject={() => handleReject(employee.id)}
+                onReject={() => handleReject(employee)}
                 onViewSubmission={() => handleViewSubmission(employee.id)}
                 t={t}
               />
@@ -491,6 +543,46 @@ const Employee360 = () => {
                 </>
               ) : (
                 t("employee360.approve") || "Approve"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Reject Confirmation Dialog */}
+      <AlertDialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("employee360.confirmReject") || "Confirm Rejection"}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("employee360.confirmRejectDescription") || "Please enter a reason for rejecting"} {employeeToReject?.name}.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <textarea
+              className="w-full min-h-[100px] p-3 border border-border rounded-md bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder={t("employee360.rejectReasonPlaceholder") || "Enter rejection reason..."}
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              disabled={isRejecting}
+            />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isRejecting}>
+              {t("common.cancel") || "Cancel"}
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmReject} 
+              disabled={isRejecting || !rejectReason.trim()}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isRejecting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  {t("employee360.rejecting") || "Rejecting..."}
+                </>
+              ) : (
+                t("employee360.reject") || "Reject"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
