@@ -63,22 +63,22 @@ const Login = () => {
         }
 
         toast({
-          title: t('login.success'),
-          description: t('login.loginSuccessful'),
+          title: t("login.success"),
+          description: t("login.loginSuccessful"),
         });
 
         navigate("/dashboard");
       } else {
         toast({
-          title: t('login.error'),
-          description: data.message || t('login.loginFailed'),
+          title: t("login.error"),
+          description: data.message || t("login.loginFailed"),
           variant: "destructive",
         });
       }
     } catch (error) {
       toast({
-        title: t('login.error'),
-        description: t('login.networkError'),
+        title: t("login.error"),
+        description: t("login.networkError"),
         variant: "destructive",
       });
       console.error("Login error:", error);
@@ -92,80 +92,79 @@ const Login = () => {
       {/* Decorative background elements */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.1),transparent_50%)]"></div>
-      
+
       <div className="w-full max-w-md relative z-10">
         {/* Language Selector */}
-        <div className={`flex ${language === 'ar' ? 'justify-start' : 'justify-end'} mb-12`}>
-          <button 
+        <div className={`flex ${language === "ar" ? "justify-start" : "justify-end"} mb-12`}>
+          <button
             onClick={toggleLanguage}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-medium hover:bg-secondary/90 transition-colors"
           >
             <Globe className="w-4 h-4" />
-            {t('language')}
+            {t("language")}
           </button>
         </div>
 
         {/* Welcome Section */}
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">{t('login.welcome')}</h1>
-          <p className="text-white/90 text-sm drop-shadow">{t('login.subtitle')}</p>
+          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">{t("login.welcome")}</h1>
+          <p className="text-white/90 text-sm drop-shadow">{t("login.subtitle")}</p>
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm font-normal text-white/90">
-              {t('login.email')}
+              {t("login.email")}
             </Label>
             <Input
               id="email"
               type="email"
-              placeholder={t('login.emailPlaceholder')}
+              placeholder={t("login.emailPlaceholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 shadow-lg"
-              autoComplete="off"
               required
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="password" className="text-sm font-normal text-white/90">
-              {t('login.password')}
+              {t("login.password")}
             </Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder={t('login.passwordPlaceholder')}
+                placeholder={t("login.passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 shadow-lg ${language === 'ar' ? 'pl-12' : 'pr-12'}`}
+                className={`h-14 text-base bg-white/95 backdrop-blur-sm border-white/50 shadow-lg ${language === "ar" ? "pl-12" : "pr-12"}`}
                 autoComplete="new-password"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className={`absolute ${language === 'ar' ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors`}
+                className={`absolute ${language === "ar" ? "left-4" : "right-4"} top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors`}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
           </div>
 
-          <div className={`flex ${language === 'ar' ? 'justify-end' : 'justify-start'}`}>
+          <div className={`flex ${language === "ar" ? "justify-end" : "justify-start"}`}>
             <a href="#" className="text-white text-sm hover:underline font-medium">
-              {t('login.forgotPassword')}
+              {t("login.forgotPassword")}
             </a>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full h-14 text-base font-semibold rounded-xl bg-white text-primary hover:bg-white/90 shadow-xl hover-lift" 
+          <Button
+            type="submit"
+            className="w-full h-14 text-base font-semibold rounded-xl bg-white text-primary hover:bg-white/90 shadow-xl hover-lift"
             disabled={isLoading}
           >
-            {isLoading ? t('login.signingIn') : t('login.signIn')}
+            {isLoading ? t("login.signingIn") : t("login.signIn")}
           </Button>
         </form>
       </div>
