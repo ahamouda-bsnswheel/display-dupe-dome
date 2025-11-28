@@ -73,7 +73,7 @@ const EmployeeCard = ({ employee, onClick }: { employee: Employee; onClick: () =
   );
 };
 
-const BATCH_SIZE = 2;
+const BATCH_SIZE = 50;
 
 const Employee360 = () => {
   const navigate = useNavigate();
@@ -188,7 +188,7 @@ const Employee360 = () => {
 
         foundEmployees = managedEmployees;
         searchOffset += BATCH_SIZE;
-
+        
         const totalFromApi = employeesData.total || allResults.length;
         moreDataAvailable = searchOffset < totalFromApi;
 
