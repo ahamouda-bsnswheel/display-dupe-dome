@@ -372,7 +372,7 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         )}
       </div>
 
-      <ScrollArea className={`flex-1 ${isReadOnly && routeEmployeeId && employeeData?.approval_state === "submitted" ? "pb-20" : ""}`}>
+      <ScrollArea className={`flex-1 ${(isReadOnly && routeEmployeeId && employeeData?.approval_state === "submitted") || (!isReadOnly && hasPendingChanges) ? "pb-20" : ""}`}>
         {/* User Info Section */}
         <div className="relative bg-gradient-hero px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10 overflow-hidden">
           {/* Decorative background elements */}
@@ -804,18 +804,6 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
           </TabsContent>
 
           <TabsContent value="private-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
-            {/* Pending Changes Banner - Sticky at top */}
-            {!isReadOnly && hasPendingChanges && (
-              <div className="fixed top-0 left-0 right-0 z-50">
-                <PendingChangesBanner
-                  pendingChanges={pendingChanges}
-                  employeeId={employeeId}
-                  onSubmitSuccess={handleSubmitSuccess}
-                  onClearChanges={clearChanges}
-                  isRTL={isRTL}
-                />
-              </div>
-            )}
 
             {/* Approval Status Alert */}
             {employeeData?.approval_state === "reject" && (
@@ -1245,6 +1233,17 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         employeeId={employeeId}
         onSave={saveChanges}
       />
+
+      {/* Pending Changes Banner - shown when employee has unsaved changes */}
+      {!isReadOnly && hasPendingChanges && (
+        <PendingChangesBanner
+          pendingChanges={pendingChanges}
+          employeeId={employeeId}
+          onSubmitSuccess={handleSubmitSuccess}
+          onClearChanges={clearChanges}
+          isRTL={isRTL}
+        />
+      )}
 
       {/* Review Actions Banner - only shown for managers reviewing submitted employees */}
       {isReadOnly && routeEmployeeId && employeeData?.approval_state === "submitted" && (
