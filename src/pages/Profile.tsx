@@ -852,8 +852,13 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                   <div className={`flex items-center gap-3 flex-1 ${isRTL ? "flex-row-reverse" : ""}`}>
                     <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0 mt-1" />
                     <div className={isRTL ? "text-right" : ""}>
-                      <p className="text-sm font-semibold text-primary">{t("profile.privateAddress")}</p>
-                      <p className="text-sm text-muted-foreground">{employeeData?.private_street || "---"}</p>
+                      <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                        {t("profile.privateAddress")}
+                        {hasChange("private_street") && <PendingChangeBadge isRTL={isRTL} />}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {getPendingValue("private_street") || employeeData?.private_street || "---"}
+                      </p>
                     </div>
                   </div>
                   {!isReadOnly && (
@@ -869,7 +874,7 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
                     <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
-                      {t("profile.email")}
+                      {t("profile.privateEmail")}
                       {hasChange("private_email") && <PendingChangeBadge isRTL={isRTL} />}
                     </p>
                     <p className="text-sm text-muted-foreground">
@@ -881,7 +886,7 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
                     <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
-                      {t("profile.phone")}
+                      {t("profile.privatePhone")}
                       {hasChange("private_phone") && <PendingChangeBadge isRTL={isRTL} />}
                     </p>
                     <p className="text-sm text-muted-foreground">
@@ -892,29 +897,37 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.bankAccountNumber")}</p>
-                    <p className="text-sm text-muted-foreground">{employeeData?.bank_account_id || "---"}</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.bankAccountNumber")}
+                      {hasChange("bank_account_id") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("bank_account_id") || (employeeData?.bank_account_id ? (typeof employeeData.bank_account_id === 'object' ? employeeData.bank_account_id[1] : employeeData.bank_account_id) : "---")}
+                    </p>
                   </div>
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.language")}</p>
-                    <p className="text-sm text-muted-foreground">{employeeData?.lang || "---"}</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.homeWorkDistance")}
+                      {hasChange("km_home_work") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("km_home_work") || employeeData?.km_home_work || "---"}
+                    </p>
                   </div>
                 </div>
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
                   <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.homeWorkDistance")}</p>
-                    <p className="text-sm text-muted-foreground">---</p>
-                  </div>
-                </div>
-                <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-                  <div className="h-2 w-2 rounded-full bg-secondary flex-shrink-0" />
-                  <div className={isRTL ? "text-right" : ""}>
-                    <p className="text-sm font-semibold text-primary">{t("profile.privateCarPlate")}</p>
-                    <p className="text-sm text-muted-foreground">---</p>
+                    <p className={`text-sm font-semibold text-primary inline-flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+                      {t("profile.privateCarPlate")}
+                      {hasChange("private_car_plate") && <PendingChangeBadge isRTL={isRTL} />}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {getPendingValue("private_car_plate") || employeeData?.private_car_plate || "---"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1184,8 +1197,12 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         open={isEditPrivateContactOpen}
         onOpenChange={setIsEditPrivateContactOpen}
         defaultValues={{
+          privateAddress: getPendingValue("private_street") || employeeData?.private_street || "",
           email: getPendingValue("private_email") || employeeData?.private_email || "",
           phone: getPendingValue("private_phone") || employeeData?.private_phone || "",
+          bankAccountNumber: getPendingValue("bank_account_id") || (employeeData?.bank_account_id ? (typeof employeeData.bank_account_id === 'object' ? employeeData.bank_account_id[1] : String(employeeData.bank_account_id)) : ""),
+          homeWorkDistance: getPendingValue("km_home_work") || employeeData?.km_home_work || "",
+          privateCarPlate: getPendingValue("private_car_plate") || employeeData?.private_car_plate || "",
         }}
         employeeId={employeeId}
         onSave={saveChanges}
