@@ -20,6 +20,7 @@ import { EditEducationModal } from "@/components/EditEducationModal";
 import { BadgeImage } from "@/components/BadgeImage";
 import { PendingChangeBadge } from "@/components/PendingChangeBadge";
 import { PendingChangesBanner } from "@/components/PendingChangesBanner";
+import { ReviewActionsBanner } from "@/components/ReviewActionsBanner";
 import { usePendingProfileChanges } from "@/hooks/use-pending-profile-changes";
 import DOMPurify from "dompurify";
 
@@ -371,7 +372,7 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         )}
       </div>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className={`flex-1 ${isReadOnly && routeEmployeeId && employeeData?.approval_state === "submitted" ? "pb-20" : ""}`}>
         {/* User Info Section */}
         <div className="relative bg-gradient-hero px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10 overflow-hidden">
           {/* Decorative background elements */}
@@ -1244,6 +1245,14 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
         employeeId={employeeId}
         onSave={saveChanges}
       />
+
+      {/* Review Actions Banner - only shown for managers reviewing submitted employees */}
+      {isReadOnly && routeEmployeeId && employeeData?.approval_state === "submitted" && (
+        <ReviewActionsBanner
+          employeeId={routeEmployeeId}
+          employeeName={employeeData?.name || ""}
+        />
+      )}
     </div>
   );
 };

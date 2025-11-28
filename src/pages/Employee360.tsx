@@ -151,29 +151,11 @@ const EmployeeCard = ({
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex-1"
+            className="w-full"
             onClick={(e) => { e.stopPropagation(); onReview(); }}
           >
             <Eye className="h-4 w-4 mr-1" />
             {t("employee360.review") || "Review"}
-          </Button>
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="flex-1"
-            onClick={(e) => { e.stopPropagation(); onApprove(); }}
-          >
-            <Check className="h-4 w-4 mr-1" />
-            {t("employee360.approve") || "Approve"}
-          </Button>
-          <Button 
-            variant="destructive" 
-            size="sm" 
-            className="flex-1"
-            onClick={(e) => { e.stopPropagation(); onReject(); }}
-          >
-            <X className="h-4 w-4 mr-1" />
-            {t("employee360.reject") || "Reject"}
           </Button>
         </div>
       )}
