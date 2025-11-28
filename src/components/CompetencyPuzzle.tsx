@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { getPreloadedImage, preloadImage } from "@/lib/imagePreloader";
 
 interface Competency {
   id: string;
@@ -30,6 +31,8 @@ const positionMap: Record<string, { top: string; right: string; width: string; h
   ACC: { top: "25%", right: "0", width: "25%", height: "25%" },
 };
 
+const IMAGE_SRC = "/images/competency-puzzle.png";
+
 export const CompetencyPuzzle = ({ competencies: apiCompetencies = [] }: CompetencyPuzzleProps) => {
   // Map API data to component format, merging with position data
   const competencies: Competency[] = apiCompetencies.map((comp) => ({
@@ -40,7 +43,18 @@ export const CompetencyPuzzle = ({ competencies: apiCompetencies = [] }: Compete
     position: positionMap[comp.code] || { top: "0", right: "0", width: "25%", height: "25%" },
   }));
   const [selectedCompetency, setSelectedCompetency] = useState<Competency | null>(null);
+  const [imageSrc, setImageSrc] = useState<string>(() => getPreloadedImage(IMAGE_SRC) || IMAGE_SRC);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Use preloaded image if available, otherwise load it
+    const cached = getPreloadedImage(IMAGE_SRC);
+    if (cached) {
+      setImageSrc(cached);
+    } else {
+      preloadImage(IMAGE_SRC).then(setImageSrc);
+    }
+  }, []);
 
   const handleUpscalingRoute = () => {
     if (selectedCompetency) {
@@ -53,7 +67,7 @@ export const CompetencyPuzzle = ({ competencies: apiCompetencies = [] }: Compete
   return (
     <>
       <div className="relative w-full max-w-sm mx-auto rounded-lg overflow-hidden">
-        <img src="/images/competency-puzzle.png" alt="Competency Puzzle" className="w-full h-auto block" />
+        <img src={imageSrc} alt="Competency Puzzle" className="w-full h-auto block" />
         {competencies.map((comp) => (
           <button
             key={comp.id}
