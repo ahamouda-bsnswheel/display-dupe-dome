@@ -141,6 +141,7 @@ const translations = {
     "profile.current": "Current",
     "profile.rejectReason": "Reject Reason",
     "profile.submissionApproved": "Your submission was approved by your manager.",
+    "profile.submissionPending": "Your submission is being reviewed.",
     "common.save": "Save",
     // Notifications Page
     "notifications.title": "Notifications",
@@ -316,6 +317,7 @@ const translations = {
     "profile.current": "حالياً",
     "profile.rejectReason": "سبب الرفض",
     "profile.submissionApproved": "تمت الموافقة على طلبك من قبل مديرك.",
+    "profile.submissionPending": "طلبك قيد المراجعة.",
     "common.save": "حفظ",
     // Notifications Page
     "notifications.title": "الإشعارات",
