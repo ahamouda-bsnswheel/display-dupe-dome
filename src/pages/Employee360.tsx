@@ -39,26 +39,24 @@ interface ApiEmployee {
 // Employee card component to handle individual image loading
 const EmployeeCard = ({ employee, onClick }: { employee: Employee; onClick: () => void }) => {
   const { blobUrl } = useAuthImage(employee.imageUrl);
-  
+
   return (
-    <Card 
-      className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-card"
-      onClick={onClick}
-    >
+    <Card className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-card" onClick={onClick}>
       <div className="flex gap-4">
-        <Avatar className="h-24 w-24 shrink-0 border-4 border-slate-800">
+        <Avatar className="h-24 w-24 shrink-0">
           <AvatarImage src={blobUrl} alt={employee.name} className="object-cover" />
           <AvatarFallback className="bg-slate-800 text-primary text-2xl">
-            {employee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+            {employee.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col justify-center min-w-0 flex-1">
-          <h3 className="font-semibold text-foreground text-lg leading-tight mb-1">
-            {employee.name}
-          </h3>
-          <p className="text-muted-foreground text-sm mb-3">
-            {employee.jobTitle}
-          </p>
+          <h3 className="font-semibold text-foreground text-lg leading-tight mb-1">{employee.name}</h3>
+          <p className="text-muted-foreground text-sm mb-3">{employee.jobTitle}</p>
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Mail className="h-4 w-4 text-primary shrink-0" />
@@ -96,24 +94,21 @@ const Employee360 = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const authData = authStorage.getAuthData();
         const headers = authStorage.getAuthHeaders();
-        
+
         if (!authData?.employee_id) {
           throw new Error("No employee ID found");
         }
 
-        const orgChartResponse = await fetch(
-          `https://bsnswheel.org/api/v1/org_chart/custom/${authData.employee_id}`,
-          {
-            method: 'PUT',
-            headers: {
-              ...headers,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const orgChartResponse = await fetch(`https://bsnswheel.org/api/v1/org_chart/custom/${authData.employee_id}`, {
+          method: "PUT",
+          headers: {
+            ...headers,
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!orgChartResponse.ok) {
           throw new Error("Failed to fetch org chart");
@@ -121,8 +116,8 @@ const Employee360 = () => {
 
         const orgChartData = await orgChartResponse.json();
         const childIds = (orgChartData.result as OrgChartEmployee[])
-          .filter(emp => emp.type === "child")
-          .map(emp => parseInt(emp.id));
+          .filter((emp) => emp.type === "child")
+          .map((emp) => parseInt(emp.id));
 
         console.log("Child employee IDs:", childIds);
 
@@ -161,9 +156,9 @@ const Employee360 = () => {
       const employeesResponse = await fetch(
         `https://bsnswheel.org/api/v1/employees?offset=${currentOffset}&limit=${BATCH_SIZE}`,
         {
-          method: 'GET',
+          method: "GET",
           headers,
-        }
+        },
       );
 
       if (!employeesResponse.ok) {
@@ -172,11 +167,11 @@ const Employee360 = () => {
 
       const employeesData = await employeesResponse.json();
       const allResults = employeesData.results as ApiEmployee[];
-      
+
       // Filter employees by child IDs
       const managedEmployees = allResults
-        .filter(emp => childEmployeeIds.includes(emp.id))
-        .map(emp => ({
+        .filter((emp) => childEmployeeIds.includes(emp.id))
+        .map((emp) => ({
           id: emp.id.toString(),
           name: emp.name,
           jobTitle: emp.job_title || "",
@@ -185,15 +180,17 @@ const Employee360 = () => {
           imageUrl: getSecureImageUrl(emp.image_url),
         }));
 
-      setEmployees(prev => isInitial ? managedEmployees : [...prev, ...managedEmployees]);
-      
+      setEmployees((prev) => (isInitial ? managedEmployees : [...prev, ...managedEmployees]));
+
       // Check if there are more employees to load
       const newOffset = currentOffset + BATCH_SIZE;
       const totalFromApi = employeesData.total || allResults.length;
       setHasMore(newOffset < totalFromApi);
       setOffset(newOffset);
 
-      console.log(`Fetched batch: offset=${currentOffset}, found=${managedEmployees.length}, hasMore=${newOffset < totalFromApi}`);
+      console.log(
+        `Fetched batch: offset=${currentOffset}, found=${managedEmployees.length}, hasMore=${newOffset < totalFromApi}`,
+      );
     } catch (err) {
       console.error("Error fetching employees batch:", err);
       setError(err instanceof Error ? err.message : "Failed to load employees");
@@ -224,20 +221,12 @@ const Employee360 = () => {
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => navigate("/modules")}
-            >
+            <Button variant="ghost" size="icon" onClick={() => navigate("/modules")}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-xl font-semibold">{t('employee360.title')}</h1>
+            <h1 className="text-xl font-semibold">{t("employee360.title")}</h1>
           </div>
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-          >
+          <Button variant="ghost" size="icon" onClick={() => setIsFilterOpen(!isFilterOpen)}>
             <Filter className="h-5 w-5" />
           </Button>
         </div>
@@ -250,39 +239,29 @@ const Employee360 = () => {
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : error ? (
-          <div className="text-center py-12 text-destructive">
-            {error}
-          </div>
+          <div className="text-center py-12 text-destructive">{error}</div>
         ) : employees.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
-            {t('employee360.noEmployees') || 'No employees found'}
+            {t("employee360.noEmployees") || "No employees found"}
           </div>
         ) : (
           <>
             <p className="text-sm text-muted-foreground mb-2">
-              {t('employee360.showing') || 'Showing'} {employees.length} {t('employee360.of') || 'of'} {totalEmployees} {t('employee360.employees') || 'employees'}
+              {t("employee360.showing") || "Showing"} {employees.length} {t("employee360.of") || "of"} {totalEmployees}{" "}
+              {t("employee360.employees") || "employees"}
             </p>
             {employees.map((employee) => (
-              <EmployeeCard 
-                key={employee.id} 
-                employee={employee} 
-                onClick={() => handleEmployeeClick(employee.id)}
-              />
+              <EmployeeCard key={employee.id} employee={employee} onClick={() => handleEmployeeClick(employee.id)} />
             ))}
             {hasMore && (
-              <Button 
-                variant="outline" 
-                className="w-full mt-4"
-                onClick={handleLoadMore}
-                disabled={loadingMore}
-              >
+              <Button variant="outline" className="w-full mt-4" onClick={handleLoadMore} disabled={loadingMore}>
                 {loadingMore ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    {t('employee360.loading') || 'Loading...'}
+                    {t("employee360.loading") || "Loading..."}
                   </>
                 ) : (
-                  t('employee360.loadMore') || 'Load More'
+                  t("employee360.loadMore") || "Load More"
                 )}
               </Button>
             )}
