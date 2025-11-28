@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+// Add new translation key for employee profile
+
 type Language = "en" | "ar";
 
 interface LanguageContextType {
@@ -77,6 +79,7 @@ const translations = {
     "more.logOut": "Log Out",
     // Profile Page
     "profile.title": "Profile",
+    "profile.employeeProfile": "Employee Profile",
     "profile.resume": "Resume",
     "profile.workInfo": "Work Info",
     "profile.privateInfo": "Private Info",
@@ -233,6 +236,7 @@ const translations = {
     "more.logOut": "تسجيل الخروج",
     // Profile Page
     "profile.title": "الملف الشخصي",
+    "profile.employeeProfile": "ملف الموظف",
     "profile.resume": "السيرة الذاتية",
     "profile.workInfo": "معلومات العمل",
     "profile.privateInfo": "المعلومات الخاصة",
