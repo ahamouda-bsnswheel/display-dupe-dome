@@ -45,6 +45,10 @@ export interface EmployeeData {
   // Banking
   bank_account_id: [number, string] | false;
   
+  // Private Contact additional fields
+  km_home_work: string | false;
+  private_car_plate: string | false;
+  
   // Job details
   job_description: string | false;
   planning_role_ids: any[];

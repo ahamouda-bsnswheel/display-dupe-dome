@@ -3,8 +3,12 @@ import { useState, useEffect, useCallback } from "react";
 const PENDING_CHANGES_KEY = "noc_pending_profile_changes";
 
 export interface PendingProfileChanges {
+  private_street?: string;
   private_email?: string;
   private_phone?: string;
+  bank_account_id?: string;
+  km_home_work?: string;
+  private_car_plate?: string;
   marital?: string;
   children?: string;
   emergency_contact?: string;
