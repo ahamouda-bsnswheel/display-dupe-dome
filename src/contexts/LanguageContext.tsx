@@ -150,6 +150,9 @@ const translations = {
     "notifications.approve": "Approve",
     "notifications.today": "Today",
     "notifications.future": "Future",
+    // Employee 360
+    "employee360.title": "Employee 360",
+    "dashboard.employee360": "Employee 360",
   },
   ar: {
     // Login Page
@@ -290,6 +293,9 @@ const translations = {
     "notifications.approve": "موافقة",
     "notifications.today": "اليوم",
     "notifications.future": "مستقبلي",
+    // Employee 360
+    "employee360.title": "ملف الموظف 360",
+    "dashboard.employee360": "ملف الموظف 360",
   },
 };
 

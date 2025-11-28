@@ -2,14 +2,16 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { Search, Clock, Calendar, BookOpen, Home, Grid3x3, Bell, MoreHorizontal, LogOut, Wallet, MailCheck, FileText, FileCheck, Edit3, PieChart, BarChart3, Award, Gauge, ArrowLeft } from "lucide-react";
+import { Search, Clock, Calendar, BookOpen, Home, Grid3x3, Bell, MoreHorizontal, LogOut, Wallet, MailCheck, FileText, FileCheck, Edit3, PieChart, BarChart3, Award, Gauge, ArrowLeft, Users } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { authStorage } from "@/lib/auth";
 
 const Modules = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
+  const authData = authStorage.getAuthData();
 
   const allModules = [
     {
@@ -90,7 +92,15 @@ const Modules = () => {
       title: t('dashboard.fleet'),
       color: "bg-purple-200",
       iconColor: "text-purple-700"
-    }
+    },
+    // Manager-only module
+    ...(authData?.is_manager ? [{
+      icon: Users,
+      title: t('dashboard.employee360'),
+      color: "bg-gradient-to-br from-blue-400 to-cyan-400",
+      iconColor: "text-white",
+      route: "/employee-360"
+    }] : [])
   ];
 
   const filteredModules = allModules.filter(module => 
@@ -130,7 +140,11 @@ const Modules = () => {
         {/* Modules Grid */}
         <div className="grid grid-cols-2 gap-4">
           {filteredModules.map((module, index) => (
-            <Card key={index} className="p-4 hover:shadow-lg transition-shadow cursor-pointer">
+            <Card 
+              key={index} 
+              className="p-4 hover:shadow-lg transition-shadow cursor-pointer"
+              onClick={() => module.route && navigate(module.route)}
+            >
               <div className="flex flex-col gap-3">
                 <div className={`${module.color} rounded-2xl p-3 w-14 h-14 flex items-center justify-center`}>
                   {module.customContent ? (

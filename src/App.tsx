@@ -15,6 +15,7 @@ import OrganizationChart from "./pages/OrganizationChart";
 import EmployeeDetail from "./pages/EmployeeDetail";
 import UpscalingRoute from "./pages/UpscalingRoute";
 import LanguageSelection from "./pages/LanguageSelection";
+import Employee360 from "./pages/Employee360";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/organization-chart" element={<ProtectedRoute><OrganizationChart /></ProtectedRoute>} />
             <Route path="/employee/:employeeId" element={<ProtectedRoute><EmployeeDetail /></ProtectedRoute>} />
             <Route path="/upscaling-route/:competencyId" element={<ProtectedRoute><UpscalingRoute /></ProtectedRoute>} />
+            <Route path="/employee-360" element={<ProtectedRoute><Employee360 /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
