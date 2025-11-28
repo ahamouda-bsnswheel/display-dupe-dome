@@ -152,6 +152,12 @@ const translations = {
     "notifications.future": "Future",
     // Employee 360
     "employee360.title": "Employee 360",
+    "employee360.showing": "Showing",
+    "employee360.of": "of",
+    "employee360.employees": "employees",
+    "employee360.loading": "Loading...",
+    "employee360.loadMore": "Load More",
+    "employee360.noEmployees": "No employees found",
     "dashboard.employee360": "Employee 360",
   },
   ar: {
@@ -295,6 +301,12 @@ const translations = {
     "notifications.future": "مستقبلي",
     // Employee 360
     "employee360.title": "ملف الموظف 360",
+    "employee360.showing": "عرض",
+    "employee360.of": "من",
+    "employee360.employees": "موظف",
+    "employee360.loading": "جاري التحميل...",
+    "employee360.loadMore": "تحميل المزيد",
+    "employee360.noEmployees": "لم يتم العثور على موظفين",
     "dashboard.employee360": "ملف الموظف 360",
   },
 };
