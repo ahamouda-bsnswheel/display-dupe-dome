@@ -801,6 +801,14 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
                 </AlertDescription>
               </Alert>
             )}
+            {employeeData?.approval_state === "submitted" && (
+              <Alert className={`border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400 ${isRTL ? "text-right" : ""}`}>
+                <AlertCircle className={`h-4 w-4 text-blue-500 ${isRTL ? "ml-2" : ""}`} />
+                <AlertDescription className={`text-blue-600 dark:text-blue-400 ${isRTL ? "mr-6" : ""}`}>
+                  {t("profile.submissionPending")}
+                </AlertDescription>
+              </Alert>
+            )}
 
             {/* Private Contact */}
             <div>
