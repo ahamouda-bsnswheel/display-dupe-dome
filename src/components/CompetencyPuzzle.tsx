@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import puzzleImage from "@/assets/competency-puzzle.png";
+
+const puzzleImage = "/images/competency-puzzle.png";
 
 interface Competency {
   id: string;
