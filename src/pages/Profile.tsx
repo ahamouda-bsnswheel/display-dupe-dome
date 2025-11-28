@@ -803,14 +803,17 @@ const [resumeGroups, setResumeGroups] = useState<ResumeGroup[]>([]);
           </TabsContent>
 
           <TabsContent value="private-info" className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 mt-0">
-            {/* Pending Changes Banner */}
+            {/* Pending Changes Banner - Sticky at top */}
             {!isReadOnly && hasPendingChanges && (
-              <PendingChangesBanner
-                pendingChanges={pendingChanges}
-                employeeId={employeeId}
-                onSubmitSuccess={handleSubmitSuccess}
-                isRTL={isRTL}
-              />
+              <div className="fixed top-0 left-0 right-0 z-50">
+                <PendingChangesBanner
+                  pendingChanges={pendingChanges}
+                  employeeId={employeeId}
+                  onSubmitSuccess={handleSubmitSuccess}
+                  onClearChanges={clearChanges}
+                  isRTL={isRTL}
+                />
+              </div>
             )}
 
             {/* Approval Status Alert */}

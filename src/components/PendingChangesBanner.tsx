@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { AlertCircle, Send } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
@@ -11,6 +10,7 @@ interface PendingChangesBannerProps {
   pendingChanges: PendingProfileChanges;
   employeeId?: number;
   onSubmitSuccess: () => void;
+  onClearChanges: () => void;
   isRTL?: boolean;
 }
 
@@ -18,6 +18,7 @@ export const PendingChangesBanner = ({
   pendingChanges,
   employeeId,
   onSubmitSuccess,
+  onClearChanges,
   isRTL,
 }: PendingChangesBannerProps) => {
   const { t } = useLanguage();
@@ -81,23 +82,47 @@ export const PendingChangesBanner = ({
     }
   };
 
+  const handleClear = () => {
+    onClearChanges();
+    toast({
+      title: t("common.success"),
+      description: t("profile.changesCleared"),
+    });
+  };
+
   return (
-    <Alert className={`border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-400 ${isRTL ? "text-right" : ""}`}>
-      <AlertCircle className={`h-4 w-4 text-amber-500 ${isRTL ? "ml-2" : ""}`} />
-      <div className={`flex items-center justify-between w-full ${isRTL ? "flex-row-reverse pr-6" : "pl-6"}`}>
-        <AlertDescription className="text-amber-700 dark:text-amber-400 flex-1">
-          {t("profile.changesMade")}
-        </AlertDescription>
-        <Button
-          size="sm"
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          className={`bg-amber-600 hover:bg-amber-700 text-white gap-1.5 ${isRTL ? "flex-row-reverse mr-3" : "ml-3"}`}
-        >
-          <Send className="h-3.5 w-3.5" />
-          {isSubmitting ? t("common.submitting") : t("common.submit")}
-        </Button>
+    <div 
+      className={`sticky top-0 z-50 bg-amber-500 text-white px-4 py-3 shadow-lg ${isRTL ? "text-right" : ""}`}
+      dir={isRTL ? "rtl" : "ltr"}
+    >
+      <div className={`flex items-center justify-between gap-3 max-w-screen-xl mx-auto ${isRTL ? "flex-row-reverse" : ""}`}>
+        <div className={`flex items-center gap-2 flex-1 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
+          <AlertCircle className="h-5 w-5 flex-shrink-0" />
+          <span className="text-sm font-medium truncate">
+            {t("profile.changesMade")}
+          </span>
+        </div>
+        <div className={`flex items-center gap-2 flex-shrink-0 ${isRTL ? "flex-row-reverse" : ""}`}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleClear}
+            className={`text-white hover:bg-white/20 gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
+          >
+            <X className="h-3.5 w-3.5" />
+            {t("common.clear")}
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className={`bg-white text-amber-600 hover:bg-white/90 gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
+          >
+            <Send className="h-3.5 w-3.5" />
+            {isSubmitting ? t("common.submitting") : t("common.submit")}
+          </Button>
+        </div>
       </div>
-    </Alert>
+    </div>
   );
 };

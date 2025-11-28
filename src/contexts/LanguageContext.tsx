@@ -152,6 +152,8 @@ const translations = {
     "common.submitting": "Submitting...",
     "common.success": "Success",
     "common.error": "Error",
+    "common.clear": "Clear",
+    "profile.changesCleared": "All pending changes have been cleared.",
     // Notifications Page
     "notifications.title": "Notifications",
     "notifications.notificationsTab": "Notifications",
@@ -343,6 +345,8 @@ const translations = {
     "common.submitting": "جاري الإرسال...",
     "common.success": "نجاح",
     "common.error": "خطأ",
+    "common.clear": "مسح",
+    "profile.changesCleared": "تم مسح جميع التغييرات المعلقة.",
     // Notifications Page
     "notifications.title": "الإشعارات",
     "notifications.notificationsTab": "الإشعارات",
