@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { authStorage } from "@/lib/auth";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
 
 interface EditEmergencyModalProps {
@@ -19,6 +19,7 @@ interface EditEmergencyModalProps {
     contactPhone: string;
   };
   employeeId?: number;
+  onSave?: (changes: { emergency_contact?: string; emergency_phone?: string }) => void;
   onSuccess?: () => void;
 }
 
@@ -27,11 +28,12 @@ export const EditEmergencyModal = ({
   onOpenChange,
   defaultValues,
   employeeId,
+  onSave,
   onSuccess,
 }: EditEmergencyModalProps) => {
+  const { t } = useLanguage();
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (defaultValues && open) {
@@ -40,56 +42,35 @@ export const EditEmergencyModal = ({
     }
   }, [defaultValues, open]);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!employeeId) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Employee ID not found",
         variant: "destructive",
       });
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const headers = authStorage.getAuthHeaders();
-      const params = new URLSearchParams();
-      
-      if (contactName) params.append("emergency_contact", contactName);
-      if (contactPhone) params.append("emergency_phone", contactPhone);
-
-      const response = await fetch(
-        `https://bsnswheel.org/api/v1/employees/${employeeId}?${params.toString()}`,
-        {
-          method: "PUT",
-          headers,
-        }
-      );
-
-      if (response.ok) {
-        toast({
-          title: "Success",
-          description: "Emergency contact updated successfully",
-        });
-        onOpenChange(false);
-        onSuccess?.();
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to update emergency contact",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error updating emergency contact:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update emergency contact",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+    // Save to localStorage via callback instead of API
+    const changes: { emergency_contact?: string; emergency_phone?: string } = {};
+    if (contactName !== (defaultValues?.contactName || "")) {
+      changes.emergency_contact = contactName;
     }
+    if (contactPhone !== (defaultValues?.contactPhone || "")) {
+      changes.emergency_phone = contactPhone;
+    }
+
+    if (Object.keys(changes).length > 0) {
+      onSave?.(changes);
+      toast({
+        title: t("common.success"),
+        description: t("profile.changesSaved"),
+      });
+    }
+    
+    onOpenChange(false);
+    onSuccess?.();
   };
 
   return (
@@ -105,7 +86,7 @@ export const EditEmergencyModal = ({
 
         {/* Header */}
         <SheetHeader className="px-6 pb-4">
-          <SheetTitle className="text-xl font-semibold">Emergency</SheetTitle>
+          <SheetTitle className="text-xl font-semibold">{t("profile.emergency")}</SheetTitle>
         </SheetHeader>
 
         {/* Form Content */}
@@ -113,12 +94,12 @@ export const EditEmergencyModal = ({
           {/* Emergency Contact */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Emergency Contact
+              {t("profile.contactName")}
             </Label>
             <Input
               value={contactName}
               onChange={(e) => setContactName(e.target.value)}
-              placeholder="Enter Emergency Contact"
+              placeholder={t("profile.contactName")}
               className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
             />
           </div>
@@ -126,13 +107,13 @@ export const EditEmergencyModal = ({
           {/* Emergency Phone */}
           <div className="space-y-2">
             <Label className="text-base font-normal text-foreground">
-              Emergency Phone
+              {t("profile.contactPhone")}
             </Label>
             <Input
               value={contactPhone}
               onChange={(e) => setContactPhone(e.target.value)}
               type="tel"
-              placeholder="Enter Emergency Phone"
+              placeholder={t("profile.contactPhone")}
               className="h-14 rounded-xl border-border bg-background text-base placeholder:text-muted-foreground/50"
             />
           </div>
@@ -142,10 +123,9 @@ export const EditEmergencyModal = ({
         <div className="px-6 pb-6">
           <Button
             onClick={handleSave}
-            disabled={isLoading}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground text-base font-medium"
           >
-            {isLoading ? "Saving..." : "Save"}
+            {t("common.save")}
           </Button>
         </div>
       </SheetContent>
