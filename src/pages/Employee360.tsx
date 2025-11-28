@@ -2,12 +2,23 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Filter, Mail, Phone, Loader2, Eye, Check, X, FileSearch } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuthImage } from "@/hooks/use-auth-image";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 type ApprovalState = "draft" | "submitted" | "approved" | "reject";
 
@@ -182,6 +193,7 @@ const BATCH_SIZE = 50;
 const Employee360 = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
@@ -191,6 +203,11 @@ const Employee360 = () => {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [totalEmployees, setTotalEmployees] = useState(0);
+  
+  // Approval confirmation state
+  const [approveDialogOpen, setApproveDialogOpen] = useState(false);
+  const [employeeToApprove, setEmployeeToApprove] = useState<Employee | null>(null);
+  const [isApproving, setIsApproving] = useState(false);
 
   // Fetch child employee IDs on mount
   useEffect(() => {
@@ -333,9 +350,52 @@ const Employee360 = () => {
     navigate(`/employee/${employeeId}/review`);
   };
 
-  const handleApprove = (employeeId: string) => {
-    // TODO: Implement approve functionality
-    console.log("Approve employee:", employeeId);
+  const handleApprove = (employee: Employee) => {
+    setEmployeeToApprove(employee);
+    setApproveDialogOpen(true);
+  };
+
+  const confirmApprove = async () => {
+    if (!employeeToApprove) return;
+    
+    setIsApproving(true);
+    try {
+      const headers = authStorage.getAuthHeaders();
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/employees/${employeeToApprove.id}?approval_state=approved`,
+        {
+          method: "PUT",
+          headers,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to approve employee");
+      }
+
+      // Update local state
+      setEmployees((prev) =>
+        prev.map((emp) =>
+          emp.id === employeeToApprove.id ? { ...emp, approvalState: "approved" as ApprovalState } : emp
+        )
+      );
+
+      toast({
+        title: t("employee360.approveSuccess") || "Employee Approved",
+        description: `${employeeToApprove.name} ${t("employee360.hasBeenApproved") || "has been approved successfully."}`,
+      });
+    } catch (err) {
+      console.error("Error approving employee:", err);
+      toast({
+        title: t("employee360.approveError") || "Error",
+        description: t("employee360.approveErrorDescription") || "Failed to approve employee. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsApproving(false);
+      setApproveDialogOpen(false);
+      setEmployeeToApprove(null);
+    }
   };
 
   const handleReject = (employeeId: string) => {
@@ -389,7 +449,7 @@ const Employee360 = () => {
                 employee={employee} 
                 onClick={() => handleEmployeeClick(employee.id)}
                 onReview={() => handleReview(employee.id)}
-                onApprove={() => handleApprove(employee.id)}
+                onApprove={() => handleApprove(employee)}
                 onReject={() => handleReject(employee.id)}
                 onViewSubmission={() => handleViewSubmission(employee.id)}
                 t={t}
@@ -410,6 +470,33 @@ const Employee360 = () => {
           </>
         )}
       </main>
+
+      {/* Approve Confirmation Dialog */}
+      <AlertDialog open={approveDialogOpen} onOpenChange={setApproveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("employee360.confirmApprove") || "Confirm Approval"}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("employee360.confirmApproveDescription") || "Are you sure you want to approve"} {employeeToApprove?.name}?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isApproving}>
+              {t("common.cancel") || "Cancel"}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmApprove} disabled={isApproving}>
+              {isApproving ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  {t("employee360.approving") || "Approving..."}
+                </>
+              ) : (
+                t("employee360.approve") || "Approve"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
