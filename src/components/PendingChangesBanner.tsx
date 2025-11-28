@@ -92,7 +92,7 @@ export const PendingChangesBanner = ({
 
   return (
     <div 
-      className={`sticky top-0 z-50 bg-amber-500 text-white px-4 py-3 shadow-lg ${isRTL ? "text-right" : ""}`}
+      className={`fixed bottom-0 left-0 right-0 z-50 bg-amber-500 text-white px-4 py-3 shadow-lg ${isRTL ? "text-right" : ""}`}
       dir={isRTL ? "rtl" : "ltr"}
     >
       <div className={`flex items-center justify-between gap-3 max-w-screen-xl mx-auto ${isRTL ? "flex-row-reverse" : ""}`}>
