@@ -74,7 +74,8 @@ const OrganizationChart = () => {
   // Build organizational hierarchy from org chart data
   const manager = orgChartData.find(emp => emp.type === "manager");
   const currentUser = orgChartData.find(emp => emp.type === "self");
-  const teamMembers = orgChartData.filter(emp => emp.type === "sama");
+  // Include both "sama" (peers) and "child" (direct reports for managers)
+  const teamMembers = orgChartData.filter(emp => emp.type === "sama" || emp.type === "child");
 
   const employees: Employee[] = [
     ...(currentUser ? [{
