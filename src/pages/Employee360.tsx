@@ -12,6 +12,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Filter, Mail, Phone, Loader2, Eye, Check, X, FileSearch } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -19,6 +24,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuthImage } from "@/hooks/use-auth-image";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+
+type FilterOption = "all" | "draft" | "submitted" | "approved" | "reject";
 
 type ApprovalState = "draft" | "submitted" | "approved" | "reject";
 
@@ -195,6 +202,7 @@ const Employee360 = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filterOption, setFilterOption] = useState<FilterOption>("all");
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -203,6 +211,21 @@ const Employee360 = () => {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [totalEmployees, setTotalEmployees] = useState(0);
+
+  // Filter employees based on selected filter
+  const filteredEmployees = filterOption === "all" 
+    ? employees 
+    : employees.filter(emp => emp.approvalState === filterOption);
+
+  const getFilterLabel = (option: FilterOption): string => {
+    switch (option) {
+      case "all": return t("employee360.filterAll") || "All";
+      case "draft": return t("employee360.filterDraft") || "Draft";
+      case "submitted": return t("employee360.filterSubmitted") || "Submitted";
+      case "approved": return t("employee360.filterApproved") || "Approved";
+      case "reject": return t("employee360.filterRejected") || "Rejected";
+    }
+  };
   
   // Approval confirmation state
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
@@ -470,9 +493,32 @@ const Employee360 = () => {
             </Button>
             <h1 className="text-xl font-semibold">{t("employee360.title")}</h1>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => setIsFilterOpen(!isFilterOpen)}>
-            <Filter className="h-5 w-5" />
-          </Button>
+          <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon" className={filterOption !== "all" ? "text-primary" : ""}>
+                <Filter className="h-5 w-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-48 p-2">
+              <div className="space-y-1">
+                {(["all", "draft", "submitted", "approved", "reject"] as FilterOption[]).map((option) => (
+                  <Button
+                    key={option}
+                    variant={filterOption === option ? "default" : "ghost"}
+                    className="w-full justify-start"
+                    size="sm"
+                    onClick={() => {
+                      setFilterOption(option);
+                      setIsFilterOpen(false);
+                    }}
+                  >
+                    {filterOption === option && <Check className="h-4 w-4 mr-2" />}
+                    {getFilterLabel(option)}
+                  </Button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </header>
 
@@ -488,13 +534,18 @@ const Employee360 = () => {
           <div className="text-center py-12 text-muted-foreground">
             {t("employee360.noEmployees") || "No employees found"}
           </div>
+        ) : filteredEmployees.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            {t("employee360.noFilterResults") || "No employees match the selected filter"}
+          </div>
         ) : (
           <>
             <p className="text-sm text-muted-foreground mb-2">
-              {t("employee360.showing") || "Showing"} {employees.length} {t("employee360.of") || "of"} {totalEmployees}{" "}
+              {t("employee360.showing") || "Showing"} {filteredEmployees.length} {t("employee360.of") || "of"} {totalEmployees}{" "}
               {t("employee360.employees") || "employees"}
+              {filterOption !== "all" && ` (${getFilterLabel(filterOption)})`}
             </p>
-            {employees.map((employee) => (
+            {filteredEmployees.map((employee) => (
               <EmployeeCard 
                 key={employee.id} 
                 employee={employee} 
