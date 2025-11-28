@@ -10,6 +10,10 @@ export interface EmployeeData {
   mobile_phone: string | false;
   image_url: string;
   
+  // Approval status
+  approval_state: "draft" | "submitted" | "approved" | "reject" | false;
+  reject_reason: string | false;
+  
   // Address and location
   address_id: [number, string] | false;
   work_location_id: [number, string] | false;
