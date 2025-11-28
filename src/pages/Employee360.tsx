@@ -75,16 +75,24 @@ const EmployeeCard = ({ employee, onClick }: { employee: Employee; onClick: () =
   );
 };
 
+const BATCH_SIZE = 50;
+
 const Employee360 = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [childEmployeeIds, setChildEmployeeIds] = useState<number[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalEmployees, setTotalEmployees] = useState(0);
 
+  // Fetch child employee IDs on mount
   useEffect(() => {
-    const fetchManagedEmployees = async () => {
+    const fetchChildIds = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -96,7 +104,6 @@ const Employee360 = () => {
           throw new Error("No employee ID found");
         }
 
-        // Step 1: Fetch org chart to get child employee IDs
         const orgChartResponse = await fetch(
           `https://bsnswheel.org/api/v1/org_chart/custom/${authData.employee_id}`,
           {
@@ -113,57 +120,99 @@ const Employee360 = () => {
         }
 
         const orgChartData = await orgChartResponse.json();
-        const childEmployeeIds = (orgChartData.result as OrgChartEmployee[])
+        const childIds = (orgChartData.result as OrgChartEmployee[])
           .filter(emp => emp.type === "child")
           .map(emp => parseInt(emp.id));
 
-        console.log("Child employee IDs:", childEmployeeIds);
+        console.log("Child employee IDs:", childIds);
 
-        if (childEmployeeIds.length === 0) {
+        if (childIds.length === 0) {
           setEmployees([]);
           setLoading(false);
+          setHasMore(false);
           return;
         }
 
-        // Step 2: Fetch all employees
-        const employeesResponse = await fetch(
-          `https://bsnswheel.org/api/v1/employees`,
-          {
-            method: 'GET',
-            headers,
-          }
-        );
-
-        if (!employeesResponse.ok) {
-          throw new Error("Failed to fetch employees");
-        }
-
-        const employeesData = await employeesResponse.json();
-        
-        // Step 3: Filter employees by child IDs
-        const managedEmployees = (employeesData.results as ApiEmployee[])
-          .filter(emp => childEmployeeIds.includes(emp.id))
-          .map(emp => ({
-            id: emp.id.toString(),
-            name: emp.name,
-            jobTitle: emp.job_title || "",
-            email: emp.work_email || "",
-            phone: emp.work_phone || emp.mobile_phone || "",
-            imageUrl: getSecureImageUrl(emp.image_url),
-          }));
-
-        console.log("Managed employees:", managedEmployees);
-        setEmployees(managedEmployees);
+        setChildEmployeeIds(childIds);
+        setTotalEmployees(childIds.length);
       } catch (err) {
-        console.error("Error fetching managed employees:", err);
+        console.error("Error fetching org chart:", err);
         setError(err instanceof Error ? err.message : "Failed to load employees");
-      } finally {
         setLoading(false);
       }
     };
 
-    fetchManagedEmployees();
+    fetchChildIds();
   }, []);
+
+  // Fetch employees batch when childEmployeeIds are available or offset changes
+  const fetchEmployeesBatch = async (currentOffset: number, isInitial: boolean = false) => {
+    if (childEmployeeIds.length === 0) return;
+
+    try {
+      if (isInitial) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+
+      const headers = authStorage.getAuthHeaders();
+
+      const employeesResponse = await fetch(
+        `https://bsnswheel.org/api/v1/employees?offset=${currentOffset}&limit=${BATCH_SIZE}`,
+        {
+          method: 'GET',
+          headers,
+        }
+      );
+
+      if (!employeesResponse.ok) {
+        throw new Error("Failed to fetch employees");
+      }
+
+      const employeesData = await employeesResponse.json();
+      const allResults = employeesData.results as ApiEmployee[];
+      
+      // Filter employees by child IDs
+      const managedEmployees = allResults
+        .filter(emp => childEmployeeIds.includes(emp.id))
+        .map(emp => ({
+          id: emp.id.toString(),
+          name: emp.name,
+          jobTitle: emp.job_title || "",
+          email: emp.work_email || "",
+          phone: emp.work_phone || emp.mobile_phone || "",
+          imageUrl: getSecureImageUrl(emp.image_url),
+        }));
+
+      setEmployees(prev => isInitial ? managedEmployees : [...prev, ...managedEmployees]);
+      
+      // Check if there are more employees to load
+      const newOffset = currentOffset + BATCH_SIZE;
+      const totalFromApi = employeesData.total || allResults.length;
+      setHasMore(newOffset < totalFromApi);
+      setOffset(newOffset);
+
+      console.log(`Fetched batch: offset=${currentOffset}, found=${managedEmployees.length}, hasMore=${newOffset < totalFromApi}`);
+    } catch (err) {
+      console.error("Error fetching employees batch:", err);
+      setError(err instanceof Error ? err.message : "Failed to load employees");
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  // Initial fetch when childEmployeeIds become available
+  useEffect(() => {
+    if (childEmployeeIds.length > 0) {
+      fetchEmployeesBatch(0, true);
+    }
+  }, [childEmployeeIds]);
+
+  const handleLoadMore = () => {
+    fetchEmployeesBatch(offset, false);
+  };
 
   const handleEmployeeClick = (employeeId: string) => {
     navigate(`/employee/${employeeId}`);
@@ -209,13 +258,35 @@ const Employee360 = () => {
             {t('employee360.noEmployees') || 'No employees found'}
           </div>
         ) : (
-          employees.map((employee) => (
-            <EmployeeCard 
-              key={employee.id} 
-              employee={employee} 
-              onClick={() => handleEmployeeClick(employee.id)}
-            />
-          ))
+          <>
+            <p className="text-sm text-muted-foreground mb-2">
+              {t('employee360.showing') || 'Showing'} {employees.length} {t('employee360.of') || 'of'} {totalEmployees} {t('employee360.employees') || 'employees'}
+            </p>
+            {employees.map((employee) => (
+              <EmployeeCard 
+                key={employee.id} 
+                employee={employee} 
+                onClick={() => handleEmployeeClick(employee.id)}
+              />
+            ))}
+            {hasMore && (
+              <Button 
+                variant="outline" 
+                className="w-full mt-4"
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+              >
+                {loadingMore ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    {t('employee360.loading') || 'Loading...'}
+                  </>
+                ) : (
+                  t('employee360.loadMore') || 'Load More'
+                )}
+              </Button>
+            )}
+          </>
         )}
       </main>
     </div>
