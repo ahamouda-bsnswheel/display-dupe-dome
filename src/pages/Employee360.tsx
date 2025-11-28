@@ -404,8 +404,7 @@ const Employee360 = () => {
   };
 
   const handleViewSubmission = (employeeId: string) => {
-    // TODO: Implement view submission functionality
-    console.log("View submission for employee:", employeeId);
+    navigate(`/employee/${employeeId}/review`);
   };
 
   return (
