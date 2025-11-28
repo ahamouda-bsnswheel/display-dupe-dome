@@ -141,6 +141,7 @@ const Employee360 = () => {
   }, []);
 
   // Fetch employees batch when childEmployeeIds are available or offset changes
+  // Keeps fetching until at least one match is found or no more data
   const fetchEmployeesBatch = async (currentOffset: number, isInitial: boolean = false) => {
     if (childEmployeeIds.length === 0) return;
 
@@ -152,45 +153,53 @@ const Employee360 = () => {
       }
 
       const headers = authStorage.getAuthHeaders();
+      let searchOffset = currentOffset;
+      let foundEmployees: Employee[] = [];
+      let moreDataAvailable = true;
 
-      const employeesResponse = await fetch(
-        `https://bsnswheel.org/api/v1/employees?offset=${currentOffset}&limit=${BATCH_SIZE}`,
-        {
-          method: "GET",
-          headers,
-        },
-      );
+      // Keep fetching until we find at least one match or exhaust all data
+      while (foundEmployees.length === 0 && moreDataAvailable) {
+        const employeesResponse = await fetch(
+          `https://bsnswheel.org/api/v1/employees?offset=${searchOffset}&limit=${BATCH_SIZE}`,
+          {
+            method: "GET",
+            headers,
+          },
+        );
 
-      if (!employeesResponse.ok) {
-        throw new Error("Failed to fetch employees");
+        if (!employeesResponse.ok) {
+          throw new Error("Failed to fetch employees");
+        }
+
+        const employeesData = await employeesResponse.json();
+        const allResults = employeesData.results as ApiEmployee[];
+
+        // Filter employees by child IDs
+        const managedEmployees = allResults
+          .filter((emp) => childEmployeeIds.includes(emp.id))
+          .map((emp) => ({
+            id: emp.id.toString(),
+            name: emp.name,
+            jobTitle: emp.job_title || "",
+            email: emp.work_email || "",
+            phone: emp.work_phone || emp.mobile_phone || "",
+            imageUrl: getSecureImageUrl(emp.image_url),
+          }));
+
+        foundEmployees = managedEmployees;
+        searchOffset += BATCH_SIZE;
+        
+        const totalFromApi = employeesData.total || allResults.length;
+        moreDataAvailable = searchOffset < totalFromApi;
+
+        console.log(
+          `Fetched batch: offset=${searchOffset - BATCH_SIZE}, found=${managedEmployees.length}, moreDataAvailable=${moreDataAvailable}`,
+        );
       }
 
-      const employeesData = await employeesResponse.json();
-      const allResults = employeesData.results as ApiEmployee[];
-
-      // Filter employees by child IDs
-      const managedEmployees = allResults
-        .filter((emp) => childEmployeeIds.includes(emp.id))
-        .map((emp) => ({
-          id: emp.id.toString(),
-          name: emp.name,
-          jobTitle: emp.job_title || "",
-          email: emp.work_email || "",
-          phone: emp.work_phone || emp.mobile_phone || "",
-          imageUrl: getSecureImageUrl(emp.image_url),
-        }));
-
-      setEmployees((prev) => (isInitial ? managedEmployees : [...prev, ...managedEmployees]));
-
-      // Check if there are more employees to load
-      const newOffset = currentOffset + BATCH_SIZE;
-      const totalFromApi = employeesData.total || allResults.length;
-      setHasMore(newOffset < totalFromApi);
-      setOffset(newOffset);
-
-      console.log(
-        `Fetched batch: offset=${currentOffset}, found=${managedEmployees.length}, hasMore=${newOffset < totalFromApi}`,
-      );
+      setEmployees((prev) => (isInitial ? foundEmployees : [...prev, ...foundEmployees]));
+      setHasMore(moreDataAvailable);
+      setOffset(searchOffset);
     } catch (err) {
       console.error("Error fetching employees batch:", err);
       setError(err instanceof Error ? err.message : "Failed to load employees");
