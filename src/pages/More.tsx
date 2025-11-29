@@ -24,6 +24,7 @@ const More = () => {
   const { t, language, toggleLanguage } = useLanguage();
   const authData = authStorage.getAuthData();
   const employeeData = authStorage.getEmployeeData();
+  const isManager = authData?.is_manager || false;
   
   const user = {
     name: employeeData?.name || "User",
@@ -38,14 +39,24 @@ const More = () => {
     navigate("/");
   };
 
-  const menuItems = [
+  const baseMenuItems = [
     { icon: User, label: t('more.myProfile'), onClick: () => navigate("/profile") },
     { icon: LayoutGrid, label: t('more.myDashboard'), onClick: () => navigate("/dashboard") },
+  ];
+
+  // Add My Dashboards for managers only
+  const managerMenuItems = isManager ? [
+    { icon: LayoutGrid, label: t('more.myDashboards'), onClick: () => navigate("/my-dashboards") },
+  ] : [];
+
+  const otherMenuItems = [
     { icon: Globe, label: t('more.language'), onClick: () => navigate("/language") },
     { icon: BookOpen, label: t('more.myCourses'), onClick: () => {} },
     { icon: FileText, label: t('more.privacyPolicy'), onClick: () => {} },
     { icon: FileText, label: t('more.termsAndConditions'), onClick: () => {} },
   ];
+
+  const menuItems = [...baseMenuItems, ...managerMenuItems, ...otherMenuItems];
 
   const ChevronIcon = language === 'ar' ? ChevronLeft : ChevronRight;
 

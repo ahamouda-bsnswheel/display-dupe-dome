@@ -72,11 +72,17 @@ const translations = {
     // More Page
     "more.myProfile": "My Profile",
     "more.myDashboard": "My Dashboard",
+    "more.myDashboards": "My Dashboards",
     "more.language": "Language",
     "more.myCourses": "My Courses",
     "more.privacyPolicy": "Privacy Policy",
     "more.termsAndConditions": "Terms And Conditions",
     "more.logOut": "Log Out",
+    // My Dashboards Page
+    "myDashboards.title": "My Dashboards",
+    "myDashboards.noDashboards": "No dashboards available",
+    "myDashboards.dashboardId": "ID",
+    "myDashboards.error": "Failed to load dashboards",
     // Profile Page
     "profile.title": "Profile",
     "profile.employeeProfile": "Employee Profile",
@@ -386,11 +392,17 @@ const translations = {
     // More Page
     "more.myProfile": "ملفي الشخصي",
     "more.myDashboard": "لوحة التحكم",
+    "more.myDashboards": "لوحات التحكم الخاصة بي",
     "more.language": "اللغة",
     "more.myCourses": "دوراتي",
     "more.privacyPolicy": "سياسة الخصوصية",
     "more.termsAndConditions": "الشروط والأحكام",
     "more.logOut": "تسجيل الخروج",
+    // My Dashboards Page
+    "myDashboards.title": "لوحات التحكم الخاصة بي",
+    "myDashboards.noDashboards": "لا توجد لوحات تحكم متاحة",
+    "myDashboards.dashboardId": "المعرف",
+    "myDashboards.error": "فشل تحميل لوحات التحكم",
     // Profile Page
     "profile.title": "الملف الشخصي",
     "profile.employeeProfile": "ملف الموظف",
