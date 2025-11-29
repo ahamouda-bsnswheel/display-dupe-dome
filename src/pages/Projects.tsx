@@ -44,6 +44,7 @@ import {
   Plus,
   Settings2,
   Trash2,
+  Search,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
@@ -81,6 +82,7 @@ const Projects = () => {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [newStageDrawerOpen, setNewStageDrawerOpen] = useState(false);
   const [newStageName, setNewStageName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Get current active stage
   const currentStage = stages.find(s => s[0].toString() === activeTab);
@@ -178,8 +180,22 @@ const Projects = () => {
   }, []);
 
   const getProjectsByStage = (stageId: number | "all") => {
-    if (stageId === "all") return projects;
-    return projects.filter((project) => project.stage_id[0] === stageId);
+    let filtered = projects;
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((project) => 
+        project.name.toLowerCase().includes(query)
+      );
+    }
+    
+    // Apply stage filter
+    if (stageId !== "all") {
+      filtered = filtered.filter((project) => project.stage_id[0] === stageId);
+    }
+    
+    return filtered;
   };
 
   const parseProgress = (progressStr: string): number => {
@@ -268,6 +284,18 @@ const Projects = () => {
 
       {/* Main Content */}
       <main className="px-4 py-6">
+        {/* Search Input */}
+        <div className={`relative mb-4 ${isRTL ? "text-right" : ""}`}>
+          <Search className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? "right-3" : "left-3"}`} />
+          <Input
+            type="text"
+            placeholder={t("projects.searchPlaceholder")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={`${isRTL ? "pr-10 text-right" : "pl-10"}`}
+          />
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Scrollable Tabs with Stage Actions */}
           <div className={`flex items-center gap-2 mb-6 ${isRTL ? "flex-row-reverse" : ""}`}>

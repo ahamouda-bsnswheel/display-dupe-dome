@@ -30,7 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, ListTodo, Plus, Settings2, Trash2 } from "lucide-react";
+import { ArrowLeft, ListTodo, Plus, Settings2, Trash2, Search } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { format } from "date-fns";
@@ -75,6 +75,7 @@ const ProjectDetail = () => {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [newStageDrawerOpen, setNewStageDrawerOpen] = useState(false);
   const [newStageName, setNewStageName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Check if user is manager
   const authData = authStorage.getAuthData();
@@ -210,8 +211,22 @@ const ProjectDetail = () => {
   }, [projectId]);
 
   const getTasksByStage = (stageId: number | "all") => {
-    if (stageId === "all") return tasks;
-    return tasks.filter((task) => task.stage_id[0] === stageId);
+    let filtered = tasks;
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((task) => 
+        task.name.toLowerCase().includes(query)
+      );
+    }
+    
+    // Apply stage filter
+    if (stageId !== "all") {
+      filtered = filtered.filter((task) => task.stage_id[0] === stageId);
+    }
+    
+    return filtered;
   };
 
   const formatDate = (dateStr: string) => {
@@ -280,6 +295,18 @@ const ProjectDetail = () => {
 
       {/* Main Content */}
       <main className="px-4 py-6">
+        {/* Search Input */}
+        <div className={`relative mb-4 ${isRTL ? "text-right" : ""}`}>
+          <Search className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? "right-3" : "left-3"}`} />
+          <Input
+            type="text"
+            placeholder={t("tasks.searchPlaceholder")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={`${isRTL ? "pr-10 text-right" : "pl-10"}`}
+          />
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Scrollable Tabs with Stage Actions */}
           <div className={`flex items-center gap-2 mb-6 ${isRTL ? "flex-row-reverse" : ""}`}>
