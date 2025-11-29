@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calendar, Clock, Users, Tag, Trash2, FolderKanban, Save, Pencil, Layers } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Users, Tag, Trash2, FolderKanban, Save, Pencil, Layers, Loader2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
 import { toast } from "sonner";
@@ -86,11 +86,32 @@ const ProjectSettings = () => {
     description: "",
   });
 
-  const handleDeleteProject = () => {
-    // TODO: Implement API call to delete project
-    console.log("Deleting project:", projectId);
-    setShowDeleteDialog(false);
-    navigate("/projects");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteProject = async () => {
+    setIsDeleting(true);
+    try {
+      const apiKey = authStorage.getApiKey();
+      const response = await fetch(`https://bsnswheel.org/api/v1/projects/${projectId}`, {
+        method: "DELETE",
+        headers: {
+          "x-api-key": apiKey || "",
+        },
+      });
+
+      if (response.ok) {
+        toast.success(t("projectSettings.deleteSuccess"));
+        setShowDeleteDialog(false);
+        navigate("/projects");
+      } else {
+        toast.error(t("projectSettings.deleteError"));
+      }
+    } catch (error) {
+      console.error("Failed to delete project:", error);
+      toast.error(t("projectSettings.deleteError"));
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleSaveProject = () => {
@@ -384,9 +405,17 @@ const ProjectSettings = () => {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className={isRTL ? "flex-row-reverse" : ""}>
-                  <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteProject} className="bg-destructive hover:bg-destructive/90">
-                    {t("projectSettings.deleteProject")}
+                  <AlertDialogCancel disabled={isDeleting}>{t("common.cancel")}</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDeleteProject} 
+                    className="bg-destructive hover:bg-destructive/90"
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      t("projectSettings.deleteProject")
+                    )}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
