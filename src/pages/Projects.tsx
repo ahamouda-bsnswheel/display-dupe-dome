@@ -7,6 +7,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   ArrowLeft,
   Home,
@@ -19,7 +42,7 @@ import {
   ListTodo,
   Settings,
   Plus,
-  Pencil,
+  Settings2,
   Trash2,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -53,6 +76,42 @@ const Projects = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("all");
   const [newProjectModalOpen, setNewProjectModalOpen] = useState(false);
+  const [stageSettingsOpen, setStageSettingsOpen] = useState(false);
+  const [stageNameInput, setStageNameInput] = useState("");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+
+  // Get current active stage
+  const currentStage = stages.find(s => s[0].toString() === activeTab);
+
+  // Update stage name input when drawer opens or active tab changes
+  useEffect(() => {
+    if (stageSettingsOpen && currentStage) {
+      setStageNameInput(currentStage[1]);
+    }
+  }, [stageSettingsOpen, currentStage]);
+
+  const handleRenameStage = () => {
+    if (!currentStage || !stageNameInput.trim()) return;
+    // TODO: Connect to API
+    toast({
+      title: t("projects.stageRenamed"),
+      description: stageNameInput,
+    });
+    setStageSettingsOpen(false);
+  };
+
+  const handleDeleteStage = () => {
+    if (!currentStage) return;
+    // TODO: Connect to API
+    toast({
+      title: t("projects.stageDeleted"),
+      description: currentStage[1],
+      variant: "destructive",
+    });
+    setDeleteConfirmOpen(false);
+    setStageSettingsOpen(false);
+    setActiveTab("all");
+  };
 
   // Check if user is manager
   const authData = authStorage.getAuthData();
@@ -216,42 +275,99 @@ const Projects = () => {
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
             
-            {/* Stage Action Buttons - Only show when a specific stage is selected */}
+            {/* Stage Settings Button - Only show when a specific stage is selected */}
             {activeTab !== "all" && isManager && (
-              <div className={`flex items-center gap-1 shrink-0 px-2 py-1 rounded-lg bg-primary/10 border border-primary/20 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 text-primary hover:bg-primary/20 hover:text-primary"
-                  onClick={() => {
-                    const currentStage = stages.find(s => s[0].toString() === activeTab);
-                    toast({
-                      title: t("projects.editStage"),
-                      description: currentStage?.[1],
-                    });
-                  }}
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                </Button>
-                <div className="w-px h-4 bg-primary/30" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 text-destructive hover:bg-destructive/20 hover:text-destructive"
-                  onClick={() => {
-                    const currentStage = stages.find(s => s[0].toString() === activeTab);
-                    toast({
-                      title: t("projects.deleteStage"),
-                      description: currentStage?.[1],
-                      variant: "destructive",
-                    });
-                  }}
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </div>
+              <Drawer open={stageSettingsOpen} onOpenChange={setStageSettingsOpen}>
+                <DrawerTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 shrink-0 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20"
+                  >
+                    <Settings2 className="h-4 w-4" />
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <div className="mx-auto w-full max-w-sm">
+                    <DrawerHeader className={isRTL ? "text-right" : ""}>
+                      <DrawerTitle>{t("projects.stageSettings")}</DrawerTitle>
+                      <DrawerDescription>
+                        {t("projects.stageSettingsDescription")}
+                      </DrawerDescription>
+                    </DrawerHeader>
+                    <div className="p-4 space-y-6">
+                      {/* Rename Section */}
+                      <div className="space-y-3">
+                        <Label htmlFor="stageName" className={isRTL ? "block text-right" : ""}>
+                          {t("projects.stageName")}
+                        </Label>
+                        <Input
+                          id="stageName"
+                          value={stageNameInput}
+                          onChange={(e) => setStageNameInput(e.target.value)}
+                          placeholder={t("projects.stageNamePlaceholder")}
+                          className={isRTL ? "text-right" : ""}
+                        />
+                        <Button 
+                          onClick={handleRenameStage}
+                          disabled={!stageNameInput.trim() || stageNameInput === currentStage?.[1]}
+                          className="w-full"
+                        >
+                          {t("projects.saveChanges")}
+                        </Button>
+                      </div>
+
+                      <Separator />
+
+                      {/* Delete Section */}
+                      <div className="space-y-3">
+                        <div className={isRTL ? "text-right" : ""}>
+                          <p className="text-sm font-medium text-destructive">{t("projects.dangerZone")}</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {t("projects.deleteStageWarning")}
+                          </p>
+                        </div>
+                        <Button 
+                          variant="destructive" 
+                          className={`w-full gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
+                          onClick={() => setDeleteConfirmOpen(true)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          {t("projects.deleteStage")}
+                        </Button>
+                      </div>
+                    </div>
+                    <DrawerFooter>
+                      <DrawerClose asChild>
+                        <Button variant="outline">{t("common.cancel")}</Button>
+                      </DrawerClose>
+                    </DrawerFooter>
+                  </div>
+                </DrawerContent>
+              </Drawer>
             )}
           </div>
+
+          {/* Delete Stage Confirmation Dialog */}
+          <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("projects.deleteStageConfirmTitle")}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t("projects.deleteStageConfirmMessage")} "{currentStage?.[1]}"
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className={isRTL ? "flex-row-reverse" : ""}>
+                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteStage}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {t("projects.deleteStage")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {/* All Projects Tab */}
           <TabsContent value="all" className="mt-0 space-y-4">
