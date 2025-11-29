@@ -139,43 +139,62 @@ const Projects = () => {
   const authData = authStorage.getAuthData();
   const isManager = authData?.is_manager ?? false;
 
-  const handleCreateProject = (projectName: string) => {
-    // TODO: Connect to API endpoint to create project
-    toast({
-      title: t("projects.projectCreated"),
-      description: projectName,
-    });
-    console.log("Creating project:", projectName);
+  const fetchProjects = async () => {
+    try {
+      const apiKey = authStorage.getApiKey();
+      const response = await fetch("https://bsnswheel.org/api/v1/projects/custom", {
+        method: "PUT",
+        headers: {
+          "x-api-key": apiKey || "",
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data: ProjectsResponse = await response.json();
+        setProjects(data.projects || []);
+        setStages(data.stages || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateProject = async (projectName: string) => {
+    try {
+      const apiKey = authStorage.getApiKey();
+      const response = await fetch(`https://bsnswheel.org/api/v1/projects?name=${encodeURIComponent(projectName)}`, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey || "",
+        },
+      });
+
+      if (response.ok) {
+        toast({
+          title: t("projects.projectCreated"),
+          description: projectName,
+        });
+        // Refresh projects list
+        fetchProjects();
+      } else {
+        toast({
+          title: t("projects.createError"),
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to create project:", error);
+      toast({
+        title: t("projects.createError"),
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const apiKey = authStorage.getApiKey();
-        const response = await fetch("https://bsnswheel.org/api/v1/projects/custom", {
-          method: "PUT",
-          headers: {
-            "x-api-key": apiKey || "",
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response.ok) {
-          const data: ProjectsResponse = await response.json();
-          setProjects(data.projects || []);
-          setStages(data.stages || []);
-          // Set first stage as active tab if available
-          if (data.stages && data.stages.length > 0) {
-            setActiveTab("all");
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch projects:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProjects();
   }, []);
 

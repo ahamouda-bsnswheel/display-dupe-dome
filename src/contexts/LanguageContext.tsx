@@ -233,6 +233,7 @@ const translations = {
     "projects.createProject": "Create Project",
     "projects.discard": "Discard",
     "projects.projectCreated": "Project Created",
+    "projects.createError": "Failed to create project",
     // Project Detail Page
     "projectDetail.title": "Project",
     "projectDetail.all": "All",
@@ -558,6 +559,7 @@ const translations = {
     "projects.createProject": "إنشاء المشروع",
     "projects.discard": "تجاهل",
     "projects.projectCreated": "تم إنشاء المشروع",
+    "projects.createError": "فشل في إنشاء المشروع",
     // Project Detail Page
     "projectDetail.title": "مشروع",
     "projectDetail.all": "الكل",
