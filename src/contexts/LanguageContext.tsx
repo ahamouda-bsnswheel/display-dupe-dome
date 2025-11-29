@@ -278,6 +278,11 @@ const translations = {
     "projects.deleteStageConfirmMessage": "Are you sure you want to delete the stage",
     "projects.stageRenamed": "Stage Renamed",
     "projects.stageDeleted": "Stage Deleted",
+    "projects.stage": "Stage",
+    "projects.addNewStage": "Add New Stage",
+    "projects.addNewStageDescription": "Create a new stage to organize your projects",
+    "projects.addStage": "Add Stage",
+    "projects.stageCreated": "Stage Created",
   },
   ar: {
     // Login Page
@@ -544,6 +549,11 @@ const translations = {
     "projects.deleteStageConfirmMessage": "هل أنت متأكد من حذف المرحلة",
     "projects.stageRenamed": "تمت إعادة تسمية المرحلة",
     "projects.stageDeleted": "تم حذف المرحلة",
+    "projects.stage": "مرحلة",
+    "projects.addNewStage": "إضافة مرحلة جديدة",
+    "projects.addNewStageDescription": "إنشاء مرحلة جديدة لتنظيم مشاريعك",
+    "projects.addStage": "إضافة مرحلة",
+    "projects.stageCreated": "تم إنشاء المرحلة",
   },
 };
 
