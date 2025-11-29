@@ -131,13 +131,53 @@ const ProjectDetail = () => {
     setNewStageName("");
   };
 
-  const handleCreateTask = (taskName: string) => {
-    // TODO: Connect to API endpoint to create task
-    toast({
-      title: t("tasks.taskCreated"),
-      description: taskName,
-    });
-    console.log("Creating task:", taskName);
+  const handleCreateTask = async (taskName: string) => {
+    try {
+      const apiKey = authStorage.getApiKey();
+      const response = await fetch(
+        `https://bsnswheel.org/api/v1/tasks?project_id=${projectId}&name=${encodeURIComponent(taskName)}`,
+        {
+          method: "POST",
+          headers: {
+            "x-api-key": apiKey || "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        toast({
+          title: t("tasks.taskCreated"),
+          description: taskName,
+        });
+        // Refresh tasks list
+        const refreshResponse = await fetch(`https://bsnswheel.org/api/v1/tasks/custom/${projectId}`, {
+          method: "PUT",
+          headers: {
+            "x-api-key": apiKey || "",
+            "Content-Type": "application/json",
+          },
+        });
+        if (refreshResponse.ok) {
+          const data: TasksResponse = await refreshResponse.json();
+          setTasks(data.tasks || []);
+          setStages(data.stages || []);
+        }
+      } else {
+        toast({
+          title: t("common.error"),
+          description: t("tasks.createTaskError"),
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to create task:", error);
+      toast({
+        title: t("common.error"),
+        description: t("tasks.createTaskError"),
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
