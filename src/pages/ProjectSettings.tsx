@@ -8,9 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calendar, Clock, Users, Tag, Trash2, FolderKanban } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Users, Tag, Trash2, FolderKanban, Save, Pencil } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
+import { toast } from "sonner";
 
 const ProjectSettings = () => {
   const navigate = useNavigate();
@@ -46,39 +47,65 @@ const ProjectSettings = () => {
     navigate("/projects");
   };
 
+  const handleSaveProject = () => {
+    // TODO: Implement API call to save project
+    console.log("Saving project:", projectData);
+    toast.success(t("projectSettings.saveSuccess"));
+  };
+
   return (
     <div className="min-h-screen bg-background pb-6 max-w-screen-xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
-        <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/projects")}
-          >
-            <ArrowLeft className={`h-5 w-5 ${isRTL ? "rotate-180" : ""}`} />
-          </Button>
-          <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-            <FolderKanban className="h-5 w-5 text-primary" />
-            <h1 className="text-xl font-semibold truncate max-w-[250px]">
-              {t("projectSettings.title")}
-            </h1>
+        <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
+          <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/projects")}
+            >
+              <ArrowLeft className={`h-5 w-5 ${isRTL ? "rotate-180" : ""}`} />
+            </Button>
+            <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+              <FolderKanban className="h-5 w-5 text-primary" />
+              <h1 className="text-xl font-semibold truncate max-w-[200px]">
+                {t("projectSettings.title")}
+              </h1>
+            </div>
           </div>
+          <Button 
+            onClick={handleSaveProject}
+            className={`gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
+          >
+            <Save className="h-4 w-4" />
+            {t("projectSettings.save")}
+          </Button>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="px-4 py-6 space-y-6">
-        {/* Project Name Edit */}
-        <Card className="p-4">
-          <div className={`flex flex-col gap-2 ${isRTL ? "text-right" : ""}`}>
-            <Label className="text-muted-foreground">
-              {t("projectSettings.projectName")}
-            </Label>
+        {/* Project Name Edit - Prominent Section */}
+        <Card className="p-5 bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
+          <div className={`flex flex-col gap-3 ${isRTL ? "text-right" : ""}`}>
+            <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+              <div className="bg-primary/10 rounded-lg p-2">
+                <Pencil className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <Label className="text-base font-semibold text-foreground">
+                  {t("projectSettings.projectName")}
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  {t("projectSettings.projectNameHint")}
+                </p>
+              </div>
+            </div>
             <Input
               value={projectData.name}
               onChange={(e) => setProjectData({ ...projectData, name: e.target.value })}
               placeholder={t("projectSettings.projectNamePlaceholder")}
+              className="text-lg font-medium h-12 border-primary/30 focus:border-primary"
             />
           </div>
         </Card>

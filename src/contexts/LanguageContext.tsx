@@ -253,6 +253,9 @@ const translations = {
     "projectSettings.deleteProject": "Delete Project",
     "projectSettings.deleteConfirmTitle": "Delete Project?",
     "projectSettings.deleteConfirmMessage": "This action cannot be undone. This will permanently delete the project and all associated tasks.",
+    "projectSettings.save": "Save",
+    "projectSettings.saveSuccess": "Project settings saved successfully",
+    "projectSettings.projectNameHint": "Give your project a clear, descriptive name",
     // Projects Page
     "projects.settings": "Project Settings",
   },
@@ -496,6 +499,9 @@ const translations = {
     "projectSettings.deleteProject": "حذف المشروع",
     "projectSettings.deleteConfirmTitle": "حذف المشروع؟",
     "projectSettings.deleteConfirmMessage": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف المشروع وجميع المهام المرتبطة به نهائياً.",
+    "projectSettings.save": "حفظ",
+    "projectSettings.saveSuccess": "تم حفظ إعدادات المشروع بنجاح",
+    "projectSettings.projectNameHint": "أعطِ مشروعك اسمًا واضحًا ووصفيًا",
     // Projects Page
     "projects.settings": "إعدادات المشروع",
   },
