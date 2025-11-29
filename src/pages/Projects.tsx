@@ -470,13 +470,13 @@ const Projects = () => {
 
           {/* All Projects Tab */}
           <TabsContent value="all" className="mt-0 space-y-4">
-            {projects.length === 0 ? (
+            {getProjectsByStage("all").length === 0 ? (
               <Card className="p-8 text-center">
                 <FolderKanban className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
                 <p className="text-muted-foreground">{t("projects.noProjects")}</p>
               </Card>
             ) : (
-              projects.map((project) => (
+              getProjectsByStage("all").map((project) => (
                 <ProjectCard
                   key={project.id}
                   project={project}

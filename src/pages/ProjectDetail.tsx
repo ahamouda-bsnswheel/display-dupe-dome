@@ -479,14 +479,14 @@ const ProjectDetail = () => {
 
           {/* All Tasks Tab */}
           <TabsContent value="all" className="mt-0 space-y-0">
-            {tasks.length === 0 ? (
+            {getTasksByStage("all").length === 0 ? (
               <Card className="p-8 text-center">
                 <ListTodo className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
                 <p className="text-muted-foreground">{t("projectDetail.noTasks")}</p>
               </Card>
             ) : (
               <div className="divide-y divide-border">
-                {tasks.map((task) => (
+                {getTasksByStage("all").map((task) => (
                   <TaskCard
                     key={task.id}
                     task={task}
