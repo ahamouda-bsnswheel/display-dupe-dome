@@ -71,12 +71,7 @@ const MyDashboards = () => {
       {/* Header */}
       <header className="sticky top-0 z-10 bg-card border-b border-border px-4 py-3">
         <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/more")}
-            className="shrink-0"
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate("/more")} className="shrink-0">
             <BackIcon className="h-5 w-5" />
           </Button>
           <h1 className="text-xl font-semibold">{t("myDashboards.title")}</h1>
@@ -90,16 +85,12 @@ const MyDashboards = () => {
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : error ? (
-          <div className="text-center py-12 text-muted-foreground">
-            {error}
-          </div>
+          <div className="text-center py-12 text-muted-foreground">{error}</div>
         ) : dashboards.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            {t("myDashboards.noDashboards")}
-          </div>
+          <div className="text-center py-12 text-muted-foreground">{t("myDashboards.noDashboards")}</div>
         ) : (
           dashboards.map((dashboard) => (
-            <Card 
+            <Card
               key={dashboard.id}
               className="cursor-pointer hover:bg-muted/50 transition-colors"
               onClick={() => handleDashboardClick(dashboard)}
@@ -110,9 +101,6 @@ const MyDashboards = () => {
                 </div>
                 <div className={`flex-1 ${isRTL ? "text-right" : ""}`}>
                   <h3 className="font-medium text-foreground">{dashboard.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {t("myDashboards.dashboardId")}: {dashboard.id}
-                  </p>
                 </div>
                 {isRTL ? (
                   <ArrowLeft className="h-5 w-5 text-muted-foreground" />
