@@ -222,6 +222,10 @@ const translations = {
     "projects.noProjects": "No projects found",
     "projects.noProjectsInStage": "No projects in this stage",
     "projects.newProject": "New Project",
+    "projects.enterProjectName": "Enter project name",
+    "projects.createProject": "Create Project",
+    "projects.discard": "Discard",
+    "projects.projectCreated": "Project Created",
     // Project Detail Page
     "projectDetail.title": "Project",
     "projectDetail.all": "All",
@@ -469,6 +473,10 @@ const translations = {
     "projects.noProjects": "لم يتم العثور على مشاريع",
     "projects.noProjectsInStage": "لا توجد مشاريع في هذه المرحلة",
     "projects.newProject": "مشروع جديد",
+    "projects.enterProjectName": "أدخل اسم المشروع",
+    "projects.createProject": "إنشاء المشروع",
+    "projects.discard": "تجاهل",
+    "projects.projectCreated": "تم إنشاء المشروع",
     // Project Detail Page
     "projectDetail.title": "مشروع",
     "projectDetail.all": "الكل",

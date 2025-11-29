@@ -23,6 +23,8 @@ import {
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
 import { format } from "date-fns";
+import NewProjectModal from "@/components/NewProjectModal";
+import { toast } from "@/hooks/use-toast";
 
 interface Project {
   id: number;
@@ -48,10 +50,20 @@ const Projects = () => {
   const [stages, setStages] = useState<[number, string][]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("all");
+  const [newProjectModalOpen, setNewProjectModalOpen] = useState(false);
 
   // Check if user is manager
   const authData = authStorage.getAuthData();
   const isManager = authData?.is_manager ?? false;
+
+  const handleCreateProject = (projectName: string) => {
+    // TODO: Connect to API endpoint to create project
+    toast({
+      title: t("projects.projectCreated"),
+      description: projectName,
+    });
+    console.log("Creating project:", projectName);
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -154,12 +166,23 @@ const Projects = () => {
             </div>
           </div>
           {isManager && (
-            <Button size="sm" className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <Button 
+              size="sm" 
+              className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
+              onClick={() => setNewProjectModalOpen(true)}
+            >
               <Plus className="h-4 w-4" />
               {t("projects.newProject")}
             </Button>
           )}
         </div>
+
+        {/* New Project Modal */}
+        <NewProjectModal
+          open={newProjectModalOpen}
+          onOpenChange={setNewProjectModalOpen}
+          onCreateProject={handleCreateProject}
+        />
       </header>
 
       {/* Main Content */}
