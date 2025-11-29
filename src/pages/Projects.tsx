@@ -19,6 +19,8 @@ import {
   ListTodo,
   Settings,
   Plus,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
@@ -188,30 +190,68 @@ const Projects = () => {
       {/* Main Content */}
       <main className="px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Scrollable Tabs */}
-          <ScrollArea className="w-full whitespace-nowrap mb-6">
-            <TabsList className={`inline-flex h-auto p-1 bg-muted/50 ${isRTL ? "flex-row-reverse" : ""}`}>
-              <TabsTrigger
-                value="all"
-                className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg"
-              >
-                {t("projects.all")} ({projects.length})
-              </TabsTrigger>
-              {stages.map((stage) => {
-                const count = getProjectsByStage(stage[0]).length;
-                return (
-                  <TabsTrigger
-                    key={stage[0]}
-                    value={stage[0].toString()}
-                    className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg"
-                  >
-                    {stage[1]} ({count})
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+          {/* Scrollable Tabs with Stage Actions */}
+          <div className={`flex items-center gap-2 mb-6 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <ScrollArea className="flex-1 whitespace-nowrap">
+              <TabsList className={`inline-flex h-auto p-1 bg-muted/50 ${isRTL ? "flex-row-reverse" : ""}`}>
+                <TabsTrigger
+                  value="all"
+                  className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg"
+                >
+                  {t("projects.all")} ({projects.length})
+                </TabsTrigger>
+                {stages.map((stage) => {
+                  const count = getProjectsByStage(stage[0]).length;
+                  return (
+                    <TabsTrigger
+                      key={stage[0]}
+                      value={stage[0].toString()}
+                      className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg"
+                    >
+                      {stage[1]} ({count})
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+            
+            {/* Stage Action Buttons - Only show when a specific stage is selected */}
+            {activeTab !== "all" && isManager && (
+              <div className={`flex items-center gap-1 shrink-0 px-2 py-1 rounded-lg bg-primary/10 border border-primary/20 ${isRTL ? "flex-row-reverse" : ""}`}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-primary hover:bg-primary/20 hover:text-primary"
+                  onClick={() => {
+                    const currentStage = stages.find(s => s[0].toString() === activeTab);
+                    toast({
+                      title: t("projects.editStage"),
+                      description: currentStage?.[1],
+                    });
+                  }}
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <div className="w-px h-4 bg-primary/30" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-destructive hover:bg-destructive/20 hover:text-destructive"
+                  onClick={() => {
+                    const currentStage = stages.find(s => s[0].toString() === activeTab);
+                    toast({
+                      title: t("projects.deleteStage"),
+                      description: currentStage?.[1],
+                      variant: "destructive",
+                    });
+                  }}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            )}
+          </div>
 
           {/* All Projects Tab */}
           <TabsContent value="all" className="mt-0 space-y-4">

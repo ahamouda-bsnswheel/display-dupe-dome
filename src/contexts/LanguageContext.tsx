@@ -265,6 +265,8 @@ const translations = {
     "projectSettings.projectStageHint": "Select the current stage of your project",
     // Projects Page
     "projects.settings": "Project Settings",
+    "projects.editStage": "Edit Stage",
+    "projects.deleteStage": "Delete Stage",
   },
   ar: {
     // Login Page
@@ -518,6 +520,8 @@ const translations = {
     "projectSettings.projectStageHint": "اختر المرحلة الحالية لمشروعك",
     // Projects Page
     "projects.settings": "إعدادات المشروع",
+    "projects.editStage": "تعديل المرحلة",
+    "projects.deleteStage": "حذف المرحلة",
   },
 };
 
