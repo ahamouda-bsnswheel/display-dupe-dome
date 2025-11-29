@@ -23,10 +23,17 @@ interface Assignee {
 
 interface TimesheetEntry {
   id: number;
-  title: string;
+  name: string;
   date: string;
-  duration: string;
-  employeeName: string;
+  unit_amount: number;
+  employee_id: [number, string];
+}
+
+interface TaskData {
+  deadline: string;
+  allocatedHours: string;
+  repeatEvery: string;
+  description: string;
 }
 
 const TaskSettings = () => {
@@ -39,14 +46,21 @@ const TaskSettings = () => {
   const [stages, setStages] = useState<Stage[]>([]);
   const [currentStageId, setCurrentStageId] = useState<number | null>(null);
   const [assignees, setAssignees] = useState<Assignee[]>([]);
-  const [loadingStages, setLoadingStages] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [taskData, setTaskData] = useState<TaskData>({
+    deadline: "---",
+    allocatedHours: "---",
+    repeatEvery: "---",
+    description: "---",
+  });
+  const [timesheetEntries, setTimesheetEntries] = useState<TimesheetEntry[]>([]);
 
-  // Fetch stages from API
+  // Fetch task data from API
   useEffect(() => {
-    const fetchStages = async () => {
+    const fetchTaskData = async () => {
       try {
         const apiKey = authStorage.getApiKey();
-        const response = await fetch(`https://bsnswheel.org/api/v1/tasks/custom/${projectId}`, {
+        const response = await fetch(`https://bsnswheel.org/api/v1/tasks/custom/${projectId}?task_id=${taskId}`, {
           method: "PUT",
           headers: {
             "x-api-key": apiKey || "",
@@ -56,43 +70,41 @@ const TaskSettings = () => {
 
         if (response.ok) {
           const data = await response.json();
+          
+          // Set stages
           const stagesData = (data.stages || []).map((s: [number, string]) => ({
             id: s[0],
             name: s[1],
           }));
           setStages(stagesData);
           
-          // Find current task's stage and assignees
+          // Find current task's data
           const task = data.tasks?.find((t: { id: number }) => t.id === Number(taskId));
           if (task) {
-            setCurrentStageId(task.stage_id[0]);
+            setCurrentStageId(task.stage_id?.[0] || null);
             setAssignees(task.user_ids || []);
+            
+            // Set task details
+            setTaskData({
+              deadline: task.date_deadline || "---",
+              allocatedHours: task.allocated_hours ? `${task.allocated_hours}` : "---",
+              repeatEvery: task.repeat_interval ? `${task.repeat_interval} ${task.repeat_unit || ""}`.trim() : "---",
+              description: task.description || "---",
+            });
+            
+            // Set timesheet entries
+            setTimesheetEntries(task.timesheet_ids || []);
           }
         }
       } catch (error) {
-        console.error("Failed to fetch stages:", error);
+        console.error("Failed to fetch task data:", error);
       } finally {
-        setLoadingStages(false);
+        setLoading(false);
       }
     };
 
-    fetchStages();
+    fetchTaskData();
   }, [projectId, taskId]);
-
-  // Placeholder data - will be populated from API later
-  const [taskData] = useState({
-    deadline: "2024-05-17 15:00:00.000",
-    allocatedHours: "40.0",
-    repeatEvery: "---",
-    description: "---",
-  });
-
-  // Placeholder timesheet data
-  const [timesheetEntries] = useState<TimesheetEntry[]>([
-    { id: 1, title: "Sprint", date: "2024-09-24", duration: "4hr", employeeName: "Toni Jimenez" },
-    { id: 2, title: "Requirements analysis", date: "2024-05-17", duration: "1hr", employeeName: "Walter Horton" },
-    { id: 3, title: "Requirements analysis", date: "2024-05-17", duration: "1hr", employeeName: "Mitchell Admin" },
-  ]);
 
   const handleDeleteTask = () => {
     // TODO: Implement API call to delete task
@@ -139,7 +151,7 @@ const TaskSettings = () => {
           <h2 className={`text-lg font-medium text-foreground mb-3 ${isRTL ? "text-right" : ""}`}>
             {t("taskSettings.taskStage")}
           </h2>
-          {loadingStages ? (
+          {loading ? (
             <div className="h-12 bg-muted/50 rounded-xl animate-pulse" />
           ) : (
             <ScrollArea className="w-full">
@@ -270,13 +282,13 @@ const TaskSettings = () => {
                     <div className={`flex flex-col gap-1 ${isRTL ? "text-right" : ""}`}>
                       <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
                         <div className="w-2 h-2 rounded-full bg-primary" />
-                        <span className="text-sm font-semibold text-foreground">{entry.title}</span>
+                        <span className="text-sm font-semibold text-foreground">{entry.name}</span>
                       </div>
                       <p className={`text-sm text-muted-foreground ${isRTL ? "mr-4" : "ml-4"}`}>
-                        {entry.date} - {entry.duration}
+                        {entry.date} - {entry.unit_amount}hr
                       </p>
                       <p className={`text-sm text-muted-foreground ${isRTL ? "mr-4" : "ml-4"}`}>
-                        {entry.employeeName}
+                        {entry.employee_id?.[1] || "---"}
                       </p>
                     </div>
                     <Button 
