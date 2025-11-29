@@ -221,6 +221,11 @@ const translations = {
     "projects.created": "Created",
     "projects.noProjects": "No projects found",
     "projects.noProjectsInStage": "No projects in this stage",
+    // Project Detail Page
+    "projectDetail.title": "Project",
+    "projectDetail.all": "All",
+    "projectDetail.noTasks": "No tasks found",
+    "projectDetail.noTasksInStage": "No tasks in this stage",
   },
   ar: {
     // Login Page
@@ -430,6 +435,11 @@ const translations = {
     "projects.created": "تاريخ الإنشاء",
     "projects.noProjects": "لم يتم العثور على مشاريع",
     "projects.noProjectsInStage": "لا توجد مشاريع في هذه المرحلة",
+    // Project Detail Page
+    "projectDetail.title": "مشروع",
+    "projectDetail.all": "الكل",
+    "projectDetail.noTasks": "لم يتم العثور على مهام",
+    "projectDetail.noTasksInStage": "لا توجد مهام في هذه المرحلة",
   },
 };
 

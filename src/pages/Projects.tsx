@@ -262,11 +262,19 @@ const ProjectCard = ({
   getStageColor,
   formatDate,
 }: ProjectCardProps) => {
+  const navigate = useNavigate();
   const progress = parseProgress(project.tasks_percentage_progress);
   const { completed, total } = parseProgressFraction(project.tasks_percentage_progress);
 
+  const handleClick = () => {
+    navigate(`/projects/${project.id}/${encodeURIComponent(project.name)}`);
+  };
+
   return (
-    <Card className="p-4 hover-lift transition-all duration-200">
+    <Card 
+      className="p-4 hover-lift transition-all duration-200 cursor-pointer"
+      onClick={handleClick}
+    >
       <div className={`flex flex-col gap-3 ${isRTL ? "text-right" : ""}`}>
         {/* Project Header */}
         <div className={`flex items-start justify-between gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
