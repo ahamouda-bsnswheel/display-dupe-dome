@@ -7,7 +7,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { ArrowLeft, Home, Grid3x3, Bell, MoreHorizontal, FolderKanban, Tag, CheckCircle2, ListTodo, Settings, Plus } from "lucide-react";
+import {
+  ArrowLeft,
+  Home,
+  Grid3x3,
+  Bell,
+  MoreHorizontal,
+  FolderKanban,
+  Tag,
+  CheckCircle2,
+  ListTodo,
+  Settings,
+  Plus,
+} from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
 import { format } from "date-fns";
@@ -36,7 +48,7 @@ const Projects = () => {
   const [stages, setStages] = useState<[number, string][]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("all");
-  
+
   // Check if user is manager
   const authData = authStorage.getAuthData();
   const isManager = authData?.is_manager ?? false;
@@ -86,9 +98,7 @@ const Projects = () => {
   const parseProgressFraction = (progressStr: string): { completed: number; total: number } => {
     // Parse "8 / 45 (18%)" -> { completed: 8, total: 45 }
     const match = progressStr.match(/(\d+)\s*\/\s*(\d+)/);
-    return match
-      ? { completed: parseInt(match[1], 10), total: parseInt(match[2], 10) }
-      : { completed: 0, total: 0 };
+    return match ? { completed: parseInt(match[1], 10), total: parseInt(match[2], 10) } : { completed: 0, total: 0 };
   };
 
   const getStageColor = (stageName: string): string => {
@@ -135,11 +145,7 @@ const Projects = () => {
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
           <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/modules")}
-            >
+            <Button variant="ghost" size="icon" onClick={() => navigate("/modules")}>
               <ArrowLeft className={`h-5 w-5 ${isRTL ? "rotate-180" : ""}`} />
             </Button>
             <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
@@ -148,11 +154,7 @@ const Projects = () => {
             </div>
           </div>
           {isManager && (
-            <Button
-              size="sm"
-              className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
-              onClick={() => navigate("/projects/new")}
-            >
+            <Button size="sm" className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}>
               <Plus className="h-4 w-4" />
               {t("projects.newProject")}
             </Button>
@@ -296,10 +298,7 @@ const ProjectCard = ({
   };
 
   return (
-    <Card 
-      className="p-4 hover-lift transition-all duration-200 cursor-pointer"
-      onClick={handleClick}
-    >
+    <Card className="p-4 hover-lift transition-all duration-200 cursor-pointer" onClick={handleClick}>
       <div className={`flex flex-col gap-3 ${isRTL ? "text-right" : ""}`}>
         {/* Project Header */}
         <div className={`flex items-start justify-between gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
