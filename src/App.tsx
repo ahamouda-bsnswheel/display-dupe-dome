@@ -19,6 +19,7 @@ import Employee360 from "./pages/Employee360";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import ProjectSettings from "./pages/ProjectSettings";
+import TaskSettings from "./pages/TaskSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
             <Route path="/projects/:projectId/:projectName" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
             <Route path="/projects/:projectId/:projectName/settings" element={<ProtectedRoute><ProjectSettings /></ProtectedRoute>} />
+            <Route path="/projects/:projectId/:projectName/task/:taskId/:taskName/settings" element={<ProtectedRoute><TaskSettings /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
