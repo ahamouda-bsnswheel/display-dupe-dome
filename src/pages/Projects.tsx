@@ -79,6 +79,8 @@ const Projects = () => {
   const [stageSettingsOpen, setStageSettingsOpen] = useState(false);
   const [stageNameInput, setStageNameInput] = useState("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [newStageDrawerOpen, setNewStageDrawerOpen] = useState(false);
+  const [newStageName, setNewStageName] = useState("");
 
   // Get current active stage
   const currentStage = stages.find(s => s[0].toString() === activeTab);
@@ -89,6 +91,13 @@ const Projects = () => {
       setStageNameInput(currentStage[1]);
     }
   }, [stageSettingsOpen, currentStage]);
+
+  // Reset new stage name when drawer closes
+  useEffect(() => {
+    if (!newStageDrawerOpen) {
+      setNewStageName("");
+    }
+  }, [newStageDrawerOpen]);
 
   const handleRenameStage = () => {
     if (!currentStage || !stageNameInput.trim()) return;
@@ -111,6 +120,17 @@ const Projects = () => {
     setDeleteConfirmOpen(false);
     setStageSettingsOpen(false);
     setActiveTab("all");
+  };
+
+  const handleAddStage = () => {
+    if (!newStageName.trim()) return;
+    // TODO: Connect to API
+    toast({
+      title: t("projects.stageCreated"),
+      description: newStageName,
+    });
+    setNewStageDrawerOpen(false);
+    setNewStageName("");
   };
 
   // Check if user is manager
@@ -271,9 +291,60 @@ const Projects = () => {
                     </TabsTrigger>
                   );
                 })}
+                {/* Add Stage Button */}
+                {isManager && (
+                  <button
+                    type="button"
+                    onClick={() => setNewStageDrawerOpen(true)}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg border-2 border-dashed border-primary/40 text-primary hover:border-primary hover:bg-primary/10 transition-colors ${isRTL ? "mr-1" : "ml-1"}`}
+                  >
+                    + {t("projects.stage")}
+                  </button>
+                )}
               </TabsList>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
+            
+            {/* New Stage Drawer */}
+            <Drawer open={newStageDrawerOpen} onOpenChange={setNewStageDrawerOpen}>
+              <DrawerContent>
+                <div className="mx-auto w-full max-w-sm">
+                  <DrawerHeader className={isRTL ? "text-right" : ""}>
+                    <DrawerTitle>{t("projects.addNewStage")}</DrawerTitle>
+                    <DrawerDescription>
+                      {t("projects.addNewStageDescription")}
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <div className="p-4 space-y-4">
+                    <div className="space-y-3">
+                      <Label htmlFor="newStageName" className={isRTL ? "block text-right" : ""}>
+                        {t("projects.stageName")}
+                      </Label>
+                      <Input
+                        id="newStageName"
+                        value={newStageName}
+                        onChange={(e) => setNewStageName(e.target.value)}
+                        placeholder={t("projects.stageNamePlaceholder")}
+                        className={isRTL ? "text-right" : ""}
+                      />
+                    </div>
+                  </div>
+                  <DrawerFooter>
+                    <Button 
+                      onClick={handleAddStage}
+                      disabled={!newStageName.trim()}
+                      className={`gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
+                    >
+                      <Plus className="h-4 w-4" />
+                      {t("projects.addStage")}
+                    </Button>
+                    <DrawerClose asChild>
+                      <Button variant="outline">{t("common.cancel")}</Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </div>
+              </DrawerContent>
+            </Drawer>
             
             {/* Stage Settings Button - Only show when a specific stage is selected */}
             {activeTab !== "all" && isManager && (
