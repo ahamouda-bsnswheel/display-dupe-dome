@@ -41,7 +41,6 @@ const More = () => {
 
   const baseMenuItems = [
     { icon: User, label: t('more.myProfile'), onClick: () => navigate("/profile") },
-    { icon: LayoutGrid, label: t('more.myDashboard'), onClick: () => navigate("/dashboard") },
   ];
 
   // Add My Dashboards for managers only
