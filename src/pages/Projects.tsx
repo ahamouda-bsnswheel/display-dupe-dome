@@ -302,21 +302,9 @@ const ProjectCard = ({
               </p>
             </div>
           </div>
-          <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-            {isManager && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-primary"
-                onClick={handleSettingsClick}
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-            )}
-            <Badge variant="outline" className={`${getStageColor(project.stage_id[1])} border-0 shrink-0`}>
-              {project.stage_id[1]}
-            </Badge>
-          </div>
+          <Badge variant="outline" className={`${getStageColor(project.stage_id[1])} border-0 shrink-0`}>
+            {project.stage_id[1]}
+          </Badge>
         </div>
 
         {/* Progress Section */}
@@ -352,6 +340,19 @@ const ProjectCard = ({
               </Badge>
             ))}
           </div>
+        )}
+
+        {/* Settings Button - Manager Only */}
+        {isManager && (
+          <Button
+            variant="outline"
+            size="sm"
+            className={`w-full mt-2 gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
+            onClick={handleSettingsClick}
+          >
+            <Settings className="h-4 w-4" />
+            {t("projects.settings")}
+          </Button>
         )}
       </div>
     </Card>
