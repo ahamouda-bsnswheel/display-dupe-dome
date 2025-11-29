@@ -40,11 +40,11 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const authHeaders = authStorage.getAuthHeaders();
+        const apiKey = authStorage.getApiKey();
         const response = await fetch("https://bsnswheel.org/api/v1/projects/custom", {
           method: "PUT",
           headers: {
-            ...authHeaders,
+            "x-api-key": apiKey || "",
             "Content-Type": "application/json",
           },
         });
