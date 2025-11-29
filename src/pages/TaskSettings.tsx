@@ -81,7 +81,6 @@ const TaskSettings = () => {
 
   // Placeholder data - will be populated from API later
   const [taskData] = useState({
-    status: "Done",
     deadline: "2024-05-17 15:00:00.000",
     allocatedHours: "40.0",
     repeatEvery: "---",
@@ -136,32 +135,37 @@ const TaskSettings = () => {
       {/* Main Content */}
       <main className="px-4 py-6 space-y-6">
         {/* Task Stage Slider */}
-        {loadingStages ? (
-          <div className="h-12 bg-muted/50 rounded-xl animate-pulse" />
-        ) : (
-          <ScrollArea className="w-full">
-            <div className={`flex gap-2 pb-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-              {stages.map((stage) => {
-                const isActive = stage.id === currentStageId;
-                
-                return (
-                  <button
-                    key={stage.id}
-                    onClick={() => setCurrentStageId(stage.id)}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${
-                      isActive 
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105" 
-                        : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
-                    }`}
-                  >
-                    {stage.name}
-                  </button>
-                );
-              })}
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        )}
+        <div>
+          <h2 className={`text-lg font-medium text-foreground mb-3 ${isRTL ? "text-right" : ""}`}>
+            {t("taskSettings.taskStage")}
+          </h2>
+          {loadingStages ? (
+            <div className="h-12 bg-muted/50 rounded-xl animate-pulse" />
+          ) : (
+            <ScrollArea className="w-full">
+              <div className={`flex gap-2 pb-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+                {stages.map((stage) => {
+                  const isActive = stage.id === currentStageId;
+                  
+                  return (
+                    <button
+                      key={stage.id}
+                      onClick={() => setCurrentStageId(stage.id)}
+                      className={`px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                        isActive 
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105" 
+                          : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                      }`}
+                    >
+                      {stage.name}
+                    </button>
+                  );
+                })}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          )}
+        </div>
 
         {/* Assignees Section */}
         <div>
@@ -202,16 +206,6 @@ const TaskSettings = () => {
           </div>
           <Card className="p-4">
             <div className="space-y-4">
-
-              {/* Status */}
-              <div className={`flex flex-col gap-1 pb-4 border-b border-border ${isRTL ? "text-right" : ""}`}>
-                <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span className="text-sm font-semibold text-foreground">{t("taskSettings.status")}</span>
-                </div>
-                <p className={`text-sm text-muted-foreground ${isRTL ? "mr-4" : "ml-4"}`}>{currentStageName || taskData.status}</p>
-              </div>
-
               {/* Deadline */}
               <div className={`flex flex-col gap-1 pb-4 border-b border-border ${isRTL ? "text-right" : ""}`}>
                 <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
