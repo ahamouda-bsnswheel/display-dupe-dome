@@ -85,11 +85,11 @@ const ProjectSettings = () => {
 
         {/* Project Info Grid */}
         <Card className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Column */}
             <div className="space-y-4">
-              <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <Label className="text-muted-foreground min-w-[120px]">
+              <div className={`flex flex-col gap-2 ${isRTL ? "text-right" : ""}`}>
+                <Label className="text-muted-foreground text-sm">
                   {t("projectSettings.nameOfTasks")}
                 </Label>
                 <Input
@@ -99,8 +99,8 @@ const ProjectSettings = () => {
                 />
               </div>
 
-              <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <Label className="text-muted-foreground min-w-[120px]">
+              <div className={`flex flex-col gap-2 ${isRTL ? "text-right" : ""}`}>
+                <Label className="text-muted-foreground text-sm">
                   {t("projectSettings.customer")}
                 </Label>
                 <Input
@@ -111,9 +111,9 @@ const ProjectSettings = () => {
                 />
               </div>
 
-              <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <Label className="text-muted-foreground min-w-[120px]">
-                  <Tag className="h-4 w-4 inline mr-1" />
+              <div className={`flex flex-col gap-2 ${isRTL ? "text-right" : ""}`}>
+                <Label className={`text-muted-foreground text-sm flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <Tag className="h-4 w-4" />
                   {t("projectSettings.tags")}
                 </Label>
                 <Input
@@ -127,8 +127,8 @@ const ProjectSettings = () => {
 
             {/* Right Column */}
             <div className="space-y-4">
-              <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <Label className="text-muted-foreground min-w-[120px]">
+              <div className={`flex flex-col gap-2 ${isRTL ? "text-right" : ""}`}>
+                <Label className="text-muted-foreground text-sm">
                   {t("projectSettings.type")}
                 </Label>
                 <RadioGroup
@@ -151,9 +151,9 @@ const ProjectSettings = () => {
                 </RadioGroup>
               </div>
 
-              <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <Label className="text-muted-foreground min-w-[120px]">
-                  <Users className="h-4 w-4 inline mr-1" />
+              <div className={`flex flex-col gap-2 ${isRTL ? "text-right" : ""}`}>
+                <Label className={`text-muted-foreground text-sm flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <Users className="h-4 w-4" />
                   {t("projectSettings.projectManager")}
                 </Label>
                 <Input
@@ -164,19 +164,19 @@ const ProjectSettings = () => {
                 />
               </div>
 
-              <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <Label className="text-muted-foreground min-w-[120px]">
-                  <Calendar className="h-4 w-4 inline mr-1" />
+              <div className={`flex flex-col gap-2 ${isRTL ? "text-right" : ""}`}>
+                <Label className={`text-muted-foreground text-sm flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <Calendar className="h-4 w-4" />
                   {t("projectSettings.plannedDate")}
                 </Label>
-                <div className={`flex items-center gap-2 flex-1 ${isRTL ? "flex-row-reverse" : ""}`}>
+                <div className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-2 ${isRTL ? "sm:flex-row-reverse" : ""}`}>
                   <Input
                     type="date"
                     value={projectData.plannedDateStart}
                     readOnly
                     className="bg-muted/50 flex-1"
                   />
-                  <span className="text-muted-foreground">→</span>
+                  <span className="text-muted-foreground text-center hidden sm:block">→</span>
                   <Input
                     type="date"
                     value={projectData.plannedDateEnd}
@@ -186,15 +186,15 @@ const ProjectSettings = () => {
                 </div>
               </div>
 
-              <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                <Label className="text-muted-foreground min-w-[120px]">
-                  <Clock className="h-4 w-4 inline mr-1" />
+              <div className={`flex flex-col gap-2 ${isRTL ? "text-right" : ""}`}>
+                <Label className={`text-muted-foreground text-sm flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <Clock className="h-4 w-4" />
                   {t("projectSettings.allocatedHours")}
                 </Label>
                 <Input
                   value={projectData.allocatedHours}
                   readOnly
-                  className="bg-muted/50 w-24"
+                  className="bg-muted/50"
                 />
               </div>
             </div>
