@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { ArrowLeft, Trash2, Pencil } from "lucide-react";
@@ -12,6 +13,12 @@ import { toast } from "sonner";
 interface Stage {
   id: number;
   name: string;
+}
+
+interface Assignee {
+  id: number;
+  name: string;
+  image_url: string;
 }
 
 interface TimesheetEntry {
@@ -31,11 +38,8 @@ const TaskSettings = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [stages, setStages] = useState<Stage[]>([]);
   const [currentStageId, setCurrentStageId] = useState<number | null>(null);
+  const [assignees, setAssignees] = useState<Assignee[]>([]);
   const [loadingStages, setLoadingStages] = useState(true);
-
-  // Get logged-in user name
-  const employeeData = authStorage.getEmployeeData();
-  const assigneeName = employeeData?.name || "";
 
   // Fetch stages from API
   useEffect(() => {
@@ -58,10 +62,11 @@ const TaskSettings = () => {
           }));
           setStages(stagesData);
           
-          // Find current task's stage
+          // Find current task's stage and assignees
           const task = data.tasks?.find((t: { id: number }) => t.id === Number(taskId));
           if (task) {
             setCurrentStageId(task.stage_id[0]);
+            setAssignees(task.user_ids || []);
           }
         }
       } catch (error) {
@@ -76,7 +81,6 @@ const TaskSettings = () => {
 
   // Placeholder data - will be populated from API later
   const [taskData] = useState({
-    name: assigneeName,
     status: "Done",
     deadline: "2024-05-17 15:00:00.000",
     allocatedHours: "40.0",
@@ -159,7 +163,34 @@ const TaskSettings = () => {
           </ScrollArea>
         )}
 
-        {/* Assignee & Status Section */}
+        {/* Assignees Section */}
+        <div>
+          <div className={`flex items-center justify-between mb-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <h2 className={`text-lg font-medium text-foreground ${isRTL ? "text-right" : ""}`}>
+              {t("taskSettings.assignees")}
+            </h2>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Pencil className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </div>
+          <Card className="p-4">
+            {assignees.length === 0 ? (
+              <p className={`text-sm text-muted-foreground ${isRTL ? "text-right" : ""}`}>
+                {t("taskSettings.noAssignees")}
+              </p>
+            ) : (
+              <div className={`flex flex-wrap gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+                {assignees.map((assignee) => (
+                  <Badge key={assignee.id} variant="secondary" className="px-3 py-1.5 text-sm">
+                    {assignee.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </Card>
+        </div>
+
+        {/* Status Section */}
         <div>
           <div className={`flex items-center justify-between mb-3 ${isRTL ? "flex-row-reverse" : ""}`}>
             <h2 className={`text-lg font-medium text-foreground ${isRTL ? "text-right" : ""}`}>
@@ -171,14 +202,6 @@ const TaskSettings = () => {
           </div>
           <Card className="p-4">
             <div className="space-y-4">
-              {/* Name */}
-              <div className={`flex flex-col gap-1 pb-4 border-b border-border ${isRTL ? "text-right" : ""}`}>
-                <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span className="text-sm font-semibold text-foreground">{t("taskSettings.name")}</span>
-                </div>
-                <p className={`text-sm text-muted-foreground ${isRTL ? "mr-4" : "ml-4"}`}>{taskData.name || "---"}</p>
-              </div>
 
               {/* Status */}
               <div className={`flex flex-col gap-1 pb-4 border-b border-border ${isRTL ? "text-right" : ""}`}>
