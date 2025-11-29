@@ -212,6 +212,15 @@ const translations = {
     "employee360.noFilterResults": "No employees match the selected filter",
     "common.cancel": "Cancel",
     "dashboard.employee360": "Employee 360",
+    "dashboard.projects": "Projects",
+    // Projects Page
+    "projects.title": "Projects",
+    "projects.all": "All",
+    "projects.tasks": "Tasks",
+    "projects.complete": "Complete",
+    "projects.created": "Created",
+    "projects.noProjects": "No projects found",
+    "projects.noProjectsInStage": "No projects in this stage",
   },
   ar: {
     // Login Page
@@ -412,6 +421,15 @@ const translations = {
     "employee360.noFilterResults": "لا يوجد موظفين يطابقون الفلتر المحدد",
     "common.cancel": "إلغاء",
     "dashboard.employee360": "ملف الموظف 360",
+    "dashboard.projects": "المشاريع",
+    // Projects Page
+    "projects.title": "المشاريع",
+    "projects.all": "الكل",
+    "projects.tasks": "المهام",
+    "projects.complete": "مكتمل",
+    "projects.created": "تاريخ الإنشاء",
+    "projects.noProjects": "لم يتم العثور على مشاريع",
+    "projects.noProjectsInStage": "لا توجد مشاريع في هذه المرحلة",
   },
 };
 

@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { Search, Clock, Calendar, BookOpen, Home, Grid3x3, Bell, MoreHorizontal, LogOut, Wallet, MailCheck, FileText, FileCheck, Edit3, PieChart, BarChart3, Award, Gauge, ArrowLeft, Users } from "lucide-react";
+import { Search, Clock, Calendar, BookOpen, Home, Grid3x3, Bell, MoreHorizontal, LogOut, Wallet, MailCheck, FileText, FileCheck, Edit3, PieChart, BarChart3, Award, Gauge, ArrowLeft, Users, FolderKanban } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
@@ -92,6 +92,13 @@ const Modules = () => {
       title: t('dashboard.fleet'),
       color: "bg-purple-200",
       iconColor: "text-purple-700"
+    },
+    {
+      icon: FolderKanban,
+      title: t('dashboard.projects'),
+      color: "bg-gradient-to-br from-indigo-400 to-purple-500",
+      iconColor: "text-white",
+      route: "/projects"
     },
     // Manager-only module
     ...(authData?.is_manager ? [{
