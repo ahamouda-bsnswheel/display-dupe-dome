@@ -221,6 +221,7 @@ const translations = {
     "projects.created": "Created",
     "projects.noProjects": "No projects found",
     "projects.noProjectsInStage": "No projects in this stage",
+    "projects.newProject": "New Project",
     // Project Detail Page
     "projectDetail.title": "Project",
     "projectDetail.all": "All",
@@ -467,6 +468,7 @@ const translations = {
     "projects.created": "تاريخ الإنشاء",
     "projects.noProjects": "لم يتم العثور على مشاريع",
     "projects.noProjectsInStage": "لا توجد مشاريع في هذه المرحلة",
+    "projects.newProject": "مشروع جديد",
     // Project Detail Page
     "projectDetail.title": "مشروع",
     "projectDetail.all": "الكل",

@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { ArrowLeft, Home, Grid3x3, Bell, MoreHorizontal, FolderKanban, Tag, CheckCircle2, ListTodo, Settings } from "lucide-react";
+import { ArrowLeft, Home, Grid3x3, Bell, MoreHorizontal, FolderKanban, Tag, CheckCircle2, ListTodo, Settings, Plus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
 import { format } from "date-fns";
@@ -133,18 +133,30 @@ const Projects = () => {
     <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
-        <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/modules")}
-          >
-            <ArrowLeft className={`h-5 w-5 ${isRTL ? "rotate-180" : ""}`} />
-          </Button>
-          <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-            <FolderKanban className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-semibold">{t("projects.title")}</h1>
+        <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
+          <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/modules")}
+            >
+              <ArrowLeft className={`h-5 w-5 ${isRTL ? "rotate-180" : ""}`} />
+            </Button>
+            <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+              <FolderKanban className="h-6 w-6 text-primary" />
+              <h1 className="text-xl font-semibold">{t("projects.title")}</h1>
+            </div>
           </div>
+          {isManager && (
+            <Button
+              size="sm"
+              className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
+              onClick={() => navigate("/projects/new")}
+            >
+              <Plus className="h-4 w-4" />
+              {t("projects.newProject")}
+            </Button>
+          )}
         </div>
       </header>
 
