@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calendar, Clock, Users, Tag, Trash2, FolderKanban, Save, Pencil } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Users, Tag, Trash2, FolderKanban, Save, Pencil, Layers, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
 import { toast } from "sonner";
+
+interface Stage {
+  id: number;
+  name: string;
+}
 
 const ProjectSettings = () => {
   const navigate = useNavigate();
@@ -21,10 +26,50 @@ const ProjectSettings = () => {
 
   const [activeTab, setActiveTab] = useState("description");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [stages, setStages] = useState<Stage[]>([]);
+  const [currentStageId, setCurrentStageId] = useState<number | null>(null);
+  const [loadingStages, setLoadingStages] = useState(true);
 
   // Get logged-in manager name
   const employeeData = authStorage.getEmployeeData();
   const managerName = employeeData?.name || "";
+
+  // Fetch stages from API
+  useEffect(() => {
+    const fetchStages = async () => {
+      try {
+        const apiKey = authStorage.getApiKey();
+        const response = await fetch("https://bsnswheel.org/api/v1/projects/custom", {
+          method: "PUT",
+          headers: {
+            "x-api-key": apiKey || "",
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const stagesData = (data.stages || []).map((s: [number, string]) => ({
+            id: s[0],
+            name: s[1],
+          }));
+          setStages(stagesData);
+          
+          // Find current project's stage
+          const project = data.projects?.find((p: { id: number }) => p.id === Number(projectId));
+          if (project) {
+            setCurrentStageId(project.stage_id[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch stages:", error);
+      } finally {
+        setLoadingStages(false);
+      }
+    };
+
+    fetchStages();
+  }, [projectId]);
 
   // Placeholder data - will be populated from API later
   const [projectData, setProjectData] = useState({
@@ -107,6 +152,98 @@ const ProjectSettings = () => {
               placeholder={t("projectSettings.projectNamePlaceholder")}
               className="text-lg font-medium h-12 border-primary/30 focus:border-primary"
             />
+          </div>
+        </Card>
+
+        {/* Project Stage Slider */}
+        <Card className="p-5">
+          <div className={`flex flex-col gap-4 ${isRTL ? "text-right" : ""}`}>
+            <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+              <div className="bg-secondary/10 rounded-lg p-2">
+                <Layers className="h-5 w-5 text-secondary" />
+              </div>
+              <div>
+                <Label className="text-base font-semibold text-foreground">
+                  {t("projectSettings.projectStage")}
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  {t("projectSettings.projectStageHint")}
+                </p>
+              </div>
+            </div>
+
+            {loadingStages ? (
+              <div className="h-20 bg-muted/50 rounded-xl animate-pulse" />
+            ) : (
+              <div className="relative">
+                {/* Stage Track */}
+                <div className="relative pt-8 pb-4">
+                  {/* Progress Line Background */}
+                  <div className="absolute top-[52px] left-0 right-0 h-1 bg-muted rounded-full" />
+                  
+                  {/* Progress Line Active */}
+                  {currentStageId && stages.length > 0 && (
+                    <div 
+                      className="absolute top-[52px] left-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-full transition-all duration-500"
+                      style={{ 
+                        width: `${((stages.findIndex(s => s.id === currentStageId) + 1) / stages.length) * 100}%` 
+                      }}
+                    />
+                  )}
+
+                  {/* Stage Points */}
+                  <div className={`flex justify-between relative ${isRTL ? "flex-row-reverse" : ""}`}>
+                    {stages.map((stage, index) => {
+                      const isActive = stage.id === currentStageId;
+                      const isPast = currentStageId ? stages.findIndex(s => s.id === currentStageId) >= index : false;
+                      
+                      return (
+                        <button
+                          key={stage.id}
+                          onClick={() => setCurrentStageId(stage.id)}
+                          className={`flex flex-col items-center gap-2 group transition-all duration-300 ${
+                            isRTL ? "flex-col-reverse" : ""
+                          }`}
+                        >
+                          {/* Stage Label */}
+                          <span 
+                            className={`text-xs font-medium px-2 py-1 rounded-full transition-all duration-300 max-w-[70px] sm:max-w-none truncate ${
+                              isActive 
+                                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" 
+                                : isPast 
+                                  ? "text-foreground bg-muted"
+                                  : "text-muted-foreground"
+                            }`}
+                          >
+                            {stage.name}
+                          </span>
+                          
+                          {/* Stage Dot */}
+                          <div 
+                            className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                              isActive 
+                                ? "bg-primary shadow-lg shadow-primary/40 scale-110" 
+                                : isPast 
+                                  ? "bg-secondary/80" 
+                                  : "bg-muted border-2 border-border group-hover:border-primary/50"
+                            }`}
+                          >
+                            {isPast && (
+                              <Check className={`h-4 w-4 ${isActive ? "text-primary-foreground" : "text-white"}`} />
+                            )}
+                            
+                            {/* Ripple Effect on Active */}
+                            {isActive && (
+                              <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-30" />
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </Card>
 

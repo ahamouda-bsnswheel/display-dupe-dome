@@ -261,6 +261,8 @@ const translations = {
     "projectSettings.save": "Save",
     "projectSettings.saveSuccess": "Project settings saved successfully",
     "projectSettings.projectNameHint": "Give your project a clear, descriptive name",
+    "projectSettings.projectStage": "Project Stage",
+    "projectSettings.projectStageHint": "Select the current stage of your project",
     // Projects Page
     "projects.settings": "Project Settings",
   },
@@ -512,6 +514,8 @@ const translations = {
     "projectSettings.save": "حفظ",
     "projectSettings.saveSuccess": "تم حفظ إعدادات المشروع بنجاح",
     "projectSettings.projectNameHint": "أعطِ مشروعك اسمًا واضحًا ووصفيًا",
+    "projectSettings.projectStage": "مرحلة المشروع",
+    "projectSettings.projectStageHint": "اختر المرحلة الحالية لمشروعك",
     // Projects Page
     "projects.settings": "إعدادات المشروع",
   },
