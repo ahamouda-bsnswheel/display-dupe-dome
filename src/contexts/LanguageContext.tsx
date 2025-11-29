@@ -308,9 +308,10 @@ const translations = {
     "tasks.stageDeleted": "Stage Deleted",
     // Task Settings Page
     "taskSettings.title": "Task Settings",
+    "taskSettings.taskStage": "Task Stage",
     "taskSettings.assignees": "Assignees",
     "taskSettings.noAssignees": "No assignees yet.",
-    "taskSettings.assigneeStatus": "Status",
+    "taskSettings.assigneeStatus": "Details",
     "taskSettings.name": "Name",
     "taskSettings.status": "Status",
     "taskSettings.deadline": "Deadline",
@@ -621,9 +622,10 @@ const translations = {
     "tasks.stageDeleted": "تم حذف المرحلة",
     // Task Settings Page
     "taskSettings.title": "إعدادات المهمة",
+    "taskSettings.taskStage": "مرحلة المهمة",
     "taskSettings.assignees": "المكلفون",
     "taskSettings.noAssignees": "لا يوجد مكلفون بعد.",
-    "taskSettings.assigneeStatus": "الحالة",
+    "taskSettings.assigneeStatus": "التفاصيل",
     "taskSettings.name": "الاسم",
     "taskSettings.status": "الحالة",
     "taskSettings.deadline": "الموعد النهائي",
