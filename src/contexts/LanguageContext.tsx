@@ -246,6 +246,15 @@ const translations = {
     "projectSettings.descriptionPlaceholder": "Project description...",
     "projectSettings.settingsPlaceholder": "Project settings will be available here.",
     "projectSettings.budgetPlaceholder": "Budget information will be available here.",
+    "projectSettings.projectName": "Project Name",
+    "projectSettings.projectNamePlaceholder": "Enter project name...",
+    "projectSettings.dangerZone": "Danger Zone",
+    "projectSettings.deleteWarning": "Once you delete a project, there is no going back. Please be certain.",
+    "projectSettings.deleteProject": "Delete Project",
+    "projectSettings.deleteConfirmTitle": "Delete Project?",
+    "projectSettings.deleteConfirmMessage": "This action cannot be undone. This will permanently delete the project and all associated tasks.",
+    // Projects Page
+    "projects.settings": "Project Settings",
   },
   ar: {
     // Login Page
@@ -480,6 +489,15 @@ const translations = {
     "projectSettings.descriptionPlaceholder": "وصف المشروع...",
     "projectSettings.settingsPlaceholder": "ستتوفر إعدادات المشروع هنا.",
     "projectSettings.budgetPlaceholder": "ستتوفر معلومات الميزانية هنا.",
+    "projectSettings.projectName": "اسم المشروع",
+    "projectSettings.projectNamePlaceholder": "أدخل اسم المشروع...",
+    "projectSettings.dangerZone": "منطقة الخطر",
+    "projectSettings.deleteWarning": "بمجرد حذف المشروع، لا يمكن التراجع. يرجى التأكد.",
+    "projectSettings.deleteProject": "حذف المشروع",
+    "projectSettings.deleteConfirmTitle": "حذف المشروع؟",
+    "projectSettings.deleteConfirmMessage": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف المشروع وجميع المهام المرتبطة به نهائياً.",
+    // Projects Page
+    "projects.settings": "إعدادات المشروع",
   },
 };
 
