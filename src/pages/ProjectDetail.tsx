@@ -209,15 +209,16 @@ const ProjectDetail = () => {
       {/* Header */}
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
-          <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+          <div className={`flex items-center gap-3 min-w-0 flex-1 ${isRTL ? "flex-row-reverse" : ""}`}>
             <Button
               variant="ghost"
               size="icon"
+              className="shrink-0"
               onClick={() => navigate("/projects")}
             >
               <ArrowLeft className={`h-5 w-5 ${isRTL ? "rotate-180" : ""}`} />
             </Button>
-            <h1 className="text-xl font-semibold truncate">{decodedProjectName}</h1>
+            <h1 className="text-xl font-semibold truncate max-w-[60vw] sm:max-w-[300px]">{decodedProjectName}</h1>
           </div>
           {isManager && (
             <Button 
