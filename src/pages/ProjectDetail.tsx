@@ -30,7 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, ListTodo, Plus, Settings2, Trash2, Settings } from "lucide-react";
+import { ArrowLeft, ListTodo, Plus, Settings2, Trash2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { format } from "date-fns";
@@ -219,25 +219,16 @@ const ProjectDetail = () => {
             </Button>
             <h1 className="text-xl font-semibold truncate">{decodedProjectName}</h1>
           </div>
-          <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-            {isManager && (
-              <Button 
-                size="sm" 
-                className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
-                onClick={() => setNewTaskModalOpen(true)}
-              >
-                <Plus className="h-4 w-4" />
-                {t("tasks.newTask")}
-              </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate(`/projects/${projectId}/${encodeURIComponent(decodedProjectName)}/settings`)}
+          {isManager && (
+            <Button 
+              size="sm" 
+              className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
+              onClick={() => setNewTaskModalOpen(true)}
             >
-              <Settings className="h-5 w-5" />
+              <Plus className="h-4 w-4" />
+              {t("tasks.newTask")}
             </Button>
-          </div>
+          )}
         </div>
       </header>
 
