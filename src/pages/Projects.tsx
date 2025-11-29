@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { ArrowLeft, Home, Grid3x3, Bell, MoreHorizontal, FolderKanban, Tag, CheckCircle2, ListTodo } from "lucide-react";
+import { ArrowLeft, Home, Grid3x3, Bell, MoreHorizontal, FolderKanban, Tag, CheckCircle2, ListTodo, Settings } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
 import { format } from "date-fns";
@@ -36,6 +36,10 @@ const Projects = () => {
   const [stages, setStages] = useState<[number, string][]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("all");
+  
+  // Check if user is manager
+  const authData = authStorage.getAuthData();
+  const isManager = authData?.is_manager ?? false;
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -190,6 +194,7 @@ const Projects = () => {
                   parseProgressFraction={parseProgressFraction}
                   getStageColor={getStageColor}
                   formatDate={formatDate}
+                  isManager={isManager}
                 />
               ))
             )}
@@ -214,6 +219,7 @@ const Projects = () => {
                     parseProgressFraction={parseProgressFraction}
                     getStageColor={getStageColor}
                     formatDate={formatDate}
+                    isManager={isManager}
                   />
                 ))
               )}
@@ -251,6 +257,7 @@ interface ProjectCardProps {
   parseProgressFraction: (str: string) => { completed: number; total: number };
   getStageColor: (name: string) => string;
   formatDate: (date: string) => string;
+  isManager: boolean;
 }
 
 const ProjectCard = ({
@@ -261,6 +268,7 @@ const ProjectCard = ({
   parseProgressFraction,
   getStageColor,
   formatDate,
+  isManager,
 }: ProjectCardProps) => {
   const navigate = useNavigate();
   const progress = parseProgress(project.tasks_percentage_progress);
@@ -268,6 +276,11 @@ const ProjectCard = ({
 
   const handleClick = () => {
     navigate(`/projects/${project.id}/${encodeURIComponent(project.name)}`);
+  };
+
+  const handleSettingsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/projects/${project.id}/${encodeURIComponent(project.name)}/settings`);
   };
 
   return (
@@ -289,9 +302,21 @@ const ProjectCard = ({
               </p>
             </div>
           </div>
-          <Badge variant="outline" className={`${getStageColor(project.stage_id[1])} border-0 shrink-0`}>
-            {project.stage_id[1]}
-          </Badge>
+          <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+            {isManager && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-primary"
+                onClick={handleSettingsClick}
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            )}
+            <Badge variant="outline" className={`${getStageColor(project.stage_id[1])} border-0 shrink-0`}>
+              {project.stage_id[1]}
+            </Badge>
+          </div>
         </div>
 
         {/* Progress Section */}
