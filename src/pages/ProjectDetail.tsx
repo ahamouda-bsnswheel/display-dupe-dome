@@ -220,16 +220,14 @@ const ProjectDetail = () => {
             </Button>
             <h1 className="text-xl font-semibold truncate max-w-[60vw] sm:max-w-[300px]">{decodedProjectName}</h1>
           </div>
-          {isManager && (
-            <Button 
-              size="sm" 
-              className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
-              onClick={() => setNewTaskModalOpen(true)}
-            >
-              <Plus className="h-4 w-4" />
-              {t("tasks.newTask")}
-            </Button>
-          )}
+          <Button 
+            size="sm" 
+            className={`gap-1.5 ${isRTL ? "flex-row-reverse" : ""}`}
+            onClick={() => setNewTaskModalOpen(true)}
+          >
+            <Plus className="h-4 w-4" />
+            {t("tasks.newTask")}
+          </Button>
         </div>
       </header>
 
@@ -266,15 +264,13 @@ const ProjectDetail = () => {
                   );
                 })}
                 {/* Add Stage Button */}
-                {isManager && (
-                  <button
-                    type="button"
-                    onClick={() => setNewStageDrawerOpen(true)}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg border-2 border-dashed border-primary/40 text-primary hover:border-primary hover:bg-primary/10 transition-colors ${isRTL ? "mr-1" : "ml-1"}`}
-                  >
-                    + {t("tasks.stage")}
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setNewStageDrawerOpen(true)}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg border-2 border-dashed border-primary/40 text-primary hover:border-primary hover:bg-primary/10 transition-colors ${isRTL ? "mr-1" : "ml-1"}`}
+                >
+                  + {t("tasks.stage")}
+                </button>
               </TabsList>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
@@ -321,7 +317,7 @@ const ProjectDetail = () => {
             </Drawer>
 
             {/* Stage Settings Button - Only show when a specific stage is selected */}
-            {activeTab !== "all" && isManager && (
+            {activeTab !== "all" && (
               <Drawer open={stageSettingsOpen} onOpenChange={setStageSettingsOpen}>
                 <DrawerTrigger asChild>
                   <Button
