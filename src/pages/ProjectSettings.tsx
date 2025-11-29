@@ -7,8 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calendar, Clock, Users, Tag, Trash2, FolderKanban, Save, Pencil, Layers, Check } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Users, Tag, Trash2, FolderKanban, Save, Pencil, Layers } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
 import { toast } from "sonner";
@@ -173,76 +174,30 @@ const ProjectSettings = () => {
             </div>
 
             {loadingStages ? (
-              <div className="h-20 bg-muted/50 rounded-xl animate-pulse" />
+              <div className="h-12 bg-muted/50 rounded-xl animate-pulse" />
             ) : (
-              <div className="relative">
-                {/* Stage Track */}
-                <div className="relative pt-8 pb-4">
-                  {/* Progress Line Background */}
-                  <div className="absolute top-[52px] left-0 right-0 h-1 bg-muted rounded-full" />
-                  
-                  {/* Progress Line Active */}
-                  {currentStageId && stages.length > 0 && (
-                    <div 
-                      className="absolute top-[52px] left-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-full transition-all duration-500"
-                      style={{ 
-                        width: `${((stages.findIndex(s => s.id === currentStageId) + 1) / stages.length) * 100}%` 
-                      }}
-                    />
-                  )}
-
-                  {/* Stage Points */}
-                  <div className={`flex justify-between relative ${isRTL ? "flex-row-reverse" : ""}`}>
-                    {stages.map((stage, index) => {
-                      const isActive = stage.id === currentStageId;
-                      const isPast = currentStageId ? stages.findIndex(s => s.id === currentStageId) >= index : false;
-                      
-                      return (
-                        <button
-                          key={stage.id}
-                          onClick={() => setCurrentStageId(stage.id)}
-                          className={`flex flex-col items-center gap-2 group transition-all duration-300 ${
-                            isRTL ? "flex-col-reverse" : ""
-                          }`}
-                        >
-                          {/* Stage Label */}
-                          <span 
-                            className={`text-xs font-medium px-2 py-1 rounded-full transition-all duration-300 max-w-[70px] sm:max-w-none truncate ${
-                              isActive 
-                                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" 
-                                : isPast 
-                                  ? "text-foreground bg-muted"
-                                  : "text-muted-foreground"
-                            }`}
-                          >
-                            {stage.name}
-                          </span>
-                          
-                          {/* Stage Dot */}
-                          <div 
-                            className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                              isActive 
-                                ? "bg-primary shadow-lg shadow-primary/40 scale-110" 
-                                : isPast 
-                                  ? "bg-secondary/80" 
-                                  : "bg-muted border-2 border-border group-hover:border-primary/50"
-                            }`}
-                          >
-                            {isPast && (
-                              <Check className={`h-4 w-4 ${isActive ? "text-primary-foreground" : "text-white"}`} />
-                            )}
-                            
-                            {/* Ripple Effect on Active */}
-                            {isActive && (
-                              <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-30" />
-                            )}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
+              <ScrollArea className="w-full">
+                <div className={`flex gap-2 pb-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  {stages.map((stage) => {
+                    const isActive = stage.id === currentStageId;
+                    
+                    return (
+                      <button
+                        key={stage.id}
+                        onClick={() => setCurrentStageId(stage.id)}
+                        className={`px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                          isActive 
+                            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105" 
+                            : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                        }`}
+                      >
+                        {stage.name}
+                      </button>
+                    );
+                  })}
                 </div>
-              </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
             )}
           </div>
         </Card>
