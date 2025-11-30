@@ -143,7 +143,7 @@ const Dashboard = () => {
     label: t('dashboard.tasksCount'),
     color: "bg-blue-100 text-blue-800"
   }];
-  return <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto">
+  return <div className="min-h-screen bg-background pb-20 w-full overflow-x-hidden">
       {/* Header */}
       <header className="relative bg-gradient-hero px-4 sm:px-6 py-6 sm:py-8 overflow-hidden">
         {/* Decorative background */}
@@ -320,7 +320,7 @@ const Dashboard = () => {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-3">
+      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-3 safe-area-bottom">
         <div className="flex justify-around items-center max-w-md mx-auto">
           <Button variant="ghost" size="icon" className="text-primary">
             <Home className="h-6 w-6" />
