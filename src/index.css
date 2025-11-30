@@ -147,8 +147,23 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html, body, #root {
+    height: 100%;
+    min-height: 100%;
+  }
+
   body {
     @apply bg-background text-foreground font-sans;
+    /* Safe area insets for Capacitor/mobile apps */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
   }
 }
 
