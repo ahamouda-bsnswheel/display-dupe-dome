@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useAuthImage } from "@/hooks/use-auth-image";
 import { useNavigate } from "react-router-dom";
@@ -12,12 +11,9 @@ import {
   FileText, 
   LogOut,
   ChevronRight,
-  ChevronLeft,
-  Home,
-  Grid3x3,
-  Bell,
-  MoreHorizontal
+  ChevronLeft
 } from "lucide-react";
+import BottomNavigation from "@/components/BottomNavigation";
 
 const More = () => {
   const navigate = useNavigate();
@@ -60,7 +56,7 @@ const More = () => {
   const ChevronIcon = language === 'ar' ? ChevronLeft : ChevronRight;
 
   return (
-    <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto">
+    <div className="min-h-screen bg-background pb-24 w-full overflow-x-hidden">
       {/* Profile Section */}
       <div className="bg-card px-4 sm:px-6 md:px-8 py-6 sm:py-8 flex flex-col items-center">
         <Avatar className="h-24 w-24 sm:h-32 sm:w-32 mb-4">
@@ -99,35 +95,7 @@ const More = () => {
         </button>
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-3">
-        <div className="flex justify-around items-center max-w-md mx-auto">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => navigate("/dashboard")}
-          >
-            <Home className="h-6 w-6" />
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => navigate("/modules")}
-          >
-            <Grid3x3 className="h-6 w-6" />
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => navigate("/notifications")}
-          >
-            <Bell className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-primary">
-            <MoreHorizontal className="h-6 w-6" />
-          </Button>
-        </div>
-      </nav>
+      <BottomNavigation />
     </div>
   );
 };

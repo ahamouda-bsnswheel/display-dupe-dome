@@ -5,11 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { authStorage, getSecureImageUrl } from "@/lib/auth";
 import { useAuthImage } from "@/hooks/use-auth-image";
 import { useNavigate } from "react-router-dom";
-import { Search, Clock, Calendar, BookOpen, Home, Grid3x3, Bell, MoreHorizontal, ChevronRight, Camera } from "lucide-react";
+import { Search, Clock, Calendar, BookOpen, ChevronRight, Camera } from "lucide-react";
 import { QRScannerModal } from "@/components/QRScannerModal";
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import BottomNavigation from "@/components/BottomNavigation";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -143,7 +144,7 @@ const Dashboard = () => {
     label: t('dashboard.tasksCount'),
     color: "bg-blue-100 text-blue-800"
   }];
-  return <div className="min-h-screen bg-background pb-20 w-full overflow-x-hidden">
+  return <div className="min-h-screen bg-background pb-24 w-full overflow-x-hidden">
       {/* Header */}
       <header className="relative bg-gradient-hero px-4 sm:px-6 py-6 sm:py-8 overflow-hidden">
         {/* Decorative background */}
@@ -319,23 +320,7 @@ const Dashboard = () => {
           </div>}
       </main>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-3 safe-area-bottom">
-        <div className="flex justify-around items-center max-w-md mx-auto">
-          <Button variant="ghost" size="icon" className="text-primary">
-            <Home className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => navigate("/modules")}>
-            <Grid3x3 className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => navigate("/notifications")}>
-            <Bell className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => navigate("/more")}>
-            <MoreHorizontal className="h-6 w-6" />
-          </Button>
-        </div>
-      </nav>
+      <BottomNavigation />
 
       {/* QR Scanner Modal */}
       <QRScannerModal 

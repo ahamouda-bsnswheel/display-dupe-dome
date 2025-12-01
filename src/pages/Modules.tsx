@@ -2,10 +2,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { Search, Clock, Calendar, BookOpen, Home, Grid3x3, Bell, MoreHorizontal, LogOut, Wallet, MailCheck, FileText, FileCheck, Edit3, PieChart, BarChart3, Award, Gauge, ArrowLeft, Users, FolderKanban } from "lucide-react";
+import { Search, Clock, Calendar, BookOpen, LogOut, Wallet, MailCheck, FileText, FileCheck, Edit3, PieChart, BarChart3, Award, Gauge, ArrowLeft, Users, FolderKanban } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { authStorage } from "@/lib/auth";
+import BottomNavigation from "@/components/BottomNavigation";
 
 const Modules = () => {
   const navigate = useNavigate();
@@ -115,7 +116,7 @@ const Modules = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto">
+    <div className="min-h-screen bg-background pb-24 w-full overflow-x-hidden">
       {/* Header */}
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <div className="flex items-center gap-3">
@@ -169,23 +170,7 @@ const Modules = () => {
         </div>
       </main>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-3">
-        <div className="flex justify-around items-center max-w-md mx-auto">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
-            <Home className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-primary">
-            <Grid3x3 className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => navigate("/notifications")}>
-            <Bell className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => navigate("/more")}>
-            <MoreHorizontal className="h-6 w-6" />
-          </Button>
-        </div>
-      </nav>
+      <BottomNavigation />
     </div>
   );
 };
