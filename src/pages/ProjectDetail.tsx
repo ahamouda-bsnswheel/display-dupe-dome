@@ -242,7 +242,7 @@ const ProjectDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
+      <div className="min-h-screen bg-background pb-20 w-full overflow-x-hidden" dir={isRTL ? "rtl" : "ltr"}>
         <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
           <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
             <Skeleton className="h-10 w-10 rounded-full" />
@@ -260,7 +260,7 @@ const ProjectDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-background pb-20 w-full overflow-x-hidden" dir={isRTL ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
