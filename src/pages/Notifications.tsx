@@ -1,15 +1,13 @@
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useNavigate } from "react-router-dom";
-import { Search, Home, Grid3x3, Bell, MoreHorizontal, MessageCircle, Umbrella, Award } from "lucide-react";
+import { Search, MessageCircle, Umbrella, Award } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import BottomNavigation from "@/components/BottomNavigation";
 
 const Notifications = () => {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -93,7 +91,7 @@ const Notifications = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background pb-20 max-w-screen-xl mx-auto">
+    <div className="min-h-screen bg-background pb-24 w-full overflow-x-hidden">
       {/* Header */}
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <h1 className="text-2xl font-semibold">{t('notifications.title')}</h1>
@@ -197,23 +195,7 @@ const Notifications = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-3">
-        <div className="flex justify-around items-center max-w-md mx-auto">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
-            <Home className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => navigate("/modules")}>
-            <Grid3x3 className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-primary">
-            <Bell className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => navigate("/more")}>
-            <MoreHorizontal className="h-6 w-6" />
-          </Button>
-        </div>
-      </nav>
+      <BottomNavigation />
     </div>
   );
 };
