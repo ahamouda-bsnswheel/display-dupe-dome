@@ -246,7 +246,7 @@ const TaskSettings = () => {
   const currentStageName = stages.find(s => s.id === currentStageId)?.name || "";
 
   return (
-    <div className="min-h-screen bg-background pb-6 max-w-screen-xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-background pb-6 w-full overflow-x-hidden" dir={isRTL ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
